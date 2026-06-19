@@ -139,6 +139,19 @@
   small.src, .hint { color:var(--muted); }
   .quiet { color:var(--muted); font-size:13px; }
 
+  .sim-controls { display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end; margin-bottom:12px; }
+  .sim-controls label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.4px; color:var(--faint); display:flex; flex-direction:column; gap:4px; }
+  .sim-controls select { font:13px var(--sans); padding:6px 8px; border:1px solid var(--line); border-radius:7px; max-width:190px; }
+  .sim-card { border:1px solid var(--line); border-radius:10px; padding:14px; }
+  .sim-verdict { font-weight:700; font-size:14px; padding:7px 11px; border-radius:8px; display:inline-block; margin-bottom:11px; }
+  .sim-verdict.ok { background:var(--accent-soft); color:var(--accent); } .sim-verdict.no { background:#f7e7e5; color:var(--conflict); }
+  .stamp { display:flex; align-items:center; gap:9px; font-size:13px; margin:6px 0; }
+  .stamp .mark { width:19px; height:19px; border-radius:50%; color:#fff; font-size:12px; display:inline-flex; align-items:center; justify-content:center; flex:none; }
+  .stamp .mark.y { background:var(--accent); } .stamp .mark.n { background:var(--conflict); }
+  .dna-verdict { margin-top:11px; padding:9px 11px; border-radius:8px; font-size:13px; }
+  .dna-verdict.honors { background:var(--accent-soft); color:var(--accent); }
+  .dna-verdict.conflicts { background:#f7e7e5; color:var(--conflict); }
+  .dna-verdict.neutral { background:#f3f5f7; color:var(--muted); }
   :focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
   @media (max-width:980px){ main { grid-template-columns:1fr; } header { flex-direction:column; align-items:flex-start; gap:6px; } }
   @media (prefers-reduced-motion:reduce){ * { transition:none !important; } }
@@ -193,6 +206,15 @@
       <h2 style="margin-top:18px">Mandate drift</h2>
       <p class="sublabel">Sub-asset classes that have drifted more than ±2.0pp from their target weight.</p>
       <div id="drift"></div>
+
+      <h2 style="margin-top:18px">What-if simulator</h2>
+      <p class="sublabel">Test a swap before you propose it — the engines check it the same way they vet the AI's own recommendation. Opens on the AI's proposal.</p>
+      <div class="sim-controls">
+        <label>Sell<select id="simSell"></select></label>
+        <label>Buy<select id="simBuy"></select></label>
+        <button class="primary" id="simRun">Simulate</button>
+      </div>
+      <div id="simResult"></div>
     </section>
 
     <section class="panel">
@@ -226,7 +248,7 @@
 </div>
 
 <script>
-let CLIENT = null, EVENT = null;
+let CLIENT = null, EVENT = null, holdings = [];
 let voice = "values-led", thread = null, threadState = "full_case", altState = null;
 const api = (p, o) => fetch("/api/advisor" + p, o).then(r => r.json()).then(j => j.data);
 const el = (id) => document.getElementById(id);
@@ -369,13 +391,14 @@ async function loadClient(id) {
   el("cutBtn").textContent = "Challenge this evidence";
   try {
     const c = await api("/clients/"+id);
-    thread = c.thread;
+    thread = c.thread; holdings = c.holdings || [];
     altState = thread ? Object.keys(thread.states).find(s => s !== "full_case") : null;
     EVENT = (c.news && c.news[0]) ? c.news[0].id : null;
     renderTraits(c.dna); renderDrift(c.drift);
-    await refreshAlerts(id);
+    const alerts = await api("/clients/"+id+"/alerts"); renderAlerts(alerts);
     renderThread();
     await loadSignals(id);
+    await setupSim(alerts);
     el("receipt").innerHTML = "<span class='hint'>Click any evidence chip to see its exact source quote.</span>";
     el("msg").value = ""; el("msgSource").textContent = "";
     el("clientMsg").value = ""; el("sendNote").textContent = "";
@@ -384,6 +407,41 @@ async function loadClient(id) {
   }
 }
 async function refreshAlerts(id) { renderAlerts(await api("/clients/"+id+"/alerts")); }
+async function setupSim(alerts) {
+  el("simSell").innerHTML = holdings.map(h => `<option value="${esc(h.isin)}">${esc(h.issuer)}</option>`).join("");
+  const flagged = alerts.map(a => a.id).find(x => /^(dna-conflict|dna-opportunity):/.test(x));
+  const defaultSell = flagged ? flagged.split(":")[1] : (holdings[0] && holdings[0].isin);
+  if (defaultSell) el("simSell").value = defaultSell;
+  el("simResult").innerHTML = "";
+  if (defaultSell) { await loadSimCandidates(defaultSell); await runSim(); }
+}
+async function loadSimCandidates(sell) {
+  const d = await api(`/clients/${CLIENT}/candidates?sell=${encodeURIComponent(sell)}`);
+  el("simBuy").innerHTML = d.options.length
+    ? d.options.map(o => `<option value="${esc(o.isin)}">${esc(o.issuer)} — ${esc(o.tag)}</option>`).join("")
+    : `<option value="">(no candidates)</option>`;
+}
+async function runSim() {
+  const sellIsin = el("simSell").value, buyIsin = el("simBuy").value;
+  if (!sellIsin || !buyIsin) { el("simResult").innerHTML = "<p class='quiet'>Pick a name to buy.</p>"; return; }
+  try { renderSim(await api(`/clients/${CLIENT}/simulate`, { method:"POST", headers:{"content-type":"application/json"}, body: JSON.stringify({ sellIsin, buyIsin }) })); }
+  catch (err) { el("simResult").innerHTML = "<p class='quiet'>Couldn't simulate — is the server running?</p>"; }
+}
+function renderSim(r) {
+  const mark = (ok) => `<span class="mark ${ok?'y':'n'}">${ok?'✓':'✗'}</span>`;
+  const driftOk = r.newBreaches.length === 0;
+  el("simResult").innerHTML = `<div class="sim-card">
+    <div class="sim-verdict ${r.compliant?'ok':'no'}">${r.compliant?'✓ Mandate-compliant swap':'✗ Not mandate-compliant'}</div>
+    <div class="stamp">${mark(r.sameSector)} Same sector${r.buy.industryGroup?` (${esc(r.buy.industryGroup)})`:''}</div>
+    <div class="stamp">${mark(r.buyRatingOk)} Buy is CIO-rated BUY${(r.buy.rating&&r.buy.rating!=='BUY')?` — it's ${esc(r.buy.rating)}`:''}</div>
+    <div class="stamp">${mark(driftOk)} No new ±2.0pp drift breach${driftOk?'':` — ${r.newBreaches.map(esc).join(', ')}`}</div>
+    <div class="quiet" style="margin-top:8px"><b class="mono">${chf(r.amountCHF)}</b> would move from ${esc(r.sell.issuer)} to ${esc(r.buy.issuer)}.</div>
+    <div class="dna-verdict ${esc(r.dna.verdict)}"><b>Client values: ${esc(r.dna.verdict)}</b> — ${esc(r.dna.reason)}</div>
+  </div>`;
+}
+el("simRun").onclick = () => runSim();
+el("simSell").onchange = async () => { await loadSimCandidates(el("simSell").value); runSim(); };
+el("simBuy").onchange = () => runSim();
 async function loadSignals(id) {
   const sigs = await api("/clients/"+id+"/signals");
   el("signals").innerHTML = sigs.slice().reverse().map(s =>

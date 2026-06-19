@@ -110,6 +110,27 @@ export class AdvisorController {
     res.json({ success: true, data: result });
   }
 
+  // Buy candidates for the what-if dropdown: same-sector swap options for the
+  // chosen sell, plus any names a CIO directive is pushing (cross-sector what-ifs).
+  candidates(req: Request, res: Response) {
+    const s = getStore();
+    const id = req.params.id;
+    if (!s.getDna(id)) return res.status(404).json({ success: false, error: "unknown or unwired client" });
+    const sell = String(req.query.sell || "");
+    const cio = s.getCio();
+    const swap = proposeSwap(sell, s.getHoldings(id), cio);
+    const options: { isin: string; issuer: string; tag: string }[] = [];
+    if (swap.chosen) options.push({ isin: swap.chosen.isin, issuer: swap.chosen.issuer, tag: "recommended" });
+    swap.rejected.forEach((r) => options.push({ isin: r.isin, issuer: r.issuer, tag: r.reason }));
+    s.getNews(id)
+      .filter((n) => n.kind === "cio-directive")
+      .forEach((n) => n.affectedIsins.forEach((isin) => {
+        const c = cio.find((e) => e.isin === isin);
+        if (c && !options.find((o) => o.isin === isin)) options.push({ isin, issuer: c.issuer, tag: "CIO-pushed · different sector" });
+      }));
+    res.json({ success: true, data: { sell, options } });
+  }
+
   getSwap(req: Request, res: Response) {
     const s = getStore();
     const id = req.params.id;
