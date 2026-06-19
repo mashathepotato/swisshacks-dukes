@@ -388,3 +388,28 @@ button { font-family: inherit; cursor: pointer; }
 .impact-name { font-size: 13.5px; font-weight: 700; color: var(--text); }
 .impact-score { font-size: 15px; font-weight: 800; }
 .impact-via { font-size: 11.5px; color: var(--text-faint); margin: 2px 0 7px; }
+
+/* ---- mandate & compliance desk (Phase A–C engines) ---- */
+.drift-row { display: flex; align-items: baseline; justify-content: space-between; font-size: 12.5px; padding: 5px 0; border-bottom: 1px solid var(--border-soft); }
+.drift-row .sa { color: var(--text-dim); }
+.drift-row .dv { font-weight: 700; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text-faint); }
+.drift-row.breach .dv { color: var(--amber); }
+.cdesk-controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; margin: 4px 0 8px; }
+.cdesk-controls label { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--text-faint); display: flex; flex-direction: column; gap: 4px; }
+.cdesk-controls select { background: var(--panel-2); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 6px 8px; font-size: 12.5px; max-width: 210px; font-family: inherit; }
+.cdesk-why { font-size: 11.5px; color: var(--text-faint); margin: 0 0 10px; line-height: 1.45; }
+.verdict { font-weight: 800; font-size: 13px; padding: 7px 11px; border-radius: 9px; display: inline-block; margin-bottom: 11px; }
+.verdict.ok { background: #38a16922; color: var(--green); border: 1px solid #38a16955; }
+.verdict.no { background: #e53e3e22; color: var(--red); border: 1px solid #e53e3e55; }
+.stamp { display: flex; align-items: center; gap: 9px; font-size: 12.5px; margin: 6px 0; color: var(--text-dim); }
+.stamp .mk { width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: #fff; flex: none; }
+.stamp .mk.y { background: var(--green); } .stamp .mk.n { background: var(--red); }
+.dverdict { margin-top: 11px; padding: 8px 10px; border-radius: 8px; font-size: 12px; line-height: 1.45; }
+.dverdict.honors { background: #38a16918; color: var(--green); }
+.dverdict.conflicts { background: #e53e3e18; color: var(--red); }
+.dverdict.neutral { background: #16203180; color: var(--text-dim); }
+.cdesk-moved { font-size: 11.5px; color: var(--text-dim); margin-top: 9px; }
+.cdesk-moved b { color: var(--text); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.alts { margin-top: 9px; }
+.alt-row { font-size: 11.5px; color: var(--text-dim); padding: 6px 0; border-top: 1px solid var(--border-soft); line-height: 1.4; }
+.alt-row .ai { color: var(--text); font-weight: 600; }

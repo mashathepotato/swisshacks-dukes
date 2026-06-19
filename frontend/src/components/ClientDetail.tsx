@@ -4,8 +4,10 @@ import { THEME_BY_ID } from "../data/themes";
 import { scoreColor, SIGNAL_META, formatMoney, relativeTime } from "../lib/format";
 import { REASON_META, EVIDENCE_META, buildReasoningChain, buildDraftEmail } from "../lib/explain";
 import { adjustConfidence, primaryTheme } from "../lib/learning";
+import { PERSONA_PLAY } from "../lib/portfolio";
 import { useLearning } from "../lib/learningStore";
 import { ValueRadar } from "./ValueRadar";
+import { ComplianceDesk } from "./ComplianceDesk";
 
 interface Props {
   client: Client | null;
@@ -109,6 +111,8 @@ export function ClientDetail({ client, onSimulate }: Props) {
       <LearningPanel client={client} />
 
       <Recommendations key={"rec-" + client.id} client={client} />
+
+      {PERSONA_PLAY[client.id] && <ComplianceDesk key={"cdesk-" + client.id} client={client} />}
 
       <DraftMessage key={"draft-" + client.id} client={client} />
 
