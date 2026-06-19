@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import type { Client, Voice } from "../types";
 import { THEME_BY_ID } from "../data/themes";
-import { scoreColor, SIGNAL_META } from "../lib/format";
+import { scoreColor, SIGNAL_META, formatMoney, relativeTime } from "../lib/format";
 import { REASON_META, buildReasoningChain, buildDraftEmail } from "../lib/explain";
 import { ValueRadar } from "./ValueRadar";
 
@@ -31,6 +31,17 @@ export function ClientDetail({ client, onSimulate }: Props) {
         <span className="n">{client.priorityScore}</span>
         <span className="d">/100 priority</span>
       </span>
+
+      {client.amountAtStake != null && (
+        <div className="stake-line">
+          <b>{formatMoney(client.amountAtStake)}</b> at stake
+          {client.lastMessageAt
+            ? <> · <span className="ago">messaged {relativeTime(client.lastMessageAt)}</span></>
+            : client.signals[0]
+            ? <> · <span className="ago">news {relativeTime(client.signals[0].publishedAt)}</span></>
+            : null}
+        </div>
+      )}
 
       <ReasoningChain client={client} />
 

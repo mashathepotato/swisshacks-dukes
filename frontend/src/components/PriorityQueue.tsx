@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { CLIENTS } from "../data/clients";
 import type { Client } from "../types";
-import { scoreColor, SIGNAL_META } from "../lib/format";
+import { scoreColor, SIGNAL_META, formatMoney, relativeTime } from "../lib/format";
 
 interface Props {
   selectedId: string | null;
@@ -25,6 +25,12 @@ export function PriorityQueue({ selectedId, onSelect }: Props) {
         const sig = c.signals[0];
         const meta = sig ? SIGNAL_META[sig.type] : null;
         const rec = c.recommendations[0];
+        // what triggered this: the client reaching out takes precedence over the news date
+        const trigger = c.lastMessageAt
+          ? { label: "messaged", at: c.lastMessageAt }
+          : sig
+          ? { label: "news", at: sig.publishedAt }
+          : null;
         return (
           <div
             key={c.id}
@@ -40,13 +46,13 @@ export function PriorityQueue({ selectedId, onSelect }: Props) {
             <div className="who">
               <div className="nm">{c.name}</div>
               <div className="at">{c.archetype} · {c.mandate}</div>
+              <div className="qmeta">
+                {meta && <span className="cause" style={{ color: meta.color }}>{meta.label}</span>}
+                {c.amountAtStake != null && <span className="stake">{formatMoney(c.amountAtStake)} at stake</span>}
+                {trigger && <span className="ago">{trigger.label} {relativeTime(trigger.at)}</span>}
+              </div>
             </div>
             <div className="reason">
-              {meta && (
-                <span className="badge" style={{ background: meta.color + "22", color: meta.color }}>
-                  {meta.label}
-                </span>
-              )}
               <div>{c.topReason}</div>
               {rec && (
                 <div className="recs-inline">

@@ -79,6 +79,44 @@ export interface DraftEmail {
   body: Record<Voice, string>;
 }
 
+/**
+ * RM feedback on a recommendation or message — the reward signal in the
+ * learning loop. Accepting / tweaking / declining nudges a per-client
+ * preference model that tunes future recommendations.
+ */
+export type FeedbackDecision = "accepted" | "tweaked" | "declined";
+
+export interface FeedbackEvent {
+  id: string;
+  clientId: string;
+  date: string;            // ISO date (YYYY-MM-DD)
+  theme: ThemeId;          // value dimension the recommendation touched
+  decision: FeedbackDecision;
+  summary: string;         // short description of what was decided
+  voice?: Voice;           // framing used, if it was a message
+}
+
+/** Per value-theme: how feedback has shifted the client's learned affinity. */
+export interface ThemeLearning {
+  theme: ThemeId;
+  base: number;            // original DNA affinity (0..1)
+  learned: number;         // affinity after feedback (0..1)
+  delta: number;           // learned - base
+  accept: number;          // 0..1 acceptance rate on this theme (overall if none)
+  n: number;               // feedback events on this theme
+}
+
+/** A per-client preference model inferred from feedback history. */
+export interface PreferenceModel {
+  clientId: string;
+  sampleSize: number;
+  acceptanceRate: number;  // 0..1 overall (0.5 prior when no data)
+  themes: ThemeLearning[];
+  preferredVoice: Voice | null;
+  voiceRates: Record<Voice, { rate: number; n: number }>;
+  recent: FeedbackEvent[]; // most-recent first
+}
+
 export interface Client {
   id: string;
   name: string;
@@ -96,6 +134,8 @@ export interface Client {
   signals: NewsSignal[];
   recommendations: Recommendation[];
   topHoldings: string[];
+  amountAtStake?: number;        // CHF exposure tied to the active signal
+  lastMessageAt?: string;        // ISO date the client last reached out, if any
   reasoningChain?: ReasonStep[]; // authored Glass-Thread chain (personas)
   draftEmail?: DraftEmail;       // authored client message draft (personas)
 }

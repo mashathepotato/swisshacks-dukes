@@ -18,6 +18,7 @@ export const CLIENTS: Client[] = [
       { theme: "us_tech_bullish", weight: 0.45 },
     ],
     priorityScore: 92,
+    amountAtStake: 3_200_000,
     topReason: "Labour-exploitation scandal hits a consumer brand in the Growth portfolio — direct reputational exposure.",
     topHoldings: ["LuxeWear Group", "Nestlé S.A.", "Richemont", "Nvidia Corp"],
     signals: [
@@ -108,6 +109,8 @@ export const CLIENTS: Client[] = [
       { theme: "defensive", weight: 0.4 },
     ],
     priorityScore: 84,
+    amountAtStake: 1_450_000,
+    lastMessageAt: "2026-06-19",
     topReason: "A pharma holding is shutting the research division for the disease the client's foundation supports.",
     topHoldings: ["Helvetia Pharma", "Roche Holding", "Nestlé S.A.", "Swiss Re"],
     signals: [
@@ -198,6 +201,7 @@ export const CLIENTS: Client[] = [
       { theme: "defensive", weight: 0.5 },
     ],
     priorityScore: 67,
+    amountAtStake: 640_000,
     topReason: "A consumer-staples holding just announced a historic palm-oil deforestation cut-off — a positive value alignment.",
     topHoldings: ["GreenStaples Co", "Nestlé S.A.", "Unilever", "Zurich Insurance"],
     signals: [
@@ -287,6 +291,7 @@ export const CLIENTS: Client[] = [
       { theme: "income", weight: 0.8 },
     ],
     priorityScore: 58,
+    amountAtStake: 2_100_000,
     topReason: "CIO suggests rebalancing from Swiss blue chips into US AI stocks — directly conflicts with their stated aversion.",
     topHoldings: ["Nestlé S.A.", "Procter & Gamble", "Zurich Insurance", "Swiss Govt Bond 2031"],
     signals: [
@@ -418,6 +423,8 @@ function syn(
     dislikes: [],
     affinities,
     priorityScore,
+    // synthetic but plausible CHF exposure scaled to the priority score
+    amountAtStake: (priorityScore * 18 + name.length * 90) * 1000,
     topReason,
     topHoldings: [],
     signals: [],
