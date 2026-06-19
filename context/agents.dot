@@ -1,0 +1,98 @@
+digraph Agents {
+  // ── Dukes · Next-Gen Wealth Advisory — multi-agent architecture ──
+  rankdir=LR;
+  bgcolor="#0f1117";
+  fontname="Helvetica";
+  fontcolor="#e6e9ef";
+  labelloc="t";
+  fontsize=22;
+  label=<<b>Dukes — Next-Generation Wealth Advisory</b><br/><font point-size="12" color="#8b93a7">Multi-agent advisory copilot · RM stays in the loop · client always decides</font>>;
+  nodesep=0.45;
+  ranksep=1.0;
+  splines=spline;
+
+  node [shape=box, style="rounded,filled", fontname="Helvetica", fontsize=12,
+        color="#2a2f3d", fontcolor="#e6e9ef", penwidth=1.5, margin="0.18,0.12"];
+  edge [color="#5b6478", fontname="Helvetica", fontsize=9, fontcolor="#9aa3b8", penwidth=1.3, arrowsize=0.8];
+
+  // ───────────── External data & model providers ─────────────
+  subgraph cluster_sources {
+    label=<<b>Data &amp; model providers</b>>;
+    labelloc="t"; fontsize=13; fontcolor="#8b93a7";
+    style="rounded,dashed"; color="#3a4154";
+    six   [label="SIX Financial\nMCP server\n(prices · fundamentals)", fillcolor="#1b2436", color="#3d5a99"];
+    news  [label="Event Registry\nNews MCP\n(headlines · sentiment)", fillcolor="#1b2436", color="#3d5a99"];
+    crmlog[label="CRM conversation\nlogs (3-yr RM notes)", fillcolor="#1b2436", color="#3d5a99"];
+    cio   [label="CIO recommendation\nlist (BUY/HOLD/SELL\n+ swap universe)", fillcolor="#1b2436", color="#3d5a99"];
+    llm   [label="Phoeniqs LLM\n(reasoning engine)", fillcolor="#241b2e", color="#7d5aa0"];
+  }
+
+  // ───────────── Agent layer ─────────────
+  subgraph cluster_agents {
+    label=<<b>Agent layer</b>>;
+    labelloc="t"; fontsize=13; fontcolor="#8b93a7";
+    style="rounded"; color="#3a4154"; bgcolor="#141824";
+
+    orch  [label="🧭  Orchestrator\ncoordinates agents · builds\nthe per-client evidence chain",
+           fillcolor="#15324a", color="#2f8fd0", penwidth=2.2, fontsize=13];
+
+    crmA  [label="🧬  CRM Agent\n→ Client DNA\nvalues · context · style", fillcolor="#16302a", color="#3aa17e"];
+    portA [label="📊  Portfolio Agent\nholdings · mandate drift", fillcolor="#16302a", color="#3aa17e"];
+    newsA [label="📰  News Agent\nmatch news → holdings", fillcolor="#16302a", color="#3aa17e"];
+    alertA[label="⚠️  Alert Engine\nDNA × portfolio × news\n→ ranked signals", fillcolor="#3a2f16", color="#c79a3a"];
+    msgA  [label="✍️  Message Agent\ntailored RM note\n(data-led / values-led)", fillcolor="#16302a", color="#3aa17e"];
+    fcA   [label="🔮  Forecast Agent\nclient-twin simulator —\npredicts reaction before sending", fillcolor="#2e1630", color="#b257b8", penwidth=2.0];
+  }
+
+  // ───────────── Dashboard (RM cockpit) ─────────────
+  subgraph cluster_ui {
+    label=<<b>RM dashboard</b>>;
+    labelloc="t"; fontsize=13; fontcolor="#8b93a7";
+    style="rounded"; color="#3a4154"; bgcolor="#101522";
+    pq   [label="Priority Queue\n(ranked clients)", fillcolor="#1a2030", color="#4a5878"];
+    cd   [label="Client Detail\n+ evidence chain", fillcolor="#1a2030", color="#4a5878"];
+    radar[label="Value Radar\n(Client DNA)", fillcolor="#1a2030", color="#4a5878"];
+    sim  [label="Simulator Chat\n+ Trajectory", fillcolor="#1a2030", color="#4a5878"];
+  }
+
+  // ───────────── Humans ─────────────
+  rm     [label="👤  Relationship\nManager", shape=oval, fillcolor="#3a2415", color="#d08a2f", penwidth=2.0, fontsize=13];
+  client [label="🧑  Client\n(decides &amp; places orders)", shape=oval, fillcolor="#1d2a1a", color="#6fa84a", penwidth=2.0, fontsize=13];
+
+  // ───────────── Provider → agent wiring ─────────────
+  crmlog -> crmA;
+  six    -> portA;
+  news   -> newsA;
+  cio    -> alertA  [label="constrains swaps"];
+  cio    -> msgA;
+
+  // LLM powers the reasoning agents (dashed = "powered by")
+  edge [style=dashed, color="#6b4f8a", arrowhead=none];
+  llm -> crmA; llm -> newsA; llm -> alertA; llm -> msgA; llm -> fcA;
+  edge [style=solid, color="#5b6478", arrowhead=normal];
+
+  // ───────────── Orchestration ─────────────
+  orch -> crmA  [dir=both];
+  orch -> portA [dir=both];
+  orch -> newsA [dir=both];
+  crmA  -> alertA;
+  portA -> alertA;
+  newsA -> alertA;
+  alertA -> orch [label="ranked\nsignals"];
+
+  // ───────────── Agents → dashboard ─────────────
+  orch  -> pq    [label="surface"];
+  orch  -> cd;
+  crmA  -> radar;
+  msgA  -> cd    [label="draft note"];
+  fcA   -> sim   [label="forecast"];
+
+  // ───────────── Human-in-the-loop ─────────────
+  pq -> rm [dir=both];
+  cd -> rm [dir=both];
+  rm -> sim   [label="test a proposal", color="#b257b8", fontcolor="#c98fcf"];
+  sim -> fcA  [label="natural-language\nproposal", color="#b257b8", fontcolor="#c98fcf"];
+  rm -> msgA  [label="approve / edit", color="#d08a2f", fontcolor="#e0a85f"];
+  rm -> client [label="recommends →", color="#6fa84a", fontcolor="#9ccb78", penwidth=2.0];
+  client -> rm [label="decides", style=dashed, color="#6fa84a", fontcolor="#9ccb78"];
+}
