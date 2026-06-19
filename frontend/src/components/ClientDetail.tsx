@@ -1,6 +1,8 @@
-import type { Client } from "../types";
+import { useMemo, useState } from "react";
+import type { Client, Voice } from "../types";
 import { THEME_BY_ID } from "../data/themes";
 import { scoreColor, SIGNAL_META } from "../lib/format";
+import { REASON_META, buildReasoningChain, buildDraftEmail } from "../lib/explain";
 import { ValueRadar } from "./ValueRadar";
 
 interface Props {
@@ -12,7 +14,7 @@ export function ClientDetail({ client, onSimulate }: Props) {
   if (!client) {
     return (
       <div className="drawer">
-        <p className="empty">Select a client to see their DNA, signals, and recommendations.</p>
+        <p className="empty">Select a client to see their DNA, the reasoning chain behind their priority, and a ready-to-send message.</p>
       </div>
     );
   }
@@ -29,6 +31,8 @@ export function ClientDetail({ client, onSimulate }: Props) {
         <span className="n">{client.priorityScore}</span>
         <span className="d">/100 priority</span>
       </span>
+
+      <ReasoningChain client={client} />
 
       <div className="section-title">Value vector</div>
       <ValueRadar client={client} />
@@ -99,17 +103,102 @@ export function ClientDetail({ client, onSimulate }: Props) {
         </>
       )}
 
+      <DraftMessage client={client} />
+
       {onSimulate && (
         <button
           onClick={() => onSimulate(client)}
           style={{
-            marginTop: 16, width: "100%", background: "var(--accent)", color: "#fff",
-            border: "none", borderRadius: 9, padding: "11px", fontWeight: 700, fontSize: 13.5,
+            marginTop: 12, width: "100%", background: "transparent", color: "var(--text-dim)",
+            border: "1px solid var(--border)", borderRadius: 9, padding: "11px", fontWeight: 600, fontSize: 13,
           }}
         >
-          Rehearse a proposal with {client.name} →
+          Rehearse this proposal with {client.name} →
         </button>
       )}
     </div>
+  );
+}
+
+/** The "Glass Thread": the deterministic sequence of factors behind the priority. */
+function ReasoningChain({ client }: { client: Client }) {
+  const chain = useMemo(() => buildReasoningChain(client), [client]);
+  if (!chain.length) return null;
+
+  return (
+    <>
+      <div className="section-title" style={{ marginTop: 16 }}>
+        Why this priority — reasoning chain
+      </div>
+      <p className="thread-intro">
+        How a combination of factors and a sequence of events led to this ranking:
+      </p>
+      <div className="thread">
+        {chain.map((step, i) => {
+          const meta = REASON_META[step.kind];
+          return (
+            <div className="rstep" key={i}>
+              <div className="rstep-rail">
+                <span className="rstep-node" style={{ background: meta.color + "22", color: meta.color, borderColor: meta.color }}>
+                  {meta.icon}
+                </span>
+                {i < chain.length - 1 && <span className="rstep-line" />}
+              </div>
+              <div className="rstep-body">
+                <div className="rstep-kind" style={{ color: meta.color }}>{meta.label}</div>
+                <div className="rstep-label">{step.label}</div>
+                <div className="rstep-detail">{step.detail}</div>
+                {step.source && <div className="rstep-source">{step.source}</div>}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </>
+  );
+}
+
+/** The actionable next step: a proposed client message the RM can edit and send. */
+function DraftMessage({ client }: { client: Client }) {
+  const draft = useMemo(() => buildDraftEmail(client), [client]);
+  const [voice, setVoice] = useState<Voice>("values-led");
+  const [copied, setCopied] = useState(false);
+
+  const body = draft.body[voice];
+  const mailto = `mailto:?subject=${encodeURIComponent(draft.subject)}&body=${encodeURIComponent(body)}`;
+
+  function copy() {
+    navigator.clipboard?.writeText(`Subject: ${draft.subject}\n\n${body}`).then(
+      () => {
+        setCopied(true);
+        window.setTimeout(() => setCopied(false), 1800);
+      },
+      () => {}
+    );
+  }
+
+  return (
+    <>
+      <div className="section-title">Proposed message · next step</div>
+      <div className="draft">
+        <div className="draft-voices">
+          <button className={"voice" + (voice === "values-led" ? " on" : "")} onClick={() => setVoice("values-led")}>
+            Values-led
+          </button>
+          <button className={"voice" + (voice === "data-driven" ? " on" : "")} onClick={() => setVoice("data-driven")}>
+            Data-driven
+          </button>
+        </div>
+        <div className="draft-subject">
+          <span className="k">Subject</span> {draft.subject}
+        </div>
+        <textarea className="draft-body" value={body} readOnly rows={Math.min(14, body.split("\n").length + 2)} />
+        <div className="draft-actions">
+          <a className="draft-send" href={mailto}>✉️ Send to {client.name}</a>
+          <button className="draft-copy" onClick={copy}>{copied ? "✓ Copied" : "Copy draft"}</button>
+        </div>
+        <p className="draft-note">AI drafts only — you review and approve before anything is sent.</p>
+      </div>
+    </>
   );
 }

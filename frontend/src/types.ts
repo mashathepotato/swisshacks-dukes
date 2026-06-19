@@ -47,6 +47,38 @@ export interface Recommendation {
   confidence: number; // 0..1
 }
 
+/**
+ * One link in the "Glass Thread" — the deterministic chain of reasoning that
+ * explains WHY a client surfaced at this priority. Ordered as a sequence of
+ * events: client DNA → portfolio exposure → news → resulting conflict →
+ * relationship sensitivity → priority score.
+ */
+export type ReasonKind =
+  | "dna"          // a CRM-derived client trait
+  | "holding"      // a portfolio position
+  | "news"         // a market / news event
+  | "conflict"     // the resulting value conflict or alignment
+  | "relationship" // relationship sensitivity that amplifies urgency
+  | "score";       // the resulting priority score
+
+export interface ReasonStep {
+  kind: ReasonKind;
+  label: string;        // short headline for the step
+  detail: string;       // one-line explanation
+  source?: string;      // provenance, e.g. "CRM 2023-09" or "Bloomberg · 2026-06-17"
+}
+
+export type Voice = "values-led" | "data-driven";
+
+/**
+ * A proposed client message the RM can review, edit and send. The AI never
+ * sends directly — this is a draft surfaced as an actionable next step.
+ */
+export interface DraftEmail {
+  subject: string;
+  body: Record<Voice, string>;
+}
+
 export interface Client {
   id: string;
   name: string;
@@ -64,6 +96,8 @@ export interface Client {
   signals: NewsSignal[];
   recommendations: Recommendation[];
   topHoldings: string[];
+  reasoningChain?: ReasonStep[]; // authored Glass-Thread chain (personas)
+  draftEmail?: DraftEmail;       // authored client message draft (personas)
 }
 
 export interface ChatMessage {

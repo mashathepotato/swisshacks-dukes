@@ -47,6 +47,50 @@ export const CLIENTS: Client[] = [
         confidence: 0.86,
       },
     ],
+    reasoningChain: [
+      {
+        kind: "dna",
+        label: "“Reputation = financial risk”",
+        detail: "11-year client who treats any reputational association as a direct threat to his public standing and Swiss prominence.",
+        source: "CRM 2024-03",
+      },
+      {
+        kind: "holding",
+        label: "Holds LuxeWear Group",
+        detail: "A visible consumer-discretionary brand sitting in his Growth mandate.",
+        source: "Portfolio · Growth sleeve",
+      },
+      {
+        kind: "news",
+        label: "Forced-labour investigation breaks",
+        detail: "Reuters alleges systematic labour exploitation across LuxeWear's suppliers; shares fell 9% intraday.",
+        source: "Reuters · 2026-06-18",
+      },
+      {
+        kind: "conflict",
+        label: "Direct reputational exposure",
+        detail: "A labour scandal inside a held brand collides head-on with his “my name is on the line” stance.",
+      },
+      {
+        kind: "relationship",
+        label: "Expects pre-emptive discretion",
+        detail: "Direct and reputation-aware — he wants to hear it from us first, not from the press.",
+      },
+      {
+        kind: "score",
+        label: "Priority 92 / 100",
+        detail: "Severity 88 × direct reputational exposure × high relationship sensitivity → top of the book.",
+      },
+    ],
+    draftEmail: {
+      subject: "A proactive note on your LuxeWear Group position",
+      body: {
+        "values-led":
+          "Dear Mr Ammann,\n\nGiven how closely you guard your public reputation, I wanted to reach out before this reaches wider coverage. A forced-labour investigation has been opened into LuxeWear Group, a holding in your portfolio — exactly the kind of association we have always agreed to stay clear of.\n\nI'd like to propose exiting the position and rotating into Richemont, a same-sector name on our CIO buy list, so your allocation and your standing both stay intact. Nothing moves without your sign-off.\n\nAt your convenience,\nT. Keller",
+        "data-driven":
+          "Dear Mr Ammann,\n\nFlagging a material development: LuxeWear Group (held in your Growth mandate) is the subject of a Reuters forced-labour investigation; shares are down ~9% intraday.\n\nRecommended action: exit LuxeWear and rotate the proceeds into Richemont — a CIO BUY in the same consumer-discretionary sleeve, preserving your mandate allocation. I can have the trade ready to execute on your approval.\n\nBest regards,\nT. Keller",
+      },
+    },
   },
   {
     id: "schneider",
@@ -93,6 +137,50 @@ export const CLIENTS: Client[] = [
         confidence: 0.79,
       },
     ],
+    reasoningChain: [
+      {
+        kind: "dna",
+        label: "Foundation funds neuromuscular research",
+        detail: "Her family foundation supports rare-disease research — a core, emotionally-held part of who she is as an investor.",
+        source: "CRM 2023-09",
+      },
+      {
+        kind: "holding",
+        label: "Holds Helvetia Pharma",
+        detail: "A pharma position in her Balanced mandate, historically aligned with her cause.",
+        source: "Portfolio · Balanced sleeve",
+      },
+      {
+        kind: "news",
+        label: "Helvetia winds down its neuromuscular unit",
+        detail: "The company is closing the exact research division the Schneider foundation funds.",
+        source: "Bloomberg · 2026-06-17",
+      },
+      {
+        kind: "conflict",
+        label: "Value conflict",
+        detail: "The holding now works directly against her foundational cause — a quiet but real betrayal of her values.",
+      },
+      {
+        kind: "relationship",
+        label: "Warm, values-led, high emotional stake",
+        detail: "She responds to personal narrative; mishandling this would feel cold and transactional to her.",
+      },
+      {
+        kind: "score",
+        label: "Priority 84 / 100",
+        detail: "Severity 71 × direct value conflict × high relationship sensitivity → near the top of the book.",
+      },
+    ],
+    draftEmail: {
+      subject: "Helvetia Pharma and your foundation's work",
+      body: {
+        "values-led":
+          "Dear Mrs Schneider,\n\nI thought of your foundation the moment I saw this. Helvetia Pharma has announced it is winding down its neuromuscular research division — the very field your family has spent years supporting. I didn't want a holding of yours to be quietly working against the cause closest to you.\n\nI'd like to propose moving into a healthcare name that is still actively investing in rare-disease research, keeping your Balanced mandate exactly where it should be. Whenever you have a moment, I'd welcome the chance to talk it through.\n\nWarmly,\nT. Keller",
+        "data-driven":
+          "Dear Mrs Schneider,\n\nA development relevant to your holdings: Helvetia Pharma is closing its neuromuscular research unit (Bloomberg, 17 Jun) — the area your foundation funds.\n\nProposed action: swap Helvetia Pharma for a same-sector CIO BUY that maintains rare-disease R&D. This preserves your Balanced allocation while removing the value conflict. Happy to walk you through the alternatives whenever suits.\n\nKind regards,\nT. Keller",
+      },
+    },
   },
   {
     id: "huber",
@@ -138,6 +226,50 @@ export const CLIENTS: Client[] = [
         confidence: 0.74,
       },
     ],
+    reasoningChain: [
+      {
+        kind: "dna",
+        label: "Reforestation & environmental impact",
+        detail: "Mission-first investor who finances South-American reforestation and wants impact framed alongside returns.",
+        source: "CRM 2024-01",
+      },
+      {
+        kind: "holding",
+        label: "Holds GreenStaples Co",
+        detail: "A consumer-staples position in his Defensive sleeve, tied to palm-oil supply chains he watches closely.",
+        source: "Portfolio · Defensive sleeve",
+      },
+      {
+        kind: "news",
+        label: "Zero-deforestation pledge by 2027",
+        detail: "GreenStaples announced the largest palm-oil deforestation cut-off in its sector.",
+        source: "Financial Times · 2026-06-16",
+      },
+      {
+        kind: "conflict",
+        label: "Positive value alignment",
+        detail: "Rare good news — a holding moving decisively toward the mission he cares about. A proof point, not a problem.",
+      },
+      {
+        kind: "relationship",
+        label: "Wants impact made visible",
+        detail: "A values-led note here strengthens trust and shows the portfolio living up to his purpose.",
+      },
+      {
+        kind: "score",
+        label: "Priority 67 / 100",
+        detail: "Moderate severity, but a high-value relationship-building moment worth acting on promptly.",
+      },
+    ],
+    draftEmail: {
+      subject: "Good news from GreenStaples — your reforestation thesis",
+      body: {
+        "values-led":
+          "Dear Mr Huber,\n\nA rare and welcome update. GreenStaples — one of your holdings — has just committed to the largest zero-deforestation palm-oil pledge in its sector, due by 2027. It's a genuine proof point that the capital behind your portfolio is moving the way you intended.\n\nGiven how well this fits your reforestation thesis, I'd suggest we reinforce the position slightly within your Defensive sleeve. I'd love to share the detail and hear your thoughts.\n\nWarm regards,\nT. Keller",
+        "data-driven":
+          "Dear Mr Huber,\n\nPositive signal on a current holding: GreenStaples Co has announced a zero-deforestation palm-oil commitment by 2027 (FT, 16 Jun) — the strongest such pledge in the sector.\n\nProposed action: a small reinforcing add within your Defensive allocation, using this as a documented ESG proof point. Mandate impact is minimal. Happy to confirm sizing on your approval.\n\nBest regards,\nT. Keller",
+      },
+    },
   },
   {
     id: "raeber",
@@ -183,6 +315,50 @@ export const CLIENTS: Client[] = [
         confidence: 0.82,
       },
     ],
+    reasoningChain: [
+      {
+        kind: "dna",
+        label: "Averse to US tech / AI speculation",
+        detail: "Conservative Swiss couple, 14-year clients: “I want to sleep at night, not speculate on Silicon Valley.”",
+        source: "CRM 2023-05",
+      },
+      {
+        kind: "holding",
+        label: "Swiss blue-chip staples core",
+        detail: "Defensive mandate built on dividend-quality, tangible businesses they understand.",
+        source: "Portfolio · Defensive sleeve",
+      },
+      {
+        kind: "news",
+        label: "CIO proposes a tilt into US AI leaders",
+        detail: "The standard CIO rebalance rotates a slice of staples into US AI mega-caps to chase momentum.",
+        source: "SIX CIO Desk · 2026-06-15",
+      },
+      {
+        kind: "conflict",
+        label: "Mandate-drift risk",
+        detail: "Forwarding the generic CIO advice would push them straight into the exact exposure they reject.",
+      },
+      {
+        kind: "relationship",
+        label: "Trust-led, hype-averse",
+        detail: "Pushing the AI tilt would read as us not listening — a real risk to a 14-year relationship.",
+      },
+      {
+        kind: "score",
+        label: "Priority 58 / 100",
+        detail: "Lower news severity, but a trust-protecting intervention: suppress the default advice before it's sent.",
+      },
+    ],
+    draftEmail: {
+      subject: "On the latest rebalancing note — keeping you on course",
+      body: {
+        "values-led":
+          "Dear Mr and Mrs Räber,\n\nYou may receive a general rebalancing suggestion that tilts toward US technology and AI names. I want to be clear: I am not recommending it for you. It runs against everything you've told me about wanting to sleep soundly rather than speculate.\n\nInstead, I'd propose a defensive alternative built around the dividend-quality names you trust, aimed at the same return target. Always at your pace, and always your decision.\n\nWith respect,\nT. Keller",
+        "data-driven":
+          "Dear Mr and Mrs Räber,\n\nNote on the current CIO rebalancing proposal: it rotates part of your blue-chip staples into US AI mega-caps. This conflicts with your stated Defensive mandate, so I am not forwarding it as-is.\n\nProposed action: an alternative rebalance through dividend-quality names targeting a comparable return, with no increase in US tech exposure. I can send the comparison whenever you'd like to review it.\n\nKind regards,\nT. Keller",
+      },
+    },
   },
 
   // ---- synthetic twins (lighter detail; populate the network & scale) ----
