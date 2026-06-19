@@ -87,6 +87,7 @@
       linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/40px 100%,
       #fbfcfe; border:1px solid var(--line); border-radius:10px; }
   svg#thread:active { cursor:grabbing; }
+  .node { cursor:grab; } .node:active { cursor:grabbing; }
   .node rect { fill:#fff; stroke:var(--slate); stroke-width:1.6; }
   .node .ntag { font:700 9.5px var(--sans); fill:var(--faint); text-transform:uppercase; letter-spacing:.5px; }
   .node .nlabel { font:600 13px var(--sans); fill:var(--ink); }
@@ -297,44 +298,74 @@ function wrap2(s, max) {
   return [l1, l2];
 }
 const view = { tx:0, ty:0, k:1, dragging:false, sx:0, sy:0 };
+const NODE_W = 192, NODE_H = 64;
+let nodePos = {};   // per-node drag overrides; persist across cut-toggle, reset per client
+let curPos = {};    // positions used by the current render (layout merged with overrides)
+let dragNode = null, grab = { x:0, y:0 };
 function applyView() { const g = document.getElementById("threadCanvas"); if (g) g.setAttribute("transform", `translate(${view.tx} ${view.ty}) scale(${view.k})`); }
+function localPoint(e) {
+  const g = document.getElementById("threadCanvas"); const ctm = g && g.getScreenCTM();
+  if (!ctm) return { x:0, y:0 };
+  const p = new DOMPoint(e.clientX, e.clientY).matrixTransform(ctm.inverse());
+  return { x:p.x, y:p.y };
+}
+function updateEdges() {
+  document.querySelectorAll("#thread .edge").forEach(ln => {
+    const a = ln.dataset.a, b = ln.dataset.b;
+    if (curPos[a]) { ln.setAttribute("x1", curPos[a].x + NODE_W); ln.setAttribute("y1", curPos[a].y + NODE_H/2); }
+    if (curPos[b]) { ln.setAttribute("x2", curPos[b].x); ln.setAttribute("y2", curPos[b].y + NODE_H/2); }
+  });
+}
 function renderThread() {
   const st = thread.states[threadState];
   const cols = { crm:16, trait:336, holding:580, news:580, swap:788 };
-  const yByKind = {}; const place = (n)=>{ const x=cols[n.kind]??300; yByKind[n.kind]=(yByKind[n.kind]||0)+1; return {x, y: 28 + (yByKind[n.kind]-1)*92 + (n.kind==='news'?252:0)}; };
-  const pos = {}; st.nodes.forEach((n)=> pos[n.id]=place(n));
-  const W=192, H=64;
-  const edge = (a,b)=>`<line x1="${pos[a].x+W}" y1="${pos[a].y+H/2}" x2="${pos[b].x}" y2="${pos[b].y+H/2}" stroke="#aab6c2" stroke-width="1.6"/>`;
+  const yByKind = {}; const layout = (n)=>{ const x=cols[n.kind]??300; yByKind[n.kind]=(yByKind[n.kind]||0)+1; return {x, y: 28 + (yByKind[n.kind]-1)*92 + (n.kind==='news'?252:0)}; };
+  curPos = {}; st.nodes.forEach((n)=> curPos[n.id] = nodePos[n.id] || layout(n));
+  const edge = ([a,b])=>`<line class="edge" data-a="${esc(a)}" data-b="${esc(b)}" x1="${curPos[a].x+NODE_W}" y1="${curPos[a].y+NODE_H/2}" x2="${curPos[b].x}" y2="${curPos[b].y+NODE_H/2}" stroke="#aab6c2" stroke-width="1.6"/>`;
   const node = (n)=>{
     const [l1,l2] = wrap2(n.label, 26);
     const sub = n.date || (n.confidence!=null ? Math.round(n.confidence*100)+"% confidence" : "");
-    return `<g class="node ${esc(n.kind)} ${n.active===false?'inactive':''}" transform="translate(${pos[n.id].x},${pos[n.id].y})">
-      <rect width="${W}" height="${H}" rx="9"></rect>
+    return `<g class="node ${esc(n.kind)} ${n.active===false?'inactive':''}" id="n-${esc(n.id)}" data-nid="${esc(n.id)}" transform="translate(${curPos[n.id].x} ${curPos[n.id].y})">
+      <rect width="${NODE_W}" height="${NODE_H}" rx="9"></rect>
       <text class="ntag" x="11" y="17">${esc(NODE_TAG[n.kind]||n.kind)}</text>
       <text class="nlabel" x="11" y="35">${esc(l1)}</text>
       ${l2?`<text class="nlabel" x="11" y="49">${esc(l2)}</text>`:""}
       <text class="nsub" x="11" y="${l2?59:49}">${esc(sub)}</text></g>`;
   };
-  const inner = st.edges.map(([a,b])=>edge(a,b)).join("") + st.nodes.map(node).join("");
+  const inner = st.edges.map(edge).join("") + st.nodes.map(node).join("");
   el("thread").innerHTML = `<g id="threadCanvas" transform="translate(${view.tx} ${view.ty}) scale(${view.k})">${inner}</g>`;
   const sevColor = { act:"var(--conflict)", watch:"var(--watch)", info:"var(--opportunity)" }[st.alert.severity] || "var(--slate)";
   el("alertLine").innerHTML = `<span class="badge" style="background:${sevColor}">${esc(st.alert.severity)}</span> ${esc(st.alert.claim)} <span class="quiet mono">· confidence ${Math.round(st.alert.confidence*100)}%</span>`;
 }
-// Pan + zoom for the reasoning thread.
+// Drag individual nodes; drag empty canvas to pan; scroll to zoom.
 (function initThreadView(){
   const svg = el("thread");
   const factor = () => 980 / (svg.getBoundingClientRect().width || 980);
-  svg.addEventListener("pointerdown", (e)=>{ view.dragging=true; view.sx=e.clientX; view.sy=e.clientY; svg.setPointerCapture(e.pointerId); });
-  svg.addEventListener("pointermove", (e)=>{ if(!view.dragging) return; const f=factor(); view.tx += (e.clientX-view.sx)*f; view.ty += (e.clientY-view.sy)*f; view.sx=e.clientX; view.sy=e.clientY; applyView(); });
-  const end = ()=>{ view.dragging=false; };
+  svg.addEventListener("pointerdown", (e)=>{
+    const g = e.target.closest(".node");
+    if (g) { dragNode = g.dataset.nid; const p = localPoint(e); grab = { x:p.x-curPos[dragNode].x, y:p.y-curPos[dragNode].y }; }
+    else { view.dragging = true; view.sx = e.clientX; view.sy = e.clientY; }
+    svg.setPointerCapture(e.pointerId);
+  });
+  svg.addEventListener("pointermove", (e)=>{
+    if (dragNode) {
+      const p = localPoint(e); const nx = p.x-grab.x, ny = p.y-grab.y;
+      curPos[dragNode] = { x:nx, y:ny }; nodePos[dragNode] = { x:nx, y:ny };
+      const ng = document.getElementById("n-"+dragNode); if (ng) ng.setAttribute("transform", `translate(${nx} ${ny})`);
+      updateEdges();
+    } else if (view.dragging) {
+      const f = factor(); view.tx += (e.clientX-view.sx)*f; view.ty += (e.clientY-view.sy)*f; view.sx = e.clientX; view.sy = e.clientY; applyView();
+    }
+  });
+  const end = ()=>{ dragNode = null; view.dragging = false; };
   svg.addEventListener("pointerup", end); svg.addEventListener("pointercancel", end);
   svg.addEventListener("wheel", (e)=>{ e.preventDefault(); view.k = Math.min(2.4, Math.max(0.5, view.k*Math.exp(-e.deltaY*0.0016))); applyView(); }, { passive:false });
 })();
-el("resetView").onclick = () => { view.tx=0; view.ty=0; view.k=1; applyView(); };
+el("resetView").onclick = () => { view.tx=0; view.ty=0; view.k=1; nodePos={}; renderThread(); };
 
 async function loadClient(id) {
   CLIENT = id; threadState = "full_case";
-  view.tx = 0; view.ty = 0; view.k = 1;
+  view.tx = 0; view.ty = 0; view.k = 1; nodePos = {};
   el("cutBtn").textContent = "Challenge this evidence";
   try {
     const c = await api("/clients/"+id);
