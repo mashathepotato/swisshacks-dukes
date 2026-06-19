@@ -1,221 +1,122 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Stock Analysis POC</title>
-    <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #e2e8f0; }
-      .app { max-width: 960px; margin: 0 auto; padding: 24px; }
-      header { text-align: center; margin-bottom: 32px; }
-      header h1 { font-size: 1.75rem; color: #38bdf8; }
-      header p { color: #94a3b8; margin-top: 4px; }
-      .controls { display: flex; gap: 8px; margin-bottom: 24px; }
-      .controls input { flex: 1; padding: 10px 14px; border: 1px solid #334155; border-radius: 6px; background: #1e293b; color: #e2e8f0; font-size: 1rem; }
-      .controls button { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600; }
-      .btn-primary { background: #2563eb; color: #fff; }
-      .btn-secondary { background: #334155; color: #e2e8f0; }
-      .btn-primary:disabled, .btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
-      .card { background: #1e293b; border: 1px solid #334155; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
-      .card h2 { font-size: 1.25rem; margin-bottom: 12px; color: #38bdf8; }
-      .card h3 { font-size: 1rem; margin-bottom: 8px; color: #38bdf8; }
-      .price { font-size: 2rem; font-weight: 700; }
-      .positive { color: #4ade80; }
-      .negative { color: #f87171; }
-      .neutral { color: #fbbf24; }
-      .badge { display: inline-block; padding: 2px 10px; border-radius: 9999px; font-size: 0.8rem; font-weight: 600; }
-      .badge-bullish { background: #166534; color: #4ade80; }
-      .badge-bearish { background: #991b1b; color: #f87171; }
-      .badge-neutral { background: #854d0e; color: #fbbf24; }
-      .news-item { padding: 12px 0; border-bottom: 1px solid #334155; }
-      .news-item:last-child { border-bottom: none; }
-      .news-item h4 { margin-bottom: 4px; }
-      .news-item p { color: #94a3b8; font-size: 0.9rem; }
-      .news-item small { color: #64748b; }
-      .rec-box { padding: 16px; border-radius: 8px; text-align: center; }
-      .rec-buy { background: #166534; }
-      .rec-hold { background: #854d0e; }
-      .rec-sell { background: #991b1b; }
-      .rec-action { font-size: 2rem; font-weight: 800; }
-      .loading { text-align: center; padding: 40px; color: #94a3b8; }
-      .probe { border: 1px solid #334155; border-radius: 8px; padding: 14px; margin-bottom: 14px; }
-      .probe-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
-      .probe-head .name { font-weight: 700; color: #e2e8f0; }
-      .probe-head .meta { color: #64748b; font-size: 0.8rem; margin-left: auto; }
-      .probe-label { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; margin: 10px 0 4px; }
-      .probe pre { background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 10px 12px; overflow-x: auto; font-family: 'SF Mono', Menlo, Consolas, monospace; font-size: 0.78rem; line-height: 1.45; color: #cbd5e1; white-space: pre-wrap; word-break: break-word; }
-      .probe pre.err { border-color: #991b1b; color: #fca5a5; }
-      .probe pre.resp-ok { border-color: #166534; }
-    </style>
-  </head>
-  <body>
-    <div class="app">
-      <header>
-        <h1>Stock Analysis POC</h1>
-        <p>Phoeniqs LLM + SIX MCP + Event Registry Integration</p>
-      </header>
-
-      <div class="controls">
-        <input type="text" id="symbolInput" placeholder="Enter symbol or name (e.g. TSLA, Nestle)" value="Apple" />
-        <button class="btn-primary" id="analyzeBtn">Analyze</button>
-        <button class="btn-secondary" id="statusBtn">Check Integrations</button>
-      </div>
-
-      <div id="status"></div>
-      <div id="results"></div>
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dukes — Advisor</title>
+<style>
+  :root { --ink:#11161c; --panel:#fff; --muted:#5b6b7a; --line:#e3e8ee; --accent:#1f7a5a; --act:#b4322a; --watch:#b8860b; }
+  * { box-sizing:border-box; } body { margin:0; font:15px/1.5 -apple-system,Segoe UI,Roboto,sans-serif; color:var(--ink); background:#f4f6f9; }
+  header { padding:14px 22px; background:var(--ink); color:#fff; font-weight:600; letter-spacing:.3px; }
+  main { display:grid; grid-template-columns:320px 1fr 360px; gap:16px; padding:16px; align-items:start; }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px; }
+  h2 { font-size:13px; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); margin:0 0 10px; }
+  .trait { border:1px solid var(--line); border-radius:8px; padding:8px; margin-bottom:8px; }
+  .bar { height:6px; background:var(--line); border-radius:3px; overflow:hidden; }
+  .bar > i { display:block; height:100%; background:var(--accent); }
+  .chip { display:inline-block; font-size:11px; background:#eef3f1; color:var(--accent); border:1px solid #d6e4dd; border-radius:10px; padding:1px 7px; margin:2px 3px 0 0; cursor:default; }
+  .chip.off { opacity:.35; text-decoration:line-through; }
+  .alert { border-left:4px solid var(--line); padding:6px 10px; margin-bottom:8px; }
+  .alert.act { border-color:var(--act); } .alert.watch { border-color:var(--watch); }
+  .sev { font-size:11px; font-weight:700; text-transform:uppercase; }
+  .sev.act { color:var(--act); } .sev.watch { color:var(--watch); }
+  svg { width:100%; height:320px; background:#fbfcfe; border:1px solid var(--line); border-radius:8px; }
+  .node rect { fill:#fff; stroke:#9fb1c1; rx:6; } .node.trait rect { stroke:var(--accent); }
+  .node.inactive rect { stroke-dasharray:4 3; opacity:.4; } .node text { font-size:11px; }
+  button { font:inherit; border:1px solid var(--line); background:#fff; border-radius:8px; padding:6px 10px; cursor:pointer; }
+  button.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .toggle button.on { background:var(--ink); color:#fff; }
+  textarea { width:100%; min-height:150px; border:1px solid var(--line); border-radius:8px; padding:8px; font:inherit; }
+  .ledger li { font-size:12px; color:var(--muted); }
+  small.src { color:var(--muted); }
+</style>
+</head>
+<body>
+<header>Dukes · Next-Generation Advisor — <span id="clientName">…</span></header>
+<main>
+  <section class="panel" id="dna"><h2>Client DNA</h2><div id="traits"></div></section>
+  <section class="panel">
+    <h2>Glass Thread <button id="cutBtn" style="float:right">Cut this evidence</button></h2>
+    <svg id="thread" viewBox="0 0 720 320"></svg>
+    <div id="alertLine" style="margin-top:10px"></div>
+    <h2 style="margin-top:14px">Alerts</h2><div id="alerts"></div>
+    <h2 style="margin-top:14px">Holdings drift</h2><div id="drift"></div>
+  </section>
+  <section class="panel">
+    <h2>Advisory message</h2>
+    <div class="toggle" style="margin-bottom:8px">
+      <button data-voice="values-led" class="on">Values-led</button>
+      <button data-voice="data-driven">Data-driven</button>
     </div>
+    <textarea id="msg" placeholder="Generate a draft…"></textarea>
+    <div style="margin-top:8px;display:flex;gap:8px">
+      <button class="primary" id="gen">Generate</button>
+      <button id="accept">Accept</button><button id="reject">Reject</button>
+    </div>
+    <p><small class="src" id="msgSource"></small></p>
+    <h2 style="margin-top:10px">Override ledger</h2><ul class="ledger" id="ledger"></ul>
+  </section>
+</main>
+<script>
+const CLIENT = "schneider", EVENT = "news-roche-parkinsons";
+let voice = "values-led", thread = null, threadState = "full_case";
+const api = (p, o) => fetch("/api/advisor" + p, o).then(r => r.json()).then(j => j.data);
+const el = (id) => document.getElementById(id);
+const log = (t) => { const li=document.createElement("li"); li.textContent = new Date().toLocaleTimeString()+" — "+t; el("ledger").prepend(li); };
 
-    <script>
-      var API_BASE = window.location.origin + '/api/analysis';
+function renderTraits(dna) {
+  el("clientName").textContent = dna.name;
+  el("traits").innerHTML = dna.traits.map(t => `
+    <div class="trait"><b>${t.label}</b> <span style="float:right">${Math.round(t.confidence*100)}%</span>
+      <div class="bar"><i style="width:${t.confidence*100}%"></i></div>
+      <div style="margin-top:6px">${t.evidence.map(e=>`<span class="chip" title="${e.quote}">${e.kind} · ${e.date}</span>`).join("")}</div>
+    </div>`).join("");
+}
+function renderAlerts(traces) {
+  el("alerts").innerHTML = traces.map(t => `
+    <div class="alert ${t.severity}"><span class="sev ${t.severity}">${t.severity}</span> ${t.claim}
+      ${t.valueAtStakeCHF?`<div><small class="src">CHF ${Math.round(t.valueAtStakeCHF).toLocaleString()} at stake</small></div>`:""}
+      <div>${t.evidence.map(e=>`<span class="chip">${e.kind} · ${e.date}</span>`).join("")}</div></div>`).join("");
+}
+function renderDrift(drift) {
+  el("drift").innerHTML = drift.filter(d=>d.breached).map(d=>`
+    <div class="alert watch"><span class="sev watch">breach</span> ${d.subAssetClass}: ${d.deltaPct.toFixed(1)}pp vs target</div>`).join("") || "<small class='src'>Within ±2.0pp.</small>";
+}
+function renderThread() {
+  const st = thread.states[threadState];
+  const cols = { crm:60, trait:230, holding:400, news:400, swap:570 };
+  const yByKind = {}; const place = (n,i)=>{ const x=cols[n.kind]||300; yByKind[n.kind]=(yByKind[n.kind]||0)+1; return {x, y: 40 + (yByKind[n.kind]-1)*70 + (n.kind==='news'?170:0)}; };
+  const pos = {}; st.nodes.forEach((n,i)=> pos[n.id]=place(n,i));
+  const edge = (a,b)=>`<line x1="${pos[a].x+120}" y1="${pos[a].y+18}" x2="${pos[b].x}" y2="${pos[b].y+18}" stroke="#9fb1c1"/>`;
+  const node = (n)=>`<g class="node ${n.kind} ${n.active===false?'inactive':''}" transform="translate(${pos[n.id].x},${pos[n.id].y})">
+      <rect width="120" height="36"></rect><text x="6" y="15">${(n.label||'').slice(0,22)}</text>
+      <text x="6" y="29" fill="#5b6b7a">${n.date||(n.confidence!=null?Math.round(n.confidence*100)+'%':'')}</text></g>`;
+  el("thread").innerHTML = st.edges.map(([a,b])=>edge(a,b)).join("") + st.nodes.map(node).join("");
+  el("alertLine").innerHTML = `<span class="sev ${st.alert.severity}">${st.alert.severity}</span> ${st.alert.claim} <small class="src">(conf ${Math.round(st.alert.confidence*100)}%)</small>`;
+}
 
-      function sentimentClass(label) {
-        return label === 'BULLISH' ? 'positive' : label === 'BEARISH' ? 'negative' : 'neutral';
-      }
-
-      function badgeClass(label) {
-        return label === 'BULLISH' ? 'badge-bullish' : label === 'BEARISH' ? 'badge-bearish' : 'badge-neutral';
-      }
-
-      function recClass(rec) {
-        return rec === 'BUY' ? 'rec-buy' : rec === 'SELL' ? 'rec-sell' : 'rec-hold';
-      }
-
-      function renderResults(data) {
-        var s = data.stock;
-        var sent = data.sentiment;
-        var rec = data.recommendation;
-        var news = data.news || [];
-
-        var changeClass = s.change >= 0 ? 'positive' : 'negative';
-        var changeSign = s.change >= 0 ? '+' : '';
-
-        document.getElementById('results').innerHTML =
-          '<div class="card">' +
-            '<h2>' + s.symbol + ' - ' + s.name + '</h2>' +
-            '<div class="price ' + changeClass + '">$' + s.currentPrice.toFixed(2) + '</div>' +
-            '<div class="' + changeClass + '">' + changeSign + s.change.toFixed(2) + ' (' + changeSign + s.changePercent.toFixed(2) + '%)</div>' +
-          '</div>' +
-          '<div class="card">' +
-            '<h3>News Sentiment</h3>' +
-            '<p>Score: <span class="' + sentimentClass(sent.label) + '">' + sent.score.toFixed(2) + '</span></p>' +
-            '<p>Label: <span class="badge ' + badgeClass(sent.label) + '">' + sent.label + '</span></p>' +
-            '<p>Confidence: ' + (sent.confidence * 100).toFixed(0) + '%</p>' +
-          '</div>' +
-          '<div class="card">' +
-            '<h3>Portfolio Recommendation</h3>' +
-            '<div class="rec-box ' + recClass(rec.recommendation) + '">' +
-              '<div class="rec-action">' + rec.suggestedAction + '</div>' +
-              '<div>' + rec.recommendation + ' &middot; ' + (rec.confidence * 100).toFixed(0) + '% confidence</div>' +
-            '</div>' +
-            '<p style="margin-top:12px">' + rec.reasoning + '</p>' +
-            (typeof rec.targetPrice === 'number' ? '<p>Target: $' + rec.targetPrice.toFixed(2) + (typeof rec.stopLoss === 'number' ? ' | Stop Loss: $' + rec.stopLoss.toFixed(2) : '') + '</p>' : '') +
-          '</div>' +
-          '<div class="card">' +
-            '<h3>Latest News</h3>' +
-            news.map(function(n) {
-              return '<div class="news-item">' +
-                '<h4>' + n.title + '</h4>' +
-                '<p>' + n.summary + '</p>' +
-                '<small>' + n.source + ' &middot; <span class="badge ' + badgeClass(n.sentiment.label) + '">' + n.sentiment.label + ' (' + n.sentiment.score.toFixed(2) + ')</span></small>' +
-              '</div>';
-            }).join('') +
-          '</div>';
-      }
-
-      function analyzeStock() {
-        var symbol = document.getElementById('symbolInput').value.trim();
-        if (!symbol) return;
-
-        document.getElementById('results').innerHTML = '<div class="loading">Analyzing...</div>';
-        document.getElementById('analyzeBtn').disabled = true;
-
-        fetch(API_BASE + '/analyze', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ symbol: symbol }),
-        })
-        .then(function(res) { return res.json(); })
-        .then(function(json) {
-          if (json.success) renderResults(json.data);
-          else document.getElementById('results').innerHTML = '<div class="card"><p>Error: ' + json.error + '</p></div>';
-        })
-        .catch(function(e) {
-          document.getElementById('results').innerHTML = '<div class="card"><p>Request failed.</p></div>';
-        })
-        .finally(function() {
-          document.getElementById('analyzeBtn').disabled = false;
-        });
-      }
-
-      function esc(s) {
-        return String(s).replace(/[&<>]/g, function(c) {
-          return c === '&' ? '&amp;' : c === '<' ? '&lt;' : '&gt;';
-        });
-      }
-
-      function renderRequest(req) {
-        var lines = [req.method + ' ' + req.url];
-        if (req.headers) {
-          Object.keys(req.headers).forEach(function(k) {
-            lines.push(k + ': ' + req.headers[k]);
-          });
-        }
-        if (req.body !== undefined) {
-          lines.push('');
-          lines.push(JSON.stringify(req.body, null, 2));
-        }
-        return lines.join('\n');
-      }
-
-      function renderProbe(p) {
-        var dot = p.ok ? '🟢' : (p.configured ? '🟡' : '⚪');
-        var state = p.ok ? 'OK' : (p.configured ? 'FAILED' : 'NOT CONFIGURED');
-
-        var html = '<div class="probe">' +
-          '<div class="probe-head">' +
-            '<span>' + dot + '</span>' +
-            '<span class="name">' + esc(p.name) + '</span>' +
-            '<span>— ' + state + '</span>' +
-            '<span class="meta">' + p.durationMs + ' ms</span>' +
-          '</div>' +
-          '<div class="probe-label">Request</div>' +
-          '<pre>' + esc(renderRequest(p.request)) + '</pre>';
-
-        if (p.response) {
-          var statusLine = p.response.status !== undefined ? 'HTTP ' + p.response.status + '\n\n' : '';
-          html += '<div class="probe-label">Response</div>' +
-            '<pre class="' + (p.ok ? 'resp-ok' : '') + '">' + esc(statusLine + p.response.body) + '</pre>';
-        }
-        if (p.error) {
-          html += '<div class="probe-label">Error</div>' +
-            '<pre class="err">' + esc(p.error) + '</pre>';
-        }
-        return html + '</div>';
-      }
-
-      function checkIntegrations() {
-        var statusEl = document.getElementById('status');
-        statusEl.innerHTML = '<div class="loading">Pinging SIX MCP, Event Registry, and Phoeniqs...</div>';
-        document.getElementById('statusBtn').disabled = true;
-
-        fetch(API_BASE + '/integrations')
-        .then(function(res) { return res.json(); })
-        .then(function(json) {
-          if (!json.success) { statusEl.innerHTML = '<div class="card"><p>Error: ' + esc(json.error) + '</p></div>'; return; }
-          var probes = json.data.probes || [];
-          statusEl.innerHTML = '<div class="card"><h3>Integration Status</h3>' +
-            probes.map(renderProbe).join('') + '</div>';
-        })
-        .catch(function() { statusEl.innerHTML = '<div class="card"><p>Status request failed.</p></div>'; })
-        .finally(function() { document.getElementById('statusBtn').disabled = false; });
-      }
-
-      document.getElementById('analyzeBtn').addEventListener('click', analyzeStock);
-      document.getElementById('statusBtn').addEventListener('click', checkIntegrations);
-      document.getElementById('symbolInput').addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') analyzeStock();
-      });
-    </script>
-  </body>
+async function boot() {
+  const c = await api("/clients/"+CLIENT);
+  thread = c.thread; renderTraits(c.dna); renderDrift(c.drift);
+  renderAlerts(await api("/clients/"+CLIENT+"/alerts"));
+  renderThread();
+}
+el("cutBtn").onclick = () => {
+  threadState = threadState === "full_case" ? "cut_neuroscience" : "full_case";
+  renderThread();
+  log(threadState === "cut_neuroscience" ? "RM challenged evidence node "+thread.cuttableNodeId+" → confidence revised, no divestment recommended" : "RM restored full evidence");
+};
+document.querySelectorAll(".toggle button").forEach(b => b.onclick = () => {
+  voice = b.dataset.voice; document.querySelectorAll(".toggle button").forEach(x=>x.classList.remove("on")); b.classList.add("on");
+});
+el("gen").onclick = async () => {
+  const r = await api("/message", { method:"POST", headers:{"content-type":"application/json"},
+    body: JSON.stringify({ clientId:CLIENT, eventId:EVENT, voice, live:true }) });
+  el("msg").value = r.text; el("msgSource").textContent = "source: " + r.source;
+};
+el("accept").onclick = () => log("RM ACCEPTED the "+voice+" advisory draft (no order placed — awaiting client)");
+el("reject").onclick = () => log("RM REJECTED the draft");
+boot();
+</script>
+</body>
 </html>
