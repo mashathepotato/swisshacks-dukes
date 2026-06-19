@@ -1,8 +1,10 @@
 import { useMemo, useState } from "react";
-import type { Client, Voice } from "../types";
+import type { Client, FeedbackDecision, PreferenceModel, Voice } from "../types";
 import { THEME_BY_ID } from "../data/themes";
 import { scoreColor, SIGNAL_META, formatMoney, relativeTime } from "../lib/format";
-import { REASON_META, buildReasoningChain, buildDraftEmail } from "../lib/explain";
+import { REASON_META, EVIDENCE_META, buildReasoningChain, buildDraftEmail } from "../lib/explain";
+import { adjustConfidence, primaryTheme } from "../lib/learning";
+import { useLearning } from "../lib/learningStore";
 import { ValueRadar } from "./ValueRadar";
 
 interface Props {
@@ -10,11 +12,17 @@ interface Props {
   onSimulate?: (client: Client) => void;
 }
 
+const DECISION_META: Record<FeedbackDecision, { label: string; color: string }> = {
+  accepted: { label: "Accepted", color: "var(--green)" },
+  tweaked: { label: "Tweaked", color: "var(--amber)" },
+  declined: { label: "Declined", color: "var(--red)" },
+};
+
 export function ClientDetail({ client, onSimulate }: Props) {
   if (!client) {
     return (
       <div className="drawer">
-        <p className="empty">Select a client to see their DNA, the reasoning chain behind their priority, and a ready-to-send message.</p>
+        <p className="empty">Select a client to see their DNA, the reasoning chain behind their priority, what the copilot has learned from your feedback, and a ready-to-send message.</p>
       </div>
     );
   }
@@ -43,7 +51,7 @@ export function ClientDetail({ client, onSimulate }: Props) {
         </div>
       )}
 
-      <ReasoningChain client={client} />
+      <ReasoningChain key={"reason-" + client.id} client={client} />
 
       <div className="section-title">Value vector</div>
       <ValueRadar client={client} />
@@ -98,23 +106,11 @@ export function ClientDetail({ client, onSimulate }: Props) {
         </>
       )}
 
-      {client.recommendations.length > 0 && (
-        <>
-          <div className="section-title">Recommendations</div>
-          {client.recommendations.map((r) => (
-            <div className="card" key={r.id}>
-              <h4>{r.action}</h4>
-              <p>{r.rationale}</p>
-              <ul className="evidence">
-                {r.evidence.map((e, i) => <li key={i}>{e}</li>)}
-              </ul>
-              <p style={{ marginTop: 8, color: "var(--accent)" }}>Confidence {Math.round(r.confidence * 100)}%</p>
-            </div>
-          ))}
-        </>
-      )}
+      <LearningPanel client={client} />
 
-      <DraftMessage client={client} />
+      <Recommendations key={"rec-" + client.id} client={client} />
+
+      <DraftMessage key={"draft-" + client.id} client={client} />
 
       {onSimulate && (
         <button
@@ -134,6 +130,7 @@ export function ClientDetail({ client, onSimulate }: Props) {
 /** The "Glass Thread": the deterministic sequence of factors behind the priority. */
 function ReasoningChain({ client }: { client: Client }) {
   const chain = useMemo(() => buildReasoningChain(client), [client]);
+  const [open, setOpen] = useState<number | null>(null);
   if (!chain.length) return null;
 
   return (
@@ -142,11 +139,14 @@ function ReasoningChain({ client }: { client: Client }) {
         Why this priority — reasoning chain
       </div>
       <p className="thread-intro">
-        How a combination of factors and a sequence of events led to this ranking:
+        How a combination of factors and a sequence of events led to this ranking. Expand any step to see the
+        direct evidence behind it.
       </p>
       <div className="thread">
         {chain.map((step, i) => {
           const meta = REASON_META[step.kind];
+          const ev = step.evidence ?? [];
+          const isOpen = open === i;
           return (
             <div className="rstep" key={i}>
               <div className="rstep-rail">
@@ -160,6 +160,34 @@ function ReasoningChain({ client }: { client: Client }) {
                 <div className="rstep-label">{step.label}</div>
                 <div className="rstep-detail">{step.detail}</div>
                 {step.source && <div className="rstep-source">{step.source}</div>}
+                {ev.length > 0 && (
+                  <div className="rstep-evidence">
+                    <button className="ev-toggle" onClick={() => setOpen(isOpen ? null : i)}>
+                      {isOpen ? "▾ Hide evidence" : `▸ ${ev.length} piece${ev.length > 1 ? "s" : ""} of evidence`}
+                    </button>
+                    {isOpen && (
+                      <div className="receipts">
+                        {ev.map((e, j) => {
+                          const em = EVIDENCE_META[e.kind];
+                          return (
+                            <div className="receipt" key={j}>
+                              <div className="rcpt-meta">
+                                <span className="kindtag" style={{ background: em.color }}>{em.icon} {em.label}</span>
+                                <span className="rcpt-src">{e.sourceId}{e.date ? ` · ${e.date}` : ""}</span>
+                              </div>
+                              <blockquote className="rcpt-quote">“{e.quote}”</blockquote>
+                              {e.ref && (
+                                e.ref.startsWith("http")
+                                  ? <a className="rcpt-ref" href={e.ref} target="_blank" rel="noreferrer">{e.ref}</a>
+                                  : <span className="rcpt-ref">{e.ref}</span>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           );
@@ -169,11 +197,161 @@ function ReasoningChain({ client }: { client: Client }) {
   );
 }
 
-/** The actionable next step: a proposed client message the RM can edit and send. */
+/** What the copilot has learned about this client from past RM feedback. */
+function LearningPanel({ client }: { client: Client }) {
+  const { modelFor } = useLearning();
+  const model = modelFor(client);
+
+  return (
+    <>
+      <div className="section-title">
+        Learning from your feedback <span className="learn-tag">RLHF</span>
+      </div>
+
+      {model.sampleSize === 0 ? (
+        <div className="card">
+          <p>No feedback logged yet for {client.name}. As you accept, tweak or decline recommendations below, the copilot tunes future confidence, value weights and tone for this relationship.</p>
+        </div>
+      ) : (
+        <div className="learn">
+          <div className="learn-top">
+            <div className="learn-rate">
+              <div className="big">{Math.round(model.acceptanceRate * 100)}%</div>
+              <div className="lbl">acceptance · {model.sampleSize} decisions</div>
+            </div>
+            {model.preferredVoice && (
+              <div className="learn-voice">
+                <div className="lbl">Preferred tone</div>
+                <span className="voice-badge">{model.preferredVoice === "values-led" ? "Values-led" : "Data-driven"}</span>
+                <div className="sub">{Math.round(model.voiceRates[model.preferredVoice].rate * 100)}% accepted</div>
+              </div>
+            )}
+          </div>
+
+          <div className="learn-sub">Learned value weights (base → now)</div>
+          <div className="learn-themes">
+            {model.themes
+              .filter((t) => t.n > 0 || t.base > 0)
+              .map((t) => {
+                const meta = THEME_BY_ID[t.theme];
+                const up = t.delta > 0.005;
+                const down = t.delta < -0.005;
+                return (
+                  <div className="lrow" key={t.theme}>
+                    <span className="lrow-name">{meta.emoji} {meta.label}</span>
+                    <div className="lrow-bar">
+                      <span className="lrow-base" style={{ left: `${t.base * 100}%` }} />
+                      <span className="lrow-fill" style={{ width: `${t.learned * 100}%`, background: meta.color }} />
+                    </div>
+                    <span className={"lrow-delta" + (up ? " up" : down ? " down" : "")}>
+                      {up ? "▲" : down ? "▼" : "■"} {t.delta >= 0 ? "+" : ""}{Math.round(t.delta * 100)}
+                    </span>
+                  </div>
+                );
+              })}
+          </div>
+
+          {model.recent.length > 0 && (
+            <>
+              <div className="learn-sub">Recent decisions</div>
+              <div className="learn-recent">
+                {model.recent.map((e) => {
+                  const dm = DECISION_META[e.decision];
+                  return (
+                    <span className="rchip" key={e.id} title={`${e.date} · ${e.summary}`} style={{ borderColor: dm.color, color: dm.color }}>
+                      {dm.label}
+                    </span>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </div>
+      )}
+    </>
+  );
+}
+
+/** Recommendations with learning-adjusted confidence and an inline feedback loop. */
+function Recommendations({ client }: { client: Client }) {
+  const { record, modelFor } = useLearning();
+  const model = modelFor(client);
+  const theme = primaryTheme(client);
+  // remounted per client (keyed in the parent), so session decisions reset on switch
+  const [decided, setDecided] = useState<Record<string, FeedbackDecision>>({});
+
+  if (client.recommendations.length === 0) return null;
+
+  function give(recId: string, action: string, decision: FeedbackDecision) {
+    if (theme) record({ clientId: client.id, theme, decision, summary: action });
+    setDecided((d) => ({ ...d, [recId]: decision }));
+  }
+
+  return (
+    <>
+      <div className="section-title">Recommendations</div>
+      {client.recommendations.map((r) => {
+        const adj = adjustConfidence(r.confidence, model, theme);
+        const base = Math.round(r.confidence * 100);
+        const tuned = Math.round(adj.value * 100);
+        const moved = adj.delta !== 0;
+        const choice = decided[r.id];
+        return (
+          <div className="card" key={r.id}>
+            <h4>{r.action}</h4>
+            <p>{r.rationale}</p>
+            <ul className="evidence">
+              {r.evidence.map((e, i) => <li key={i}>{e}</li>)}
+            </ul>
+
+            <div className="conf">
+              {moved ? (
+                <>
+                  <span className="conf-base">{base}%</span>
+                  <span className="conf-arrow">→</span>
+                  <span className="conf-tuned" style={{ color: adj.delta > 0 ? "var(--green)" : "var(--amber)" }}>
+                    {tuned}% {adj.delta > 0 ? "▲" : "▼"} learned
+                  </span>
+                </>
+              ) : (
+                <span className="conf-tuned" style={{ color: "var(--accent)" }}>Confidence {base}%</span>
+              )}
+            </div>
+            {moved && (
+              <p className="conf-why">
+                Tuned from history: {Math.round(adj.accept * 100)}% of {adj.n} similar proposal{adj.n === 1 ? "" : "s"} accepted by {client.name}.
+              </p>
+            )}
+
+            {choice ? (
+              <div className="fb-done" style={{ color: DECISION_META[choice].color }}>
+                ✓ Recorded as {DECISION_META[choice].label.toLowerCase()} — model updated.
+              </div>
+            ) : (
+              <div className="fb-row">
+                <button className="fb accept" onClick={() => give(r.id, r.action, "accepted")}>Accept</button>
+                <button className="fb tweak" onClick={() => give(r.id, r.action, "tweaked")}>Tweak</button>
+                <button className="fb decline" onClick={() => give(r.id, r.action, "declined")}>Decline</button>
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
+/** The actionable next step: a proposed client message, defaulted to the learned tone. */
 function DraftMessage({ client }: { client: Client }) {
+  const { record, modelFor } = useLearning();
+  const model: PreferenceModel = modelFor(client);
   const draft = useMemo(() => buildDraftEmail(client), [client]);
-  const [voice, setVoice] = useState<Voice>("values-led");
+  const theme = primaryTheme(client);
+
+  // remounted per client (keyed in the parent); initial tone = learned preference
+  const [voice, setVoice] = useState<Voice>(model.preferredVoice ?? "values-led");
   const [copied, setCopied] = useState(false);
+  const [sent, setSent] = useState(false);
 
   const body = draft.body[voice];
   const mailto = `mailto:?subject=${encodeURIComponent(draft.subject)}&body=${encodeURIComponent(body)}`;
@@ -188,6 +366,13 @@ function DraftMessage({ client }: { client: Client }) {
     );
   }
 
+  function send() {
+    if (theme) record({ clientId: client.id, theme, decision: "accepted", summary: `Sent: ${draft.subject}`, voice });
+    setSent(true);
+  }
+
+  const learnedThisVoice = model.preferredVoice === voice && model.voiceRates[voice].n > 0;
+
   return (
     <>
       <div className="section-title">Proposed message · next step</div>
@@ -200,15 +385,22 @@ function DraftMessage({ client }: { client: Client }) {
             Data-driven
           </button>
         </div>
+        {learnedThisVoice && (
+          <p className="draft-learned">★ Pre-selected — {client.name} accepts this tone most often.</p>
+        )}
         <div className="draft-subject">
           <span className="k">Subject</span> {draft.subject}
         </div>
         <textarea className="draft-body" value={body} readOnly rows={Math.min(14, body.split("\n").length + 2)} />
         <div className="draft-actions">
-          <a className="draft-send" href={mailto}>✉️ Send to {client.name}</a>
+          <a className="draft-send" href={mailto} onClick={send}>✉️ Send to {client.name}</a>
           <button className="draft-copy" onClick={copy}>{copied ? "✓ Copied" : "Copy draft"}</button>
         </div>
-        <p className="draft-note">AI drafts only — you review and approve before anything is sent.</p>
+        {sent ? (
+          <p className="draft-note" style={{ color: "var(--green)" }}>✓ Logged as accepted ({voice}) — the copilot will favour this tone next time.</p>
+        ) : (
+          <p className="draft-note">AI drafts only — you review and approve before anything is sent.</p>
+        )}
       </div>
     </>
   );

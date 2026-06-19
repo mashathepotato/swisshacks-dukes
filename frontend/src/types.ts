@@ -61,11 +61,27 @@ export type ReasonKind =
   | "relationship" // relationship sensitivity that amplifies urgency
   | "score";       // the resulting priority score
 
+/**
+ * A "source receipt": the verbatim evidence that justifies a reason — a CRM
+ * note, a client email, a news snippet, a CIO desk instruction. Shape mirrors
+ * the Phase-B `Evidence` model so the two can converge.
+ */
+export type EvidenceKind = "crm" | "email" | "client" | "news" | "cio" | "market";
+
+export interface Evidence {
+  kind: EvidenceKind;
+  sourceId: string;  // provenance, e.g. "crm_schneider.csv:2024-05-14" or "inbox · Mrs Schneider"
+  quote: string;     // the exact passage that backs the reason
+  date?: string;     // ISO date
+  ref?: string;      // optional ISIN or URL for deeper linking
+}
+
 export interface ReasonStep {
   kind: ReasonKind;
-  label: string;        // short headline for the step
-  detail: string;       // one-line explanation
-  source?: string;      // provenance, e.g. "CRM 2023-09" or "Bloomberg · 2026-06-17"
+  label: string;          // short headline for the step
+  detail: string;         // one-line explanation
+  source?: string;        // provenance, e.g. "CRM 2023-09" or "Bloomberg · 2026-06-17"
+  evidence?: Evidence[];  // direct receipts; the step expands to reveal these
 }
 
 export type Voice = "values-led" | "data-driven";

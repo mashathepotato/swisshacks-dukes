@@ -1,4 +1,4 @@
-import type { Client, DraftEmail, ReasonKind, ReasonStep } from "../types";
+import type { Client, DraftEmail, EvidenceKind, ReasonKind, ReasonStep } from "../types";
 import { SIGNAL_META } from "./format";
 
 /** Presentation for each reasoning-chain step kind. */
@@ -9,6 +9,16 @@ export const REASON_META: Record<ReasonKind, { label: string; icon: string; colo
   conflict:     { label: "Assessment",   icon: "⚖️", color: "#e53e3e" },
   relationship: { label: "Relationship", icon: "🤝", color: "#38a169" },
   score:        { label: "Priority",     icon: "🎯", color: "#d69e2e" },
+};
+
+/** Presentation for each evidence "source receipt" kind. */
+export const EVIDENCE_META: Record<EvidenceKind, { label: string; icon: string; color: string }> = {
+  crm:    { label: "CRM note",      icon: "🗂️", color: "#4f8ff7" },
+  email:  { label: "Client email",  icon: "✉️", color: "#38a169" },
+  client: { label: "Client message", icon: "💬", color: "#38a169" },
+  news:   { label: "News",          icon: "📰", color: "#dd6b20" },
+  cio:    { label: "CIO desk",      icon: "🏦", color: "#805ad5" },
+  market: { label: "Market data",   icon: "📊", color: "#6b7a8f" },
 };
 
 /**

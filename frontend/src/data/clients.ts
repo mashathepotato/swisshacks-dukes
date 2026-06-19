@@ -54,6 +54,14 @@ export const CLIENTS: Client[] = [
         label: "“Reputation = financial risk”",
         detail: "11-year client who treats any reputational association as a direct threat to his public standing and Swiss prominence.",
         source: "CRM 2024-03",
+        evidence: [
+          {
+            kind: "crm",
+            sourceId: "crm_ammann.csv:2024-03-11",
+            date: "2024-03-11",
+            quote: "Any association with exploitation is unacceptable — my name is on the line. If something in my book gets dragged through the press, that is my reputation, not just a number.",
+          },
+        ],
       },
       {
         kind: "holding",
@@ -66,6 +74,15 @@ export const CLIENTS: Client[] = [
         label: "Forced-labour investigation breaks",
         detail: "Reuters alleges systematic labour exploitation across LuxeWear's suppliers; shares fell 9% intraday.",
         source: "Reuters · 2026-06-18",
+        evidence: [
+          {
+            kind: "news",
+            sourceId: "reuters.com/luxewear-forced-labour-probe",
+            date: "2026-06-18",
+            quote: "Investigators documented forced-labour conditions across three LuxeWear Group supplier factories in South-East Asia; the company's shares closed down 9%.",
+            ref: "https://www.reuters.com/luxewear-forced-labour-probe",
+          },
+        ],
       },
       {
         kind: "conflict",
@@ -146,6 +163,14 @@ export const CLIENTS: Client[] = [
         label: "Foundation funds neuromuscular research",
         detail: "Her family foundation supports rare-disease research — a core, emotionally-held part of who she is as an investor.",
         source: "CRM 2023-09",
+        evidence: [
+          {
+            kind: "crm",
+            sourceId: "crm_schneider.csv:2023-09-02",
+            date: "2023-09-02",
+            quote: "Our family foundation exists to fund neuromuscular research. I expect the companies we own to be part of that fight, not to walk away from it.",
+          },
+        ],
       },
       {
         kind: "holding",
@@ -158,6 +183,15 @@ export const CLIENTS: Client[] = [
         label: "Helvetia winds down its neuromuscular unit",
         detail: "The company is closing the exact research division the Schneider foundation funds.",
         source: "Bloomberg · 2026-06-17",
+        evidence: [
+          {
+            kind: "news",
+            sourceId: "bloomberg.com/helvetia-neuromuscular-winddown",
+            date: "2026-06-17",
+            quote: "Helvetia Pharma will shutter its neuromuscular research division by year-end, redirecting spend toward higher-margin lifestyle treatments.",
+            ref: "https://www.bloomberg.com/helvetia-neuromuscular-winddown",
+          },
+        ],
       },
       {
         kind: "conflict",
@@ -168,6 +202,14 @@ export const CLIENTS: Client[] = [
         kind: "relationship",
         label: "Warm, values-led, high emotional stake",
         detail: "She responds to personal narrative; mishandling this would feel cold and transactional to her.",
+        evidence: [
+          {
+            kind: "email",
+            sourceId: "inbox · Mrs Schneider",
+            date: "2026-06-19",
+            quote: "I just saw the Helvetia news — please tell me we no longer hold them. You know what this cause means to my family. Can we speak today?",
+          },
+        ],
       },
       {
         kind: "score",
@@ -236,6 +278,14 @@ export const CLIENTS: Client[] = [
         label: "Reforestation & environmental impact",
         detail: "Mission-first investor who finances South-American reforestation and wants impact framed alongside returns.",
         source: "CRM 2024-01",
+        evidence: [
+          {
+            kind: "crm",
+            sourceId: "crm_huber.csv:2024-01-18",
+            date: "2024-01-18",
+            quote: "I finance reforestation in South America myself — I want my portfolio pulling in the same direction, and I want to see the impact, not just the return.",
+          },
+        ],
       },
       {
         kind: "holding",
@@ -248,6 +298,15 @@ export const CLIENTS: Client[] = [
         label: "Zero-deforestation pledge by 2027",
         detail: "GreenStaples announced the largest palm-oil deforestation cut-off in its sector.",
         source: "Financial Times · 2026-06-16",
+        evidence: [
+          {
+            kind: "news",
+            sourceId: "ft.com/greenstaples-zero-deforestation",
+            date: "2026-06-16",
+            quote: "GreenStaples committed to a fully traceable, zero-deforestation palm-oil supply chain by 2027 — the most ambitious pledge yet in consumer staples.",
+            ref: "https://www.ft.com/greenstaples-zero-deforestation",
+          },
+        ],
       },
       {
         kind: "conflict",
@@ -326,6 +385,14 @@ export const CLIENTS: Client[] = [
         label: "Averse to US tech / AI speculation",
         detail: "Conservative Swiss couple, 14-year clients: “I want to sleep at night, not speculate on Silicon Valley.”",
         source: "CRM 2023-05",
+        evidence: [
+          {
+            kind: "crm",
+            sourceId: "crm_raeber.csv:2023-05-19",
+            date: "2023-05-19",
+            quote: "Keep our money in established global consumer staples. I want to sleep at night, not speculate on Silicon Valley.",
+          },
+        ],
       },
       {
         kind: "holding",
@@ -338,6 +405,14 @@ export const CLIENTS: Client[] = [
         label: "CIO proposes a tilt into US AI leaders",
         detail: "The standard CIO rebalance rotates a slice of staples into US AI mega-caps to chase momentum.",
         source: "SIX CIO Desk · 2026-06-15",
+        evidence: [
+          {
+            kind: "cio",
+            sourceId: "SIX CIO Desk · rebalance note Q2-26",
+            date: "2026-06-15",
+            quote: "Recommended across Defensive mandates: rotate ~8% from blue-chip staples into US AI mega-caps to capture momentum into H2.",
+          },
+        ],
       },
       {
         kind: "conflict",
