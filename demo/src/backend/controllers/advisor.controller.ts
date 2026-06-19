@@ -21,7 +21,7 @@ export class AdvisorController {
     if (!dna) return res.status(404).json({ success: false, error: "unknown or unwired client" });
     const holdings = s.getHoldings(id);
     const drift = computeDrift(holdings, s.getStrategies(), dna.mandate);
-    res.json({ success: true, data: { dna, holdings, drift, thread: s.getThread(id) } });
+    res.json({ success: true, data: { dna, holdings, drift, thread: s.getThread(id), news: s.getNews(id) } });
   }
 
   getAlerts(req: Request, res: Response) {

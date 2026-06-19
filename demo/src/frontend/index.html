@@ -32,7 +32,7 @@
 </style>
 </head>
 <body>
-<header>Dukes · Next-Generation Advisor — <span id="clientName">…</span></header>
+<header>Dukes · Next-Generation Advisor &nbsp;&nbsp; <select id="clientPicker" style="font:inherit;padding:3px 8px;border-radius:6px"></select> &nbsp; — &nbsp; <span id="clientName">…</span></header>
 <main>
   <section class="panel" id="dna"><h2>Client DNA</h2><div id="traits"></div></section>
   <section class="panel">
@@ -58,8 +58,8 @@
   </section>
 </main>
 <script>
-const CLIENT = "schneider", EVENT = "news-roche-parkinsons";
-let voice = "values-led", thread = null, threadState = "full_case";
+let CLIENT = null, EVENT = null;
+let voice = "values-led", thread = null, threadState = "full_case", altState = null;
 const api = (p, o) => fetch("/api/advisor" + p, o).then(r => r.json()).then(j => j.data);
 const el = (id) => document.getElementById(id);
 const log = (t) => { const li=document.createElement("li"); li.textContent = new Date().toLocaleTimeString()+" — "+t; el("ledger").prepend(li); };
@@ -95,21 +95,36 @@ function renderThread() {
   el("alertLine").innerHTML = `<span class="sev ${st.alert.severity}">${st.alert.severity}</span> ${st.alert.claim} <small class="src">(conf ${Math.round(st.alert.confidence*100)}%)</small>`;
 }
 
+async function loadClient(id) {
+  CLIENT = id; threadState = "full_case";
+  try {
+    const c = await api("/clients/"+id);
+    thread = c.thread;
+    altState = thread ? Object.keys(thread.states).find(s => s !== "full_case") : null;
+    EVENT = (c.news && c.news[0]) ? c.news[0].id : null;
+    renderTraits(c.dna); renderDrift(c.drift);
+    renderAlerts(await api("/clients/"+id+"/alerts"));
+    renderThread();
+    el("msg").value = ""; el("msgSource").textContent = "";
+  } catch (err) {
+    el("clientName").textContent = "Failed to load — check server.";
+  }
+}
 async function boot() {
   try {
-    const c = await api("/clients/"+CLIENT);
-    thread = c.thread; renderTraits(c.dna); renderDrift(c.drift);
-    renderAlerts(await api("/clients/"+CLIENT+"/alerts"));
-    renderThread();
+    const clients = await api("/clients");
+    el("clientPicker").innerHTML = clients.map(c => `<option value="${c.id}">${c.name} · ${c.mandate}</option>`).join("");
+    el("clientPicker").onchange = (e) => loadClient(e.target.value);
+    if (clients.length) await loadClient(clients[0].id);
   } catch (err) {
     el("clientName").textContent = "Failed to load — check server.";
   }
 }
 el("cutBtn").onclick = () => {
-  if (!thread) return;
-  threadState = threadState === "full_case" ? "cut_neuroscience" : "full_case";
+  if (!thread || !altState) return;
+  threadState = threadState === "full_case" ? altState : "full_case";
   renderThread();
-  log(threadState === "cut_neuroscience" ? "RM challenged evidence node "+thread.cuttableNodeId+" → confidence revised, no divestment recommended" : "RM restored full evidence");
+  log(threadState === altState ? "RM challenged evidence node "+thread.cuttableNodeId+" → confidence revised, no divestment recommended" : "RM restored full evidence");
 };
 document.querySelectorAll(".toggle button").forEach(b => b.onclick = () => {
   voice = b.dataset.voice; document.querySelectorAll(".toggle button").forEach(x=>x.classList.remove("on")); b.classList.add("on");

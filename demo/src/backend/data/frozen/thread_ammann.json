@@ -1,0 +1,41 @@
+{
+  "clientId": "ammann",
+  "cuttableNodeId": "crm-2025-01-16",
+  "states": {
+    "full_case": {
+      "alert": { "severity": "act", "claim": "Adidas now conflicts with the client's zero-tolerance labour-governance mandate", "confidence": 0.92 },
+      "nodes": [
+        { "id": "crm-2023-06-20", "kind": "crm", "label": "Mandate: clean labour, no hypocrisy risk", "date": "2023-06-20", "quote": "If my name is linked via my portfolio to ... sweatshops, illegal exploitation, or wage theft, it creates immediate hypocrisy risk for my own stores.", "active": true },
+        { "id": "crm-2025-01-16", "kind": "crm", "label": "Instruction: dump on labour allegations", "date": "2025-01-16", "quote": "If any ... brand we hold gets hit with severe labor exploitation allegations, dump the entire position before the local Swiss press can link my name to it.", "active": true },
+        { "id": "trait-gov", "kind": "trait", "label": "Zero-tolerance on labour scandals", "confidence": 0.92 },
+        { "id": "holding-adidas", "kind": "holding", "label": "Adidas AG", "ref": "DE000A1EWWW0", "valueCHF": 97071.14 },
+        { "id": "news", "kind": "news", "label": "Adidas supplier: forced-labour allegations", "date": "2026-06-14" },
+        { "id": "swap", "kind": "swap", "label": "Propose: SELL Adidas → BUY a CIO-BUY Consumer Discretionary name with clean governance" }
+      ],
+      "edges": [
+        ["crm-2023-06-20", "trait-gov"],
+        ["crm-2025-01-16", "trait-gov"],
+        ["trait-gov", "holding-adidas"],
+        ["news", "holding-adidas"],
+        ["holding-adidas", "swap"]
+      ]
+    },
+    "cut_labour": {
+      "alert": { "severity": "watch", "claim": "Possible labour-governance concern on Adidas — weaker case after RM challenge", "confidence": 0.45 },
+      "nodes": [
+        { "id": "crm-2023-06-20", "kind": "crm", "label": "Mandate: clean labour, no hypocrisy risk", "date": "2023-06-20", "quote": "If my name is linked via my portfolio to ... sweatshops, illegal exploitation, or wage theft, it creates immediate hypocrisy risk for my own stores.", "active": true },
+        { "id": "crm-2025-01-16", "kind": "crm", "label": "(challenged by RM — excluded)", "date": "2025-01-16", "quote": "If any ... brand we hold gets hit with severe labor exploitation allegations, dump the entire position before the local Swiss press can link my name to it.", "active": false },
+        { "id": "trait-gov", "kind": "trait", "label": "Zero-tolerance on labour scandals", "confidence": 0.45 },
+        { "id": "holding-adidas", "kind": "holding", "label": "Adidas AG", "ref": "DE000A1EWWW0", "valueCHF": 97071.14 },
+        { "id": "news", "kind": "news", "label": "Adidas supplier: forced-labour allegations", "date": "2026-06-14" },
+        { "id": "swap", "kind": "swap", "label": "Hold & monitor — flag for RM review, no divestment recommended" }
+      ],
+      "edges": [
+        ["crm-2023-06-20", "trait-gov"],
+        ["trait-gov", "holding-adidas"],
+        ["news", "holding-adidas"],
+        ["holding-adidas", "swap"]
+      ]
+    }
+  }
+}

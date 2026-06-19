@@ -1,0 +1,28 @@
+{
+  "clientId": "ammann",
+  "name": "Julian Ammann",
+  "mandate": "Growth",
+  "style": "data-driven",
+  "traits": [
+    {
+      "id": "governance-zero-tolerance",
+      "label": "Zero-tolerance on labour / governance scandals",
+      "detail": "Founder and public face of a Swiss retail brand: reputational risk is financial risk. Will divest any consumer/retail holding hit with labour-exploitation allegations before the Swiss press can link it to his name.",
+      "confidence": 0.92,
+      "evidence": [
+        { "kind": "crm", "sourceId": "crm_ammann.csv:2023-06-20", "date": "2023-06-20", "quote": "If my name is linked via my portfolio to an international corporate parent caught using sweatshops, illegal exploitation, or wage theft, it creates immediate hypocrisy risk for my own stores." },
+        { "kind": "crm", "sourceId": "crm_ammann.csv:2025-01-16", "date": "2025-01-16", "quote": "If any international consumer or retail brand we hold gets hit with severe labor exploitation allegations, dump the entire position before the local Swiss press can link my name to it." },
+        { "kind": "crm", "sourceId": "crm_ammann.csv:2026-03-12", "date": "2026-03-12", "quote": "if there is live media or judicial smoke surrounding their labor practices right now, the position must be flagged immediately before it hits mainstream national press." }
+      ]
+    },
+    {
+      "id": "clean-footprint-over-yield",
+      "label": "Accepts lower returns for a clean footprint",
+      "detail": "Analytical; will trade Sharpe ratio and yield for zero reputational liability in the portfolio.",
+      "confidence": 0.8,
+      "evidence": [
+        { "kind": "crm", "sourceId": "crm_ammann.csv:2023-09-05", "date": "2023-09-05", "quote": "I will gladly accept a lower Sharpe ratio or lower yields in exchange for a clean portfolio footprint." }
+      ]
+    }
+  ]
+}

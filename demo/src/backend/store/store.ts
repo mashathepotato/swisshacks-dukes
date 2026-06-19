@@ -10,7 +10,7 @@ const REGISTRY: ClientReg[] = [
   { id: "schneider", name: "Hubertus Schneider", mandate: "Balanced", crmFile: "crm_schneider.csv" },
   { id: "huber", name: "Huber", mandate: "Defensive", crmFile: "crm_huber.csv" },
   { id: "raeber", name: "Eugen Räber", mandate: "Defensive", crmFile: "crm_raeber.csv" },
-  { id: "ammann", name: "Ammann", mandate: "Growth", crmFile: "crm_ammann.csv" },
+  { id: "ammann", name: "Julian Ammann", mandate: "Growth", crmFile: "crm_ammann.csv" },
 ];
 
 const frozen = (f: string) => JSON.parse(fs.readFileSync(path.join(frozenDir(), f), "utf8"));
@@ -34,9 +34,18 @@ export function getStore(): Store {
   const cio = loadCioList();
   const strategies = loadStrategies();
   const messageCache = frozen("message_cache.json") as Record<string, string>;
-  const dnaById: Record<string, DnaProfile> = { schneider: frozen("dna_schneider.json") };
-  const newsById: Record<string, NewsEvent[]> = { schneider: [frozen("news_schneider.json")] };
-  const threadById: Record<string, unknown> = { schneider: frozen("thread_schneider.json") };
+  const dnaById: Record<string, DnaProfile> = {
+    schneider: frozen("dna_schneider.json"),
+    ammann: frozen("dna_ammann.json"),
+  };
+  const newsById: Record<string, NewsEvent[]> = {
+    schneider: [frozen("news_schneider.json")],
+    ammann: [frozen("news_ammann.json")],
+  };
+  const threadById: Record<string, unknown> = {
+    schneider: frozen("thread_schneider.json"),
+    ammann: frozen("thread_ammann.json"),
+  };
   const holdingsByMandate: Record<Mandate, Holding[]> = {
     Defensive: loadPortfolio("Defensive"),
     Balanced: loadPortfolio("Balanced"),
