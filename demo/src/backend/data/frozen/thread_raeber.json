@@ -1,0 +1,41 @@
+{
+  "clientId": "raeber",
+  "cuttableNodeId": "crm-2024-11-06",
+  "states": {
+    "full_case": {
+      "alert": { "severity": "act", "claim": "CIO push into US mega-cap tech conflicts with the client's documented aversion — escalate to RM, do not auto-rotate", "confidence": 0.9 },
+      "nodes": [
+        { "id": "crm-2023-05-19", "kind": "crm", "label": "Stay in staples/industrials, not SV bubbles", "date": "2023-05-19", "quote": "keep our money in established global consumer staples and industrials ... not speculate on Silicon Valley cloud bubbles.", "active": true },
+        { "id": "crm-2024-11-06", "kind": "crm", "label": "AI firms valued on pure hype", "date": "2024-11-06", "quote": "These abstract software and AI firms are valued on pure hype. It feels like the dot-com crash of 2000 all over again.", "active": true },
+        { "id": "trait-aversion", "kind": "trait", "label": "Aversion to speculative US tech", "confidence": 0.9 },
+        { "id": "holding-defensive", "kind": "holding", "label": "Defensive value sleeve (staples & healthcare)", "ref": "", "valueCHF": 0 },
+        { "id": "news", "kind": "news", "label": "CIO TAA: rotate into US mega-cap tech", "date": "2026-05-20" },
+        { "id": "swap", "kind": "swap", "label": "Recommend: retain defensive posture; escalate the CIO rotation to the RM" }
+      ],
+      "edges": [
+        ["crm-2023-05-19", "trait-aversion"],
+        ["crm-2024-11-06", "trait-aversion"],
+        ["trait-aversion", "holding-defensive"],
+        ["news", "holding-defensive"],
+        ["holding-defensive", "swap"]
+      ]
+    },
+    "cut_aversion": {
+      "alert": { "severity": "watch", "claim": "Weaker aversion case after RM challenge — CIO rotation may be discussed with the client", "confidence": 0.45 },
+      "nodes": [
+        { "id": "crm-2023-05-19", "kind": "crm", "label": "Stay in staples/industrials, not SV bubbles", "date": "2023-05-19", "quote": "keep our money in established global consumer staples and industrials ... not speculate on Silicon Valley cloud bubbles.", "active": true },
+        { "id": "crm-2024-11-06", "kind": "crm", "label": "(challenged by RM — excluded)", "date": "2024-11-06", "quote": "These abstract software and AI firms are valued on pure hype.", "active": false },
+        { "id": "trait-aversion", "kind": "trait", "label": "Aversion to speculative US tech", "confidence": 0.45 },
+        { "id": "holding-defensive", "kind": "holding", "label": "Defensive value sleeve (staples & healthcare)", "ref": "", "valueCHF": 0 },
+        { "id": "news", "kind": "news", "label": "CIO TAA: rotate into US mega-cap tech", "date": "2026-05-20" },
+        { "id": "swap", "kind": "swap", "label": "Discuss the CIO rotation with the client at the next review" }
+      ],
+      "edges": [
+        ["crm-2023-05-19", "trait-aversion"],
+        ["trait-aversion", "holding-defensive"],
+        ["news", "holding-defensive"],
+        ["holding-defensive", "swap"]
+      ]
+    }
+  }
+}

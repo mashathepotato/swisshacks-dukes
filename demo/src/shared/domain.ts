@@ -1,7 +1,13 @@
 export type Mandate = "Defensive" | "Balanced" | "Growth";
 export type Voice = "data-driven" | "values-led";
 export type Severity = "act" | "watch" | "info";
-export type AlertType = "dna-conflict" | "cio-sell" | "drift-breach" | "news-hit";
+export type AlertType =
+  | "dna-conflict"
+  | "dna-opportunity"
+  | "cio-dna-conflict"
+  | "cio-sell"
+  | "drift-breach"
+  | "news-hit";
 export type EvidenceKind = "crm" | "cio" | "news" | "market";
 export type Rating = "BUY" | "HOLD" | "SELL";
 
@@ -103,6 +109,13 @@ export interface NewsEvent {
   affectedIsins: string[];
   publishedAt: string;
   url?: string;
+  // "threat" (default): negative news that may trigger divestment.
+  // "opportunity": positive news aligning with a client value.
+  // "cio-directive": a CIO recommendation that may conflict with client DNA.
+  kind?: "threat" | "opportunity" | "cio-directive";
+  // Optional explicit trait this event keys off (by DnaTrait.id). When absent,
+  // a "threat" event falls back to the divestment-style trait heuristic.
+  triggerTraitId?: string;
 }
 
 export interface CrmNote {

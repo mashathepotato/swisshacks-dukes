@@ -1,0 +1,28 @@
+{
+  "clientId": "raeber",
+  "name": "Eugen Räber",
+  "mandate": "Defensive",
+  "style": "data-driven",
+  "traits": [
+    {
+      "id": "us-tech-aversion",
+      "label": "Aversion to speculative US tech",
+      "detail": "Wealth from selling a precision-engineering firm; values tangible, mature businesses. Has a high psychological barrier to volatile US tech/AI equities and has repeatedly asked to stay out of 'Silicon Valley cloud bubbles'.",
+      "confidence": 0.9,
+      "evidence": [
+        { "kind": "crm", "sourceId": "crm_raeber.csv:2023-05-19", "date": "2023-05-19", "quote": "keep our money in established global consumer staples and industrials. I want to sleep at night, not speculate on Silicon Valley cloud bubbles." },
+        { "kind": "crm", "sourceId": "crm_raeber.csv:2024-11-06", "date": "2024-11-06", "quote": "These abstract software and AI firms are valued on pure hype. It feels like the dot-com crash of 2000 all over again." },
+        { "kind": "crm", "sourceId": "crm_raeber.csv:2023-10-05", "date": "2023-10-05", "quote": "requested a strict flag to block any high-beta speculative asset classes, preferring blue-chip defensive names and sovereign bonds." }
+      ]
+    },
+    {
+      "id": "capital-preservation",
+      "label": "Capital preservation & steady cash flow",
+      "detail": "Primary goals are preservation and predictable dividend/coupon income to fund the family foundation; prizes 'quiet, predictable, boring' performance.",
+      "confidence": 0.85,
+      "evidence": [
+        { "kind": "crm", "sourceId": "crm_raeber.csv:2023-01-16", "date": "2023-01-16", "quote": "capital preservation and steady cash flow are his primary goals ... he only values tangible, mature businesses with proven global cash flows." }
+      ]
+    }
+  ]
+}

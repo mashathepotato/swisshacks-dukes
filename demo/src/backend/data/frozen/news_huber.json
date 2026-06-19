@@ -1,0 +1,10 @@
+{
+  "id": "news-unilever-palmoil",
+  "kind": "opportunity",
+  "triggerTraitId": "reforestation",
+  "headline": "Unilever cuts off palm-oil deforestation suppliers and launches reforestation foundation",
+  "summary": "A major global consumer-goods conglomerate announces a historic policy: completely cutting off suppliers tied to palm-oil deforestation and launching a multi-million-dollar foundation to reforest the Brazilian rainforest.",
+  "affectedIsins": ["GB00B10RZP78"],
+  "publishedAt": "2026-05-20",
+  "url": "https://example.com/unilever-palm-oil-cutoff"
+}

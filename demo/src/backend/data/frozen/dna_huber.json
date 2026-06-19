@@ -1,0 +1,28 @@
+{
+  "clientId": "huber",
+  "name": "Marius Huber",
+  "mandate": "Defensive",
+  "style": "values-led",
+  "traits": [
+    {
+      "id": "reforestation",
+      "label": "Reforestation & biodiversity mission",
+      "detail": "Wealth from a sustainable-agriculture exit; runs a reforestation foundation. Wants capital to reward companies that take real, measurable action to protect ecosystems — and to be told when a holding does something magnificent, not only when one drops.",
+      "confidence": 0.9,
+      "evidence": [
+        { "kind": "crm", "sourceId": "crm_huber.csv:2023-05-19", "date": "2023-05-19", "quote": "I want to actively penalize companies that treat nature as a free resource. Our portfolio must prioritize businesses that proactively protect natural ecosystems." },
+        { "kind": "crm", "sourceId": "crm_huber.csv:2024-06-11", "date": "2024-06-11", "quote": "She highly respects corporations that go beyond simple carbon offsets and actually invest in physical, measurable rainforest restoration and indigenous land protection." },
+        { "kind": "crm", "sourceId": "crm_huber.csv:2026-01-15", "date": "2026-01-15", "quote": "If a company takes a brave, absolute stance against palm oil deforestation and actively puts money into reforestation, that is exactly where my money should be. ... call me when a company I own actually does something magnificent for the planet." }
+      ]
+    },
+    {
+      "id": "supply-chain-transparency",
+      "label": "Demands verified supply-chain transparency",
+      "detail": "Prefers verified supply chains over greenwashed metrics; sceptical of conglomerates hiding deforestation behind shell suppliers.",
+      "confidence": 0.78,
+      "evidence": [
+        { "kind": "crm", "sourceId": "crm_huber.csv:2024-11-06", "date": "2024-11-06", "quote": "Many global conglomerates claim they are sustainable, but they are still buying from suppliers hiding behind shell companies to clear rainforests for palm oil." }
+      ]
+    }
+  ]
+}

@@ -8,7 +8,7 @@ interface ClientReg { id: string; name: string; mandate: Mandate; crmFile: strin
 
 const REGISTRY: ClientReg[] = [
   { id: "schneider", name: "Hubertus Schneider", mandate: "Balanced", crmFile: "crm_schneider.csv" },
-  { id: "huber", name: "Huber", mandate: "Defensive", crmFile: "crm_huber.csv" },
+  { id: "huber", name: "Marius Huber", mandate: "Defensive", crmFile: "crm_huber.csv" },
   { id: "raeber", name: "Eugen Räber", mandate: "Defensive", crmFile: "crm_raeber.csv" },
   { id: "ammann", name: "Julian Ammann", mandate: "Growth", crmFile: "crm_ammann.csv" },
 ];
@@ -37,14 +37,20 @@ export function getStore(): Store {
   const dnaById: Record<string, DnaProfile> = {
     schneider: frozen("dna_schneider.json"),
     ammann: frozen("dna_ammann.json"),
+    huber: frozen("dna_huber.json"),
+    raeber: frozen("dna_raeber.json"),
   };
   const newsById: Record<string, NewsEvent[]> = {
     schneider: [frozen("news_schneider.json")],
     ammann: [frozen("news_ammann.json")],
+    huber: [frozen("news_huber.json")],
+    raeber: [frozen("news_raeber.json")],
   };
   const threadById: Record<string, unknown> = {
     schneider: frozen("thread_schneider.json"),
     ammann: frozen("thread_ammann.json"),
+    huber: frozen("thread_huber.json"),
+    raeber: frozen("thread_raeber.json"),
   };
   const holdingsByMandate: Record<Mandate, Holding[]> = {
     Defensive: loadPortfolio("Defensive"),

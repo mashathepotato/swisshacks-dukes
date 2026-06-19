@@ -19,7 +19,9 @@
   .alert { border-left:4px solid var(--line); padding:6px 10px; margin-bottom:8px; }
   .alert.act { border-color:var(--act); } .alert.watch { border-color:var(--watch); }
   .sev { font-size:11px; font-weight:700; text-transform:uppercase; }
-  .sev.act { color:var(--act); } .sev.watch { color:var(--watch); }
+  .sev.act { color:var(--act); } .sev.watch { color:var(--watch); } .sev.info { color:var(--accent); }
+  .alert.dna-opportunity { border-color:var(--accent); } .sev.dna-opportunity { color:var(--accent); }
+  .alert.cio-dna-conflict { border-color:#6b4fa1; } .sev.cio-dna-conflict { color:#6b4fa1; }
   svg { width:100%; height:320px; background:#fbfcfe; border:1px solid var(--line); border-radius:8px; }
   .node rect { fill:#fff; stroke:#9fb1c1; } .node.trait rect { stroke:var(--accent); }
   .node.inactive rect { stroke-dasharray:4 3; opacity:.4; } .node text { font-size:11px; }
@@ -72,11 +74,14 @@ function renderTraits(dna) {
       <div style="margin-top:6px">${t.evidence.map(e=>`<span class="chip" title="${e.quote}">${e.kind} · ${e.date}</span>`).join("")}</div>
     </div>`).join("");
 }
+const ALERT_LABEL = { "dna-conflict":"conflict", "dna-opportunity":"opportunity", "cio-dna-conflict":"CIO tension", "cio-sell":"CIO sell", "drift-breach":"drift", "news-hit":"news" };
 function renderAlerts(traces) {
-  el("alerts").innerHTML = traces.map(t => `
-    <div class="alert ${t.severity}"><span class="sev ${t.severity}">${t.severity}</span> ${t.claim}
+  el("alerts").innerHTML = traces.map(t => {
+    const label = ALERT_LABEL[t.type] || t.severity;
+    return `<div class="alert ${t.severity} ${t.type}"><span class="sev ${t.severity} ${t.type}">${label}</span> ${t.claim}
       ${t.valueAtStakeCHF?`<div><small class="src">CHF ${Math.round(t.valueAtStakeCHF).toLocaleString()} at stake</small></div>`:""}
-      <div>${t.evidence.map(e=>`<span class="chip">${e.kind} · ${e.date}</span>`).join("")}</div></div>`).join("");
+      <div>${t.evidence.map(e=>`<span class="chip">${e.kind} · ${e.date}</span>`).join("")}</div></div>`;
+  }).join("");
 }
 function renderDrift(drift) {
   el("drift").innerHTML = drift.filter(d=>d.breached).map(d=>`

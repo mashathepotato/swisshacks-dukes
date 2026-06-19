@@ -1,0 +1,41 @@
+{
+  "clientId": "huber",
+  "cuttableNodeId": "crm-2026-01-15",
+  "states": {
+    "full_case": {
+      "alert": { "severity": "info", "claim": "Unilever — a holding — just aligned with the client's reforestation mission (opportunity)", "confidence": 0.9 },
+      "nodes": [
+        { "id": "crm-2023-05-19", "kind": "crm", "label": "Penalise nature-harmers; reward protectors", "date": "2023-05-19", "quote": "I want to actively penalize companies that treat nature as a free resource.", "active": true },
+        { "id": "crm-2026-01-15", "kind": "crm", "label": "Call me when a holding does something magnificent", "date": "2026-01-15", "quote": "call me when a company I own actually does something magnificent for the planet", "active": true },
+        { "id": "trait-reforestation", "kind": "trait", "label": "Reforestation & biodiversity mission", "confidence": 0.9 },
+        { "id": "holding-unilever", "kind": "holding", "label": "Unilever PLC", "ref": "GB00B10RZP78", "valueCHF": 80491.1 },
+        { "id": "news", "kind": "news", "label": "Unilever: palm-oil cutoff + reforestation fund", "date": "2026-05-20" },
+        { "id": "swap", "kind": "swap", "label": "Opportunity: increase exposure to Unilever (CIO-BUY, mandate-compliant)" }
+      ],
+      "edges": [
+        ["crm-2023-05-19", "trait-reforestation"],
+        ["crm-2026-01-15", "trait-reforestation"],
+        ["trait-reforestation", "holding-unilever"],
+        ["news", "holding-unilever"],
+        ["holding-unilever", "swap"]
+      ]
+    },
+    "cut_alignment": {
+      "alert": { "severity": "watch", "claim": "Weaker alignment case after RM challenge — note, do not act", "confidence": 0.45 },
+      "nodes": [
+        { "id": "crm-2023-05-19", "kind": "crm", "label": "Penalise nature-harmers; reward protectors", "date": "2023-05-19", "quote": "I want to actively penalize companies that treat nature as a free resource.", "active": true },
+        { "id": "crm-2026-01-15", "kind": "crm", "label": "(challenged by RM — excluded)", "date": "2026-01-15", "quote": "call me when a company I own actually does something magnificent for the planet", "active": false },
+        { "id": "trait-reforestation", "kind": "trait", "label": "Reforestation & biodiversity mission", "confidence": 0.45 },
+        { "id": "holding-unilever", "kind": "holding", "label": "Unilever PLC", "ref": "GB00B10RZP78", "valueCHF": 80491.1 },
+        { "id": "news", "kind": "news", "label": "Unilever: palm-oil cutoff + reforestation fund", "date": "2026-05-20" },
+        { "id": "swap", "kind": "swap", "label": "Note alignment for the next review — no action recommended" }
+      ],
+      "edges": [
+        ["crm-2023-05-19", "trait-reforestation"],
+        ["trait-reforestation", "holding-unilever"],
+        ["news", "holding-unilever"],
+        ["holding-unilever", "swap"]
+      ]
+    }
+  }
+}

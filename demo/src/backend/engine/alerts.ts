@@ -16,24 +16,65 @@ export function buildAlerts(input: {
   const heldByIsin = new Map(holdings.map((h) => [h.isin, h]));
   const traces: Trace[] = [];
   const divTrait = isDivestmentTrait(dna);
+  const traitById = (id?: string) => (id ? dna.traits.find((t) => t.id === id) : undefined);
+  const newsEvidence = (ev: NewsEvent): Evidence => ({
+    kind: "news", sourceId: ev.id, date: ev.publishedAt, quote: ev.headline, ref: ev.url,
+  });
 
-  // (a) dna-conflict: news hits a held ISIN and the client has a divestment trait
   for (const ev of news) {
-    for (const isin of ev.affectedIsins) {
-      const holding = heldByIsin.get(isin);
-      if (!holding || !divTrait) continue;
-      const evidence: Evidence[] = [
-        ...divTrait.evidence,
-        { kind: "news", sourceId: ev.id, date: ev.publishedAt, quote: ev.headline, ref: ev.url },
-      ];
+    const kind = ev.kind ?? "threat";
+
+    // (a) threat → dna-conflict: news hits a held ISIN, divestment-style trait applies
+    if (kind === "threat") {
+      const trait = traitById(ev.triggerTraitId) ?? divTrait;
+      if (!trait) continue;
+      for (const isin of ev.affectedIsins) {
+        const holding = heldByIsin.get(isin);
+        if (!holding) continue;
+        traces.push({
+          id: `dna-conflict:${isin}`,
+          claim: `${holding.issuer} now conflicts with the client's "${trait.label}"`,
+          type: "dna-conflict",
+          confidence: trait.confidence,
+          severity: "act",
+          evidence: [...trait.evidence, newsEvidence(ev)],
+          valueAtStakeCHF: holding.currentCHF,
+        });
+      }
+      continue;
+    }
+
+    // (b) opportunity → dna-opportunity: positive news aligned with a client value
+    if (kind === "opportunity") {
+      const trait = traitById(ev.triggerTraitId) ?? dna.traits[0];
+      if (!trait) continue;
+      for (const isin of ev.affectedIsins) {
+        const holding = heldByIsin.get(isin);
+        const name = holding ? holding.issuer : isin;
+        traces.push({
+          id: `dna-opportunity:${isin}`,
+          claim: `${name} aligns with the client's "${trait.label}" — consider increasing exposure`,
+          type: "dna-opportunity",
+          confidence: trait.confidence,
+          severity: "info",
+          evidence: [...trait.evidence, newsEvidence(ev)],
+          valueAtStakeCHF: holding ? holding.currentCHF : undefined,
+        });
+      }
+      continue;
+    }
+
+    // (c) cio-directive → cio-dna-conflict: a CIO push that conflicts with client DNA
+    if (kind === "cio-directive") {
+      const trait = traitById(ev.triggerTraitId) ?? dna.traits[0];
+      if (!trait) continue;
       traces.push({
-        id: `dna-conflict:${isin}`,
-        claim: `${holding.issuer} now conflicts with the client's "${divTrait.label}"`,
-        type: "dna-conflict",
-        confidence: divTrait.confidence,
+        id: `cio-dna-conflict:${ev.id}`,
+        claim: `CIO directive conflicts with the client's "${trait.label}" — escalate to RM before applying`,
+        type: "cio-dna-conflict",
+        confidence: trait.confidence,
         severity: "act",
-        evidence,
-        valueAtStakeCHF: holding.currentCHF,
+        evidence: [...trait.evidence, newsEvidence(ev)],
       });
     }
   }

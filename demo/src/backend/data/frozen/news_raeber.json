@@ -1,0 +1,10 @@
+{
+  "id": "news-cio-ustech",
+  "kind": "cio-directive",
+  "triggerTraitId": "us-tech-aversion",
+  "headline": "CIO Tactical Asset Allocation: trim defensive value, rotate into US mega-cap technology",
+  "summary": "The CIO issues a global TAA update: due to rapid AI-infrastructure growth, the defensive model portfolio mandates a reduction in defensive value (Consumer Staples & Healthcare) to fund a position in mega-cap US technology (e.g. NVIDIA, Microsoft, Apple).",
+  "affectedIsins": ["US67066G1040", "US5949181045"],
+  "publishedAt": "2026-05-20",
+  "url": "https://example.com/cio-taa-ai-rotation"
+}
