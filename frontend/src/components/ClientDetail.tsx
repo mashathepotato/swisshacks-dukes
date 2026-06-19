@@ -6,6 +6,7 @@ import { REASON_META, EVIDENCE_META, buildReasoningChain, buildDraftEmail } from
 import { adjustConfidence, primaryTheme } from "../lib/learning";
 import { PERSONA_PLAY } from "../lib/portfolio";
 import { useLearning } from "../lib/learningStore";
+import { useDone } from "../lib/doneStore";
 import { ValueRadar } from "./ValueRadar";
 import { ComplianceDesk } from "./ComplianceDesk";
 
@@ -21,6 +22,7 @@ const DECISION_META: Record<FeedbackDecision, { label: string; color: string }> 
 };
 
 export function ClientDetail({ client, onSimulate }: Props) {
+  const { isDone, markDone, reopen } = useDone();
   if (!client) {
     return (
       <div className="drawer">
@@ -28,6 +30,7 @@ export function ClientDetail({ client, onSimulate }: Props) {
       </div>
     );
   }
+  const dealt = isDone(client.id);
 
   return (
     <div className="drawer">
@@ -52,6 +55,12 @@ export function ClientDetail({ client, onSimulate }: Props) {
             : null}
         </div>
       )}
+
+      <div>
+        <button className={"markdone" + (dealt ? " on" : "")} onClick={() => (dealt ? reopen(client.id) : markDone(client.id))}>
+          {dealt ? "✓ Dealt with — reopen" : "✓ Mark as dealt with"}
+        </button>
+      </div>
 
       <ReasoningChain key={"reason-" + client.id} client={client} />
 

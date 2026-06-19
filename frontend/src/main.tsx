@@ -3,11 +3,14 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import { LearningProvider } from './lib/learningStore.tsx'
+import { DoneProvider } from './lib/doneStore.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <LearningProvider>
-      <App />
+      <DoneProvider>
+        <App />
+      </DoneProvider>
     </LearningProvider>
   </StrictMode>,
 )
