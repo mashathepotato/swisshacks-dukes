@@ -58,7 +58,7 @@ export function ClientDetail({ client, onSimulate }: Props) {
 
       <div>
         <button className={"markdone" + (dealt ? " on" : "")} onClick={() => (dealt ? reopen(client.id) : markDone(client.id))}>
-          {dealt ? "✓ Dealt with — reopen" : "✓ Mark as dealt with"}
+          {dealt ? "✓ Completed — reopen" : "✓ Mark as complete"}
         </button>
       </div>
 

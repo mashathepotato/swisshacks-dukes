@@ -55,7 +55,7 @@ export function PriorityQueue({ selectedId, onSelect }: Props) {
         {isDone ? (
           <button className="done-btn" onClick={(e) => { e.stopPropagation(); reopen(c.id); }}>↩ Reopen</button>
         ) : (
-          <button className="done-btn" onClick={(e) => { e.stopPropagation(); markDone(c.id); }}>✓ Mark done</button>
+          <button className="done-btn" onClick={(e) => { e.stopPropagation(); markDone(c.id); }}>✓ Mark complete</button>
         )}
       </div>
     );
@@ -65,17 +65,17 @@ export function PriorityQueue({ selectedId, onSelect }: Props) {
     <div className="queue">
       <h1>Your book — by priority</h1>
       <p className="lead">
-        {active.length} need{active.length === 1 ? "s" : ""} attention · ranked by news severity, portfolio exposure, value conflict and relationship sensitivity. Mark a client done once you've reached out.
+        {active.length} need{active.length === 1 ? "s" : ""} attention · ranked by news severity, portfolio exposure, value conflict and relationship sensitivity. Mark a client complete once you've actioned it.
       </p>
 
       {active.length > 0 ? active.map((c) => row(c, false)) : (
-        <p className="empty" style={{ padding: "32px 0" }}>✓ Inbox zero — every flagged client has been dealt with.</p>
+        <p className="empty" style={{ padding: "32px 0" }}>✓ All caught up — every flagged client has been actioned.</p>
       )}
 
       {dealt.length > 0 && (
         <>
           <div className="queue-section" onClick={() => setShowDone((v) => !v)}>
-            <span>{showDone ? "▾" : "▸"} Dealt with · {dealt.length}</span>
+            <span>{showDone ? "▾" : "▸"} Completed · {dealt.length}</span>
             <span className="ln" />
           </div>
           {showDone && dealt.map((c) => row(c, true))}
