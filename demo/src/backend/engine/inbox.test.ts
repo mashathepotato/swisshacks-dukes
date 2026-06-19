@@ -24,6 +24,13 @@ test("within the same severity, higher value-at-stake scores higher", () => {
   expect(a.score).toBeGreaterThan(b.score);
 });
 
+test("a live client-signal outranks even a high-value ACT alert", () => {
+  const signal: Trace = { id: "s", claim: "client msg", type: "client-signal", confidence: 1, severity: "act", evidence: [] };
+  const sigRow = summarizeClient("sig", "S", "Balanced", [signal]);
+  const richAct = summarizeClient("rich", "R", "Growth", [trace("act", 5_000_000)]);
+  expect(sigRow.score).toBeGreaterThan(richAct.score);
+});
+
 test("rankInbox orders by score descending: act > watch > info", () => {
   const rows = [
     summarizeClient("info", "I", "Defensive", [trace("info", 80000)]),

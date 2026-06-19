@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { CioEntry, DnaProfile, Holding, Mandate, NewsEvent, StrategyTarget } from "../../shared/domain";
+import { CioEntry, ClientSignal, DnaProfile, Holding, Mandate, NewsEvent, StrategyTarget } from "../../shared/domain";
 import { loadPortfolio, loadStrategies, loadCioList } from "../data/loaders";
 import { frozenDir } from "../data/paths";
 
@@ -24,6 +24,8 @@ export interface Store {
   getStrategies(): StrategyTarget[];
   getThread(id: string): unknown;
   getMessageCache(): Record<string, string>;
+  addSignal(signal: ClientSignal): void;
+  getSignals(id: string): ClientSignal[];
 }
 
 let singleton: Store | undefined;
@@ -57,6 +59,8 @@ export function getStore(): Store {
     Balanced: loadPortfolio("Balanced"),
     Growth: loadPortfolio("Growth"),
   };
+  // Inbound client messages accumulate at runtime (reset on restart).
+  const signalsById: Record<string, ClientSignal[]> = {};
 
   singleton = {
     listClients: () => REGISTRY.filter(({ id }) => id in dnaById).map(({ id, name, mandate }) => ({ id, name, mandate })),
@@ -70,6 +74,10 @@ export function getStore(): Store {
     getStrategies: () => strategies,
     getThread: (id) => threadById[id],
     getMessageCache: () => messageCache,
+    addSignal: (signal) => {
+      (signalsById[signal.clientId] ??= []).push(signal);
+    },
+    getSignals: (id) => signalsById[id] ?? [],
   };
   return singleton;
 }

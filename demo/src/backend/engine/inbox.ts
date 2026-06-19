@@ -3,9 +3,14 @@ import { InboxRow, Mandate, Severity, Trace } from "../../shared/domain";
 // Severity dominates the ranking; value-at-stake breaks ties within a severity.
 const sevWeight: Record<Severity, number> = { act: 3, watch: 2, info: 1 };
 
+// A live, unaddressed client message outranks any system-detected alert: the
+// client has actively reached out and is waiting on the RM.
+const CLIENT_SIGNAL_BOOST = 10_000_000;
+
 export function summarizeClient(id: string, name: string, mandate: Mandate, traces: Trace[]): InboxRow {
   const top = traces[0] ?? null; // buildAlerts already sorts act -> watch -> info
-  const score = top ? sevWeight[top.severity] * 1_000_000 + (top.valueAtStakeCHF ?? 0) : 0;
+  const boost = top?.type === "client-signal" ? CLIENT_SIGNAL_BOOST : 0;
+  const score = top ? boost + sevWeight[top.severity] * 1_000_000 + (top.valueAtStakeCHF ?? 0) : 0;
   return {
     id,
     name,

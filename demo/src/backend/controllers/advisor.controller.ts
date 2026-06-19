@@ -4,19 +4,33 @@ import { computeDrift } from "../engine/drift";
 import { proposeSwap } from "../engine/swap";
 import { buildAlerts } from "../engine/alerts";
 import { rankInbox, summarizeClient } from "../engine/inbox";
+import { classifySignal } from "../engine/signals";
 import { draftMessage } from "../agents/messageAgent";
 import { PhoeniqsService } from "../services/phoeniqs.service";
-import { Trace, Voice } from "../../shared/domain";
+import { ClientSignal, Trace, Voice } from "../../shared/domain";
 
 const phoeniqs = new PhoeniqsService();
 
 // Shared alert computation for a single client; returns [] for unknown/unwired ids.
+// Flagged inbound client messages surface as top-priority ACT traces.
 function clientAlerts(s: Store, id: string): Trace[] {
   const dna = s.getDna(id);
   if (!dna) return [];
   const holdings = s.getHoldings(id);
   const drift = computeDrift(holdings, s.getStrategies(), dna.mandate);
-  return buildAlerts({ dna, holdings, news: s.getNews(id), cio: s.getCio(), drift });
+  const base = buildAlerts({ dna, holdings, news: s.getNews(id), cio: s.getCio(), drift });
+  const signalTraces: Trace[] = s
+    .getSignals(id)
+    .filter((sig) => sig.flagged)
+    .map((sig) => ({
+      id: `client-signal:${sig.id}`,
+      claim: `Client message: "${sig.text}"`,
+      type: "client-signal",
+      confidence: 1,
+      severity: "act",
+      evidence: [{ kind: "client", sourceId: sig.id, date: sig.receivedAt, quote: sig.text }],
+    }));
+  return [...signalTraces, ...base];
 }
 
 export class AdvisorController {
@@ -46,6 +60,34 @@ export class AdvisorController {
     const id = req.params.id;
     if (!s.getDna(id)) return res.status(404).json({ success: false, error: "unknown or unwired client" });
     res.json({ success: true, data: clientAlerts(s, id) });
+  }
+
+  // 24/7 client channel: log + classify an inbound message. The AI NEVER replies
+  // to the client; it only flags high-priority ones for the RM.
+  postInbound(req: Request, res: Response) {
+    const s = getStore();
+    const id = req.params.id;
+    if (!s.getDna(id)) return res.status(404).json({ success: false, error: "unknown or unwired client" });
+    const text = String(req.body?.text ?? "").trim();
+    if (!text) return res.status(400).json({ success: false, error: "empty message" });
+    const { flagged, reason } = classifySignal(text);
+    const signal: ClientSignal = {
+      id: `sig-${Date.now()}`,
+      clientId: id,
+      text,
+      receivedAt: new Date().toISOString(),
+      flagged,
+      reason,
+    };
+    s.addSignal(signal);
+    res.json({ success: true, data: { logged: true, aiReplied: false, flagged, reason, signal } });
+  }
+
+  getSignals(req: Request, res: Response) {
+    const s = getStore();
+    const id = req.params.id;
+    if (!s.getDna(id)) return res.status(404).json({ success: false, error: "unknown or unwired client" });
+    res.json({ success: true, data: s.getSignals(id) });
   }
 
   getSwap(req: Request, res: Response) {

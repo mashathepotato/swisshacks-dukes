@@ -7,8 +7,9 @@ export type AlertType =
   | "cio-dna-conflict"
   | "cio-sell"
   | "drift-breach"
+  | "client-signal"
   | "news-hit";
-export type EvidenceKind = "crm" | "cio" | "news" | "market";
+export type EvidenceKind = "crm" | "cio" | "news" | "market" | "client";
 export type Rating = "BUY" | "HOLD" | "SELL";
 
 export interface Evidence {
@@ -100,6 +101,15 @@ export interface Trace {
   severity: Severity;
   evidence: Evidence[];
   valueAtStakeCHF?: number;
+}
+
+export interface ClientSignal {
+  id: string;
+  clientId: string;
+  text: string;
+  receivedAt: string;
+  flagged: boolean;   // true => raises the client's priority for the RM
+  reason: string;     // why it was (or wasn't) flagged
 }
 
 export interface InboxRow {
