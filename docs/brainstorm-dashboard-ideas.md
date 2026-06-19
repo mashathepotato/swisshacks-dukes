@@ -97,10 +97,143 @@ that's worth 50% of the score (Creativity 25% + Trust/Explainability 25%).
   by CIO research (deliberately in the data).
 - **Replay / scrubber** — rewind the simulation to re-pitch on stage.
 
+## The RM's daily reality (not just one event)
+
+- **Morning briefing** — RM logs in to "3 clients need attention today," ranked
+  by urgency × value-at-stake. The simulation is one event; this is the
+  *standing* product an RM would open every morning. Strong feasibility story.
+- **Action queue with SLAs** — each alert has an age and a suggested deadline. A
+  CIO SELL sitting 47 days unactioned screams from the top.
+- **"Done" satisfaction loop** — RM acts → alert clears → portfolio drift visibly
+  re-centers. Proves the system *resolves* things, not just flags them.
+
+## Quantify the value (judges love a number)
+
+- **Value-at-stake per alert** — "CHF 92k exposed to this scandal." Makes
+  abstract conflicts concrete.
+- **Drift cost** — how far off-mandate, in CHF, and the tracking-error implication.
+- **"Time saved" meter** — manual = scan 200 holdings × news; AI = surfaced in
+  seconds. A single before/after stat lands hard in a pitch.
+
+## Cold-start / onboarding angle
+
+- **DNA from scratch** — drop in a new client's first CRM notes and watch the DNA
+  card populate. Shows the parsing isn't hard-coded to the 4 personas — big
+  credibility boost if a judge is skeptical.
+- **DNA confidence growing over time** — slider over the 3-year log; traits
+  sharpen as evidence accumulates.
+
+## Trust-oriented visual identity (Visual Design = 15%)
+
+- **Calm, private-bank aesthetic** — muted, serif-ish, lots of whitespace; not a
+  flashy SaaS dashboard. Signals "this is for wealth, not crypto."
+- **AI vs. human color language** — AI suggestions in one consistent treatment,
+  RM/confirmed actions in another. You always know who said what — that *is*
+  trust UI.
+- **Provenance on hover everywhere** — never a naked claim; the whole UI teaches
+  "you can check this."
+
+## Sophistication / edge cases that impress
+
+- **Conflicting signals** — CIO says BUY, client DNA says no (Räber + US AI).
+  Don't auto-resolve — *escalate the tension to the RM*. The single most
+  on-theme moment in the brief ("RM stays in the loop, client decides").
+- **No good swap exists** — sometimes the same-sector CIO BUY list is empty;
+  system says "no compliant swap — flag for review" instead of inventing one.
+  Knowing its limits = trustworthy.
+- **Bond/illiquid handling** — gracefully degrade to par-pricing when SIX history
+  is thin (the data warns about this). Shows we read the fine print.
+
+## Conversational / explanation layer
+
+- **"Ask why" on any element** — click a recommendation, ask "why this one?", get
+  a grounded answer citing DNA + CIO + news. Conversational *on top of*
+  structure, not instead of it.
+- **RM coaching the AI** — RM corrects a DNA trait; system acknowledges and
+  re-reasons. Two-way, not a vending machine.
+
+## Demo-narrative devices
+
+- **Split-screen "old world vs. new world"** — left: RM drowning in spreadsheets
+  + 200 holdings; right: our surfaced insight. Frames the problem in 5 seconds.
+- **One persona as the through-line** — Schneider's foundation story is the most
+  emotional (research for a disease her family cares about gets shut down). Lead
+  the pitch with the human stakes, then show the machinery.
+
+## Converged synthesis (two-agent cross-critique)
+
+Ran two independent sub-agents — a *pragmatic engineer* (feasibility lens) and a
+*creative/design visionary* (the 50% Creativity + Trust lens) — then had each
+critique and revise against the other. They converged on one design:
+
+**Thesis:** A's deterministic rails aren't a constraint on the wow — they *are*
+the trust story, made visible and interrogable. Manipulation = navigating
+precomputed states, not live recompute. The judge never knows the difference and
+nothing can break on stage.
+
+**The merged MVP**
+- **One persona polished (Schneider), four supported in data.** Schneider's
+  buried neuroscience-research thread (repeated across CRM notes 2024-05 → 2025-06)
+  is the most emotionally resonant and is genuinely in the data. Swap universe is
+  real: Novartis/Roche are CIO-BUY in Health Care.
+- **Deterministic engine** — frozen DNA traits, ±2.0pp drift flags, rule-based
+  alert match, swap constrained to `cio_recommendation_list.csv`. Everything emits
+  a **trace object** `{claim, evidence[], confidence, source}`. The UI is a renderer
+  of traces → explainability is architectural, not cosmetic.
+- **Exactly ONE live LLM call:** the two-voice message draft (data-driven vs.
+  values-led), with a per-persona cached fallback. DNA extraction is run **once,
+  offline, frozen to JSON** (real LLM use, zero stage risk).
+- **The hero — "The Glass Thread":** a provenance graph (CRM note → DNA trait →
+  holding → news event → swap), **pre-laid-out and animate-on-replay** — NOT a
+  live force-directed/recomputing graph (that's the #1 cut).
+
+**The hero moment to stake the pitch on — "Cut the thread":**
+The thread connects Schneider's buried CRM quote → DNA trait → pharma holding →
+"research shut down" news → proposed same-sector CIO-BUY swap. Presenter says
+"what if I don't buy that this note reflects his values?" and **cuts the evidence
+node**. Instantly (precomputed alternate state): confidence bar drops, evidence
+chips grey out, alert downgrades act→watch, swap rationale rewrites to a hedged
+form, and the **Override Ledger** logs it. Punchline: *"The AI didn't argue. It
+showed its work, took my correction, and changed its mind — on the record."*
+Scores all four soft criteria at once (Creativity, Trust, Visual, Presentation).
+
+**Build (ranked, S/M/L):**
+1. Deterministic match + swap engine + trace objects — **M** (the spine)
+2. Static provenance graph, clickable highlight + one cut-node branch — **M** (hero)
+3. **Override Ledger** (append-only accept/edit/reject) — **S** (highest trust-per-hour)
+4. Evidence Receipt chip component (reused everywhere) — **S**
+5. Live two-voice message draft + cached fallback — **M** (the one live call)
+6. Frozen DNA extraction (run once, commit JSON) — **S**
+7. Conflict-vs-Mandate split meter — **S**
+
+**Stretch (only if core solid Sat night):** counterfactual "why not this one?"
+(folds into the cut-node alternate state for free); single-node toggle feel.
+
+**Cut (do not build):** manipulable/recomputing force-directed graph; confidence-
+gated autonomy lanes; time-scrub timeline; live multi-agent orchestrator (produce
+traces deterministically instead); bespoke gene-viz / heavy motion.
+
+**⚠️ Factual finding both agents flagged:** the reference `demo/` starter is **NOT
+in our repo** — it lives in the upstream challenge repo. Wiring it (clone, `.env`
+for Phoeniqs/SIX/Event Registry, green health check) is ~2–4h of real Phase-0 work
+that earlier notes silently assumed away.
+
+**Rough 48h arc (4 people):** Phase 0 (h0–6) wire starter + keys + pin Schneider's
+thread; Phase 1 (h6–18) deterministic spine + frozen DNA + render linear flow;
+Phase 2 (h18–32) provenance graph + Override Ledger + live message — *feature-freeze
+candidate*; Phase 3 (h32–42) load other 3 personas in data + one stretch + polish;
+Phase 4 (h42–48) .pptx + pitch coaching + cached-everything dry run. Rules:
+feature-freeze h32, hard stop on new features h44, every live call has a cached
+fallback, SIX MCP optional-not-blocking.
+
 ## Open questions to resolve next
 
-- Hero panel? (Leaning: swap-proposal diff + reasoning trace — personalization
-  *and* explainability in one view.)
-- Scripted vs. live integrations for the stage demo?
-- One persona deep, or all four? Single client, or RM's whole book?
-- Stack — build on the reference `demo/` (TS/Express + SPA) or our own?
+The synthesis above answers most of the earlier opens (hero = Glass Thread;
+deterministic + 1 live call; one persona polished + 4 in data; build on `demo/`).
+Still to decide with the team:
+
+- Do we commit to "Cut the thread" as the staked hero moment, or keep the safer
+  linear walkthrough as the centerpiece?
+- Graph rendering: hand-placed layout vs. pre-solved D3 force frozen to JSON?
+- Is SIX live market-data enrichment worth any Phase-3 time, or fully cached?
+- Who owns which lane (BE engine / LLM+wiring / FE graph / design+pitch)?
