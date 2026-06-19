@@ -226,6 +226,44 @@ Phase 4 (h42–48) .pptx + pitch coaching + cached-everything dry run. Rules:
 feature-freeze h32, hard stop on new features h44, every live call has a cached
 fallback, SIX MCP optional-not-blocking.
 
+## Group brainstorm integration (from `docs/group-brainstorm.md`)
+
+The team's group brainstorm added ideas that reframe the product from a single
+deep client view into **an RM's intelligent inbox over their whole book** — which
+the deep "cut-the-thread" hero beat then lives *inside*. These don't conflict with
+the converged synthesis; they give it a believable product shell (helps Feasibility
++ Presentation). Standouts:
+
+- **24/7 client listener, forbidden to respond (the best new idea).** Client can
+  message anytime; the agent **never replies** (the brief's non-negotiable), but
+  **appends to the client's context and flags them high-priority** (e.g. "wants
+  to dump Nvidia"). Turns the human-in-the-loop constraint into a feature. Cheap
+  to demo, pure Trust points.
+- **Priority client inbox — ~90 clients/manager, ranked, click-to-explain.** The
+  RM's morning triage: who needs attention today and *why* (which news drove it).
+  This is the product shell the single-client hero story sits inside. (Extends the
+  earlier "morning briefing" + "cross-client radar" ideas with explicit ranking.)
+- **RM copilot + what-if simulator.** RM talks through an idea ("what if I move
+  Räber into US AI?") with a chat that has client + news context and **runs it
+  through the simulator** to forecast the effect (and surface the DNA conflict).
+- **Whisper meeting transcription → auto-builds Client DNA.** Shows the DNA
+  pipeline is real and live-capable; strong onboarding beat.
+- **Onboarding personality test → "web of values".** Structured DNA seeding +
+  a values-web viz (cousin of the DNA graph / knowledge graph).
+- **Client context/knowledge handover.** When an RM leaves or a new one takes
+  over, accumulated DNA transfers — real-world continuity value.
+- **Privacy/consent terms gate what the agent may access.** A trust/compliance
+  angle few teams will think of.
+- Also raised: a **data-densifying simulator** (generate more clients/scenarios),
+  an **agent-architecture diagram** as an explainer artifact, **live stock
+  prices**, **strategy effects from news**, and a **customizable RM dashboard**.
+
+**Suggested unified shape:** product = the RM's priority inbox over a book of
+clients (fed by the 24/7 listener + meeting transcription); selecting a flagged
+client opens the deterministic Glass-Thread provenance view; "cut the thread"
+remains the staked hero beat; the what-if simulator/copilot is the high-value
+stretch. Depth for the pitch, breadth for the product story.
+
 ## Open questions to resolve next
 
 The synthesis above answers most of the earlier opens (hero = Glass Thread;
