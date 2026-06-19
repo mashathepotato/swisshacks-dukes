@@ -4,6 +4,7 @@ import { computeDrift } from "../engine/drift";
 import { proposeSwap } from "../engine/swap";
 import { buildAlerts } from "../engine/alerts";
 import { rankInbox, summarizeClient } from "../engine/inbox";
+import { simulateSwap } from "../engine/simulate";
 import { classifySignal } from "../engine/signals";
 import { draftMessage } from "../agents/messageAgent";
 import { PhoeniqsService } from "../services/phoeniqs.service";
@@ -90,6 +91,23 @@ export class AdvisorController {
     const id = req.params.id;
     if (!s.getDna(id)) return res.status(404).json({ success: false, error: "unknown or unwired client" });
     res.json({ success: true, data: s.getSignals(id) });
+  }
+
+  // What-if: run a hypothetical swap through the deterministic engines and report
+  // same-sector / CIO-BUY / drift impact / DNA verdict — before the RM proposes it.
+  simulate(req: Request, res: Response) {
+    const s = getStore();
+    const id = req.params.id;
+    const dna = s.getDna(id);
+    if (!dna) return res.status(404).json({ success: false, error: "unknown or unwired client" });
+    const { sellIsin, buyIsin, amountCHF } = req.body as { sellIsin?: string; buyIsin?: string; amountCHF?: number };
+    if (!sellIsin || !buyIsin) return res.status(400).json({ success: false, error: "sellIsin and buyIsin are required" });
+    const sellResolvesConflict = clientAlerts(s, id).some((a) => a.id === `dna-conflict:${sellIsin}`);
+    const result = simulateSwap({
+      holdings: s.getHoldings(id), strategies: s.getStrategies(), cio: s.getCio(), dna, mandate: dna.mandate,
+      sellIsin, buyIsin, amountCHF: typeof amountCHF === "number" ? amountCHF : undefined, sellResolvesConflict,
+    });
+    res.json({ success: true, data: result });
   }
 
   getSwap(req: Request, res: Response) {

@@ -112,6 +112,19 @@ export interface ClientSignal {
   reason: string;     // why it was (or wasn't) flagged
 }
 
+export interface SimResult {
+  sell: { isin: string; issuer: string; currentCHF: number };
+  buy: { isin: string; issuer: string; rating: Rating | null; industryGroup: string };
+  amountCHF: number;
+  sameSector: boolean;
+  buyRatingOk: boolean;          // buy instrument is CIO-rated BUY
+  driftBefore: DriftBreach[];
+  driftAfter: DriftBreach[];
+  newBreaches: string[];         // sub-asset classes breached after the trade but not before
+  compliant: boolean;            // same sector + CIO-BUY + introduces no new ±2.0pp breach
+  dna: { verdict: "honors" | "conflicts" | "neutral"; reason: string; traitId?: string };
+}
+
 export interface InboxRow {
   id: string;
   name: string;
