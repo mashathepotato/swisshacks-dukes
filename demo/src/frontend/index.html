@@ -3,117 +3,298 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dukes — Advisor</title>
+<title>Dukes Advisory</title>
 <style>
-  :root { --ink:#11161c; --panel:#fff; --muted:#5b6b7a; --line:#e3e8ee; --accent:#1f7a5a; --act:#b4322a; --watch:#b8860b; }
-  * { box-sizing:border-box; } body { margin:0; font:15px/1.5 -apple-system,Segoe UI,Roboto,sans-serif; color:var(--ink); background:#f4f6f9; }
-  header { padding:14px 22px; background:var(--ink); color:#fff; font-weight:600; letter-spacing:.3px; }
-  main { display:grid; grid-template-columns:320px 1fr 360px; gap:16px; padding:16px; align-items:start; }
-  .panel { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px; }
-  h2 { font-size:13px; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); margin:0 0 10px; }
-  .trait { border:1px solid var(--line); border-radius:8px; padding:8px; margin-bottom:8px; }
-  .bar { height:6px; background:var(--line); border-radius:3px; overflow:hidden; }
+  :root {
+    --ink:#14181f; --bg:#eceff3; --panel:#ffffff; --line:#dce2e9; --muted:#5d6b7a; --faint:#8794a2;
+    --accent:#1b6b53; --accent-soft:#e6f0ec;
+    --conflict:#b23a2e; --watch:#a9781f; --opportunity:#1b6b53; --tension:#6b4fa1; --client:#15698f; --slate:#51606f;
+    --serif:Georgia,"Times New Roman",serif;
+    --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --mono:ui-monospace,"SF Mono","Cascadia Code",Menlo,Consolas,monospace;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; font:15px/1.55 var(--sans); color:var(--ink); background:var(--bg); }
+  .mono { font-family:var(--mono); font-variant-numeric:tabular-nums; }
+
+  /* Topbar */
+  header { display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding:14px 24px; background:var(--ink); color:#fff; border-bottom:3px solid var(--accent); }
+  .brand { font-family:var(--serif); font-size:20px; letter-spacing:.2px; }
+  .brand span { color:#9fb4ab; font-size:14px; }
+  .tagline { color:#aeb9c4; font-size:12.5px; margin-top:2px; }
+  .crumb { display:flex; align-items:center; gap:12px; }
+  #clientName { font-family:var(--serif); font-size:17px; color:#fff; }
+
+  /* Layout */
+  .wrap { padding:20px; max-width:1340px; margin:0 auto; }
+  main { display:grid; grid-template-columns:330px 1fr 380px; gap:18px; align-items:start; }
+  .panel { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:18px;
+    box-shadow:0 1px 2px rgba(20,24,31,.04); }
+  .panel + .panel { margin-top:18px; }
+  .eyebrow { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.8px; color:var(--faint); }
+  .panel > h2 { margin:0; }
+  h2 { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.8px; color:var(--faint); margin:0 0 4px; }
+  .sublabel { font-size:12.5px; color:var(--muted); margin:0 0 14px; }
+  .row-head { display:flex; align-items:baseline; justify-content:space-between; gap:8px; }
+
+  /* DNA traits */
+  .trait { border:1px solid var(--line); border-radius:10px; padding:11px 12px; margin-bottom:10px; }
+  .trait-top { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .trait-label { font-weight:600; }
+  .conf { font-size:12px; color:var(--muted); }
+  .conf b { font-family:var(--mono); color:var(--ink); }
+  .bar { height:5px; background:var(--line); border-radius:3px; overflow:hidden; margin:7px 0 9px; }
   .bar > i { display:block; height:100%; background:var(--accent); }
-  .chip { display:inline-block; font-size:11px; background:#eef3f1; color:var(--accent); border:1px solid #d6e4dd; border-radius:10px; padding:1px 7px; margin:2px 3px 0 0; cursor:default; }
-  .chip.off { opacity:.35; text-decoration:line-through; }
-  .alert { border-left:4px solid var(--line); padding:6px 10px; margin-bottom:8px; }
-  .alert.act { border-color:var(--act); } .alert.watch { border-color:var(--watch); }
-  .sev { font-size:11px; font-weight:700; text-transform:uppercase; }
-  .sev.act { color:var(--act); } .sev.watch { color:var(--watch); } .sev.info { color:var(--accent); }
-  .alert.dna-opportunity { border-color:var(--accent); } .sev.dna-opportunity { color:var(--accent); }
-  .alert.cio-dna-conflict { border-color:#6b4fa1; } .sev.cio-dna-conflict { color:#6b4fa1; }
-  .alert.client-signal { border-color:#0b6b9a; } .sev.client-signal { color:#0b6b9a; }
-  svg { width:100%; height:320px; background:#fbfcfe; border:1px solid var(--line); border-radius:8px; }
-  .node rect { fill:#fff; stroke:#9fb1c1; } .node.trait rect { stroke:var(--accent); }
-  .node.inactive rect { stroke-dasharray:4 3; opacity:.4; } .node text { font-size:11px; }
-  button { font:inherit; border:1px solid var(--line); background:#fff; border-radius:8px; padding:6px 10px; cursor:pointer; }
+
+  /* Evidence chips = source receipts */
+  .chip { font:600 11px var(--sans); border:1px solid var(--line); background:#f5f7f9; color:var(--slate);
+    border-radius:999px; padding:2px 9px; margin:3px 4px 0 0; cursor:pointer; display:inline-flex; gap:5px; align-items:center; }
+  .chip::before { content:""; width:6px; height:6px; border-radius:50%; background:var(--slate); }
+  .chip.crm::before { background:var(--client); } .chip.cio::before { background:var(--tension); }
+  .chip.news::before { background:var(--watch); } .chip.market::before { background:var(--slate); }
+  .chip.client::before { background:var(--client); }
+  .chip:hover { border-color:var(--faint); }
+  .chip.off { opacity:.4; text-decoration:line-through; }
+  .chip.active { border-color:var(--ink); background:#fff; }
+
+  /* Source receipt inspector */
+  #receiptCard .hint { color:var(--faint); font-size:13px; }
+  .rcpt-meta { font-size:12px; color:var(--muted); margin-bottom:8px; }
+  .kindtag { font:700 10px var(--sans); text-transform:uppercase; letter-spacing:.5px; color:#fff;
+    background:var(--slate); border-radius:4px; padding:1px 6px; }
+  .kindtag.crm,.kindtag.client { background:var(--client); } .kindtag.cio { background:var(--tension); }
+  .kindtag.news { background:var(--watch); } .kindtag.market { background:var(--slate); }
+  blockquote { margin:0; font-family:var(--serif); font-style:italic; font-size:15px; line-height:1.5;
+    color:var(--ink); border-left:3px solid var(--line); padding-left:12px; }
+
+  /* Alerts */
+  .alert { border:1px solid var(--line); border-left:4px solid var(--slate); border-radius:8px; padding:9px 11px; margin-bottom:9px; }
+  .alert .claim { margin:2px 0; }
+  .badge { font:700 10px var(--sans); text-transform:uppercase; letter-spacing:.5px; color:#fff;
+    background:var(--slate); border-radius:4px; padding:2px 7px; }
+  .at-stake { font-size:12px; color:var(--muted); }
+  .at-stake b { font-family:var(--mono); color:var(--ink); }
+  .alert.dna-conflict { border-left-color:var(--conflict); } .badge.dna-conflict { background:var(--conflict); }
+  .alert.cio-sell, .alert.drift-breach { border-left-color:var(--watch); } .badge.cio-sell,.badge.drift-breach { background:var(--watch); }
+  .alert.dna-opportunity { border-left-color:var(--opportunity); } .badge.dna-opportunity { background:var(--opportunity); }
+  .alert.cio-dna-conflict { border-left-color:var(--tension); } .badge.cio-dna-conflict { background:var(--tension); }
+  .alert.client-signal { border-left-color:var(--client); } .badge.client-signal { background:var(--client); }
+
+  /* Glass thread */
+  svg#thread { width:100%; height:300px; background:
+      linear-gradient(var(--line) 1px,transparent 1px) 0 0/100% 60px,
+      #fbfcfe; border:1px solid var(--line); border-radius:10px; }
+  .node rect { fill:#fff; stroke:var(--slate); stroke-width:1.4; }
+  .node .ntag { font:700 8px var(--sans); fill:var(--faint); text-transform:uppercase; letter-spacing:.4px; }
+  .node .nlabel { font:600 10.5px var(--sans); fill:var(--ink); }
+  .node .nsub { font:10px var(--mono); fill:var(--muted); }
+  .node.crm rect { stroke:var(--client); } .node.trait rect { stroke:var(--accent); }
+  .node.holding rect { stroke:var(--slate); } .node.news rect { stroke:var(--watch); } .node.swap rect { stroke:var(--tension); }
+  .node.inactive { opacity:.38; } .node.inactive rect { stroke-dasharray:4 3; }
+  .thread-legend { display:flex; flex-wrap:wrap; gap:6px 14px; margin-top:10px; font-size:12px; color:var(--muted); }
+  .tk { display:inline-flex; align-items:center; gap:6px; } .tk i { width:9px; height:9px; border-radius:2px; }
+  .alertline { margin-top:12px; padding:9px 11px; border-radius:8px; background:#f6f8fa; border:1px solid var(--line); }
+
+  /* Inbox */
+  .legend { display:flex; flex-wrap:wrap; gap:8px 16px; padding:12px 14px; margin-bottom:14px;
+    background:#f6f8fa; border:1px solid var(--line); border-radius:10px; font-size:12.5px; color:var(--muted); }
+  .legend .lg { display:inline-flex; align-items:center; gap:7px; }
+  .legend i { width:9px; height:9px; border-radius:2px; flex:none; }
+  .legend .terms { flex-basis:100%; color:var(--faint); border-top:1px dashed var(--line); padding-top:9px; margin-top:2px; }
+  .inbox-row { display:flex; gap:14px; align-items:flex-start; border:1px solid var(--line); border-left:4px solid var(--slate);
+    border-radius:10px; padding:13px 15px; margin-bottom:10px; cursor:pointer; transition:background .12s,border-color .12s; }
+  .inbox-row:hover { background:#f3f6f9; border-color:var(--faint); }
+  .inbox-rank { font-family:var(--mono); font-size:18px; color:var(--faint); min-width:22px; }
+  .inbox-main { flex:1; }
+  .inbox-name { font-family:var(--serif); font-size:17px; }
+  .inbox-meta { font-size:12px; color:var(--muted); margin-left:8px; }
+  .inbox-claim { color:var(--ink); margin-top:3px; }
+  .inbox-row.dna-conflict { border-left-color:var(--conflict); } .inbox-row.cio-sell,.inbox-row.drift-breach { border-left-color:var(--watch); }
+  .inbox-row.dna-opportunity { border-left-color:var(--opportunity); } .inbox-row.cio-dna-conflict { border-left-color:var(--tension); }
+  .inbox-row.client-signal { border-left-color:var(--client); }
+
+  /* Controls */
+  button { font:600 13px var(--sans); border:1px solid var(--line); background:#fff; color:var(--ink);
+    border-radius:8px; padding:7px 12px; cursor:pointer; transition:background .12s,border-color .12s; }
+  button:hover { border-color:var(--faint); }
   button.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+  button.primary:hover { background:#155941; }
+  button.ghost { background:transparent; color:#fff; border-color:#3a4654; }
+  button:disabled { opacity:.5; cursor:default; }
+  .toggle { display:inline-flex; border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+  .toggle button { border:0; border-radius:0; background:#fff; color:var(--muted); }
   .toggle button.on { background:var(--ink); color:#fff; }
-  textarea { width:100%; min-height:150px; border:1px solid var(--line); border-radius:8px; padding:8px; font:inherit; }
-  .ledger li { font-size:12px; color:var(--muted); }
-  small.src { color:var(--muted); }
-  .inbox-row { border:1px solid var(--line); border-left-width:4px; border-radius:8px; padding:10px 12px; margin-bottom:8px; cursor:pointer; }
-  .inbox-row:hover { background:#eef3f8; }
-  .inbox-row.act { border-left-color:var(--act); } .inbox-row.watch { border-left-color:var(--watch); }
-  .inbox-row.dna-opportunity { border-left-color:var(--accent); } .inbox-row.cio-dna-conflict { border-left-color:#6b4fa1; }
-  .inbox-row.client-signal { border-left-color:#0b6b9a; }
-  .inbox-head { margin-bottom:3px; }
+  textarea { width:100%; border:1px solid var(--line); border-radius:8px; padding:10px; font:14px/1.5 var(--sans); resize:vertical; }
+  #msg { min-height:148px; }
+  details.legend-d { margin-top:12px; font-size:12.5px; color:var(--muted); }
+  details.legend-d summary { cursor:pointer; color:var(--accent); font-weight:600; }
+  .log { list-style:none; padding:0; margin:8px 0 0; }
+  .log li { font-size:12px; color:var(--muted); padding:4px 0; border-top:1px dashed var(--line); }
+  .log li b { color:var(--ink); }
+  small.src, .hint { color:var(--muted); }
+  .quiet { color:var(--muted); font-size:13px; }
+
+  :focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+  @media (max-width:980px){ main { grid-template-columns:1fr; } header { flex-direction:column; align-items:flex-start; gap:6px; } }
+  @media (prefers-reduced-motion:reduce){ * { transition:none !important; } }
 </style>
 </head>
 <body>
-<header>Dukes · Next-Generation Advisor <button id="backBtn" style="display:none;margin-left:10px">← Inbox</button> &nbsp; <span id="clientName" style="font-weight:400;color:#c2ccd6"></span></header>
-<section id="inboxView" class="panel" style="margin:16px">
-  <h2>Priority inbox — your book today</h2>
-  <div id="inboxList"></div>
-</section>
-<main id="detailView" style="display:none">
-  <section class="panel" id="dna"><h2>Client DNA</h2><div id="traits"></div></section>
-  <section class="panel">
-    <h2>Glass Thread <button id="cutBtn" style="float:right">Cut this evidence</button></h2>
-    <svg id="thread" viewBox="0 0 720 320"></svg>
-    <div id="alertLine" style="margin-top:10px"></div>
-    <h2 style="margin-top:14px">Alerts</h2><div id="alerts"></div>
-    <h2 style="margin-top:14px">Holdings drift</h2><div id="drift"></div>
+<header>
+  <div>
+    <div class="brand">Dukes <span>· Advisory</span></div>
+    <div class="tagline">Every recommendation, traceable to its source.</div>
+  </div>
+  <div class="crumb"><button id="backBtn" class="ghost" style="display:none">← Priority inbox</button> <span id="clientName"></span></div>
+</header>
+
+<div class="wrap">
+  <section id="inboxView" class="panel">
+    <h2>Priority inbox</h2>
+    <p class="sublabel">Your book today, ranked by urgency and money at stake. Open a client to see why — and to draft a note.</p>
+    <div class="legend" id="inboxLegend"></div>
+    <div id="inboxList"></div>
   </section>
-  <section class="panel">
-    <h2>Advisory message</h2>
-    <div class="toggle" style="margin-bottom:8px">
-      <button data-voice="values-led" class="on">Values-led</button>
-      <button data-voice="data-driven">Data-driven</button>
-    </div>
-    <textarea id="msg" placeholder="Generate a draft…"></textarea>
-    <div style="margin-top:8px;display:flex;gap:8px">
-      <button class="primary" id="gen">Generate</button>
-      <button id="accept">Accept</button><button id="reject">Reject</button>
-    </div>
-    <p><small class="src" id="msgSource"></small></p>
-    <h2 style="margin-top:10px">Override ledger</h2><ul class="ledger" id="ledger"></ul>
-    <h2 style="margin-top:14px">Client channel · 24/7</h2>
-    <p style="font-size:12px;color:var(--muted);margin:0 0 6px">The client can message anytime. The AI <b>logs &amp; flags</b> for you — it never replies to the client.</p>
-    <textarea id="clientMsg" style="min-height:56px" placeholder="Type as the client… e.g. 'I want to dump all my Nvidia'"></textarea>
-    <div style="margin-top:6px"><button id="send">Send as client</button> &nbsp;<small class="src" id="sendNote"></small></div>
-    <ul class="ledger" id="signals"></ul>
-  </section>
-</main>
+
+  <main id="detailView" style="display:none">
+    <section class="panel">
+      <h2>Client DNA</h2>
+      <p class="sublabel">The client's investment identity, learned from their CRM history. Each trait cites where it came from.</p>
+      <div id="traits"></div>
+      <div class="panel" id="receiptCard" style="margin-top:14px;background:#f9fafc">
+        <div class="eyebrow">Source receipt</div>
+        <div id="receipt" style="margin-top:8px"><span class="hint">Click any evidence chip to see its exact source quote.</span></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="row-head"><h2>Reasoning thread</h2><button id="cutBtn">Challenge this evidence</button></div>
+      <p class="sublabel">How the AI got from a CRM note to a proposed action. Challenge a fact to watch the case revise — live.</p>
+      <svg id="thread" viewBox="0 0 720 300" role="img" aria-label="Reasoning thread"></svg>
+      <div class="thread-legend">
+        <span class="tk"><i style="background:var(--client)"></i>CRM note</span>
+        <span class="tk"><i style="background:var(--accent)"></i>DNA trait</span>
+        <span class="tk"><i style="background:var(--slate)"></i>Holding</span>
+        <span class="tk"><i style="background:var(--watch)"></i>News / CIO event</span>
+        <span class="tk"><i style="background:var(--tension)"></i>Proposed action</span>
+      </div>
+      <div class="alertline" id="alertLine"></div>
+      <h2 style="margin-top:18px">Alerts</h2>
+      <p class="sublabel">What needs the RM's attention, most urgent first.</p>
+      <div id="alerts"></div>
+      <details class="legend-d"><summary>What do the colours mean?</summary><div class="legend" id="detailLegend" style="margin-top:10px"></div></details>
+      <h2 style="margin-top:18px">Mandate drift</h2>
+      <p class="sublabel">Sub-asset classes that have drifted more than ±2.0pp from their target weight.</p>
+      <div id="drift"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Advisory note</h2>
+      <p class="sublabel">A draft for the RM to send — never the client directly. You decide; the client decides.</p>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">
+        <span class="quiet">Tone</span>
+        <div class="toggle">
+          <button data-voice="values-led" class="on">Values-led</button>
+          <button data-voice="data-driven">Data-driven</button>
+        </div>
+      </div>
+      <textarea id="msg" placeholder="Press Generate to draft a note in the client's preferred tone…"></textarea>
+      <div style="margin-top:9px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="primary" id="gen">Generate draft</button>
+        <button id="accept">Accept</button><button id="reject">Reject</button>
+      </div>
+      <p style="margin:8px 0 0"><small class="src" id="msgSource"></small></p>
+
+      <h2 style="margin-top:18px">Decision log</h2>
+      <p class="sublabel">A timestamped record of every AI suggestion and every RM decision.</p>
+      <ul class="log" id="ledger"></ul>
+
+      <h2 style="margin-top:18px">Client channel · 24/7</h2>
+      <p class="sublabel">The client can write anytime. The AI <b>logs and flags</b> the message for you — it never replies or advises the client.</p>
+      <textarea id="clientMsg" style="min-height:58px" placeholder="Type as the client… e.g. “I want to dump all my Nvidia”"></textarea>
+      <div style="margin-top:7px"><button id="send">Send as client</button> &nbsp;<small class="src" id="sendNote"></small></div>
+      <ul class="log" id="signals"></ul>
+    </section>
+  </main>
+</div>
+
 <script>
 let CLIENT = null, EVENT = null;
 let voice = "values-led", thread = null, threadState = "full_case", altState = null;
 const api = (p, o) => fetch("/api/advisor" + p, o).then(r => r.json()).then(j => j.data);
 const el = (id) => document.getElementById(id);
-const log = (t) => { const li=document.createElement("li"); li.textContent = new Date().toLocaleTimeString()+" — "+t; el("ledger").prepend(li); };
+const esc = (s) => String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const chf = (n) => "CHF " + Math.round(n).toLocaleString("en-CH");
+const log = (t) => { const li=document.createElement("li"); li.innerHTML = `<b class="mono">${new Date().toLocaleTimeString()}</b> — ${esc(t)}`; el("ledger").prepend(li); };
+
+const ALERT_LABEL = { "dna-conflict":"conflict", "dna-opportunity":"opportunity", "cio-dna-conflict":"CIO tension", "cio-sell":"CIO sell", "drift-breach":"drift", "client-signal":"client msg", "news-hit":"news" };
+const LEGEND = [
+  ["conflict","var(--conflict)","a holding clashes with the client's values"],
+  ["opportunity","var(--opportunity)","a holding aligns with their mission"],
+  ["CIO tension","var(--tension)","a CIO call conflicts with the client"],
+  ["CIO sell / drift","var(--watch)","house view says sell, or the mandate has drifted"],
+  ["client msg","var(--client)","the client reached out — the AI never replies"],
+];
+function legendHTML() {
+  return LEGEND.map(([l,c,m]) => `<span class="lg"><i style="background:${c}"></i><b>${l}</b> — ${m}</span>`).join("")
+    + `<span class="terms"><b>Confidence</b> = how strongly the CRM history supports a trait. <b>At stake</b> = CHF exposed. <b>Evidence chips</b> = click to read the exact source.</span>`;
+}
+const chip = (e, off) => `<button class="chip ${esc(e.kind)} ${off?'off':''}" data-kind="${esc(e.kind)}" data-src="${esc(e.sourceId||'')}" data-date="${esc(e.date||'')}" data-quote="${esc(e.quote||'')}">${esc(e.kind)} · ${esc(e.date||'—')}</button>`;
+
+function showReceipt(d) {
+  document.querySelectorAll(".chip.active").forEach(c => c.classList.remove("active"));
+  el("receipt").innerHTML = `<div class="rcpt-meta"><span class="kindtag ${esc(d.kind)}">${esc(d.kind)}</span> <span class="mono">${esc(d.src)||'—'}</span> · <span class="mono">${esc(d.date)||'—'}</span></div><blockquote>${esc(d.quote)||'(no quote)'}</blockquote>`;
+}
+document.addEventListener("click", (ev) => {
+  const c = ev.target.closest(".chip");
+  if (!c) return;
+  showReceipt(c.dataset); c.classList.add("active");
+});
 
 function renderTraits(dna) {
-  el("clientName").textContent = dna.name;
+  el("clientName").textContent = dna.name + " · " + dna.mandate;
   el("traits").innerHTML = dna.traits.map(t => `
-    <div class="trait"><b>${t.label}</b> <span style="float:right">${Math.round(t.confidence*100)}%</span>
+    <div class="trait">
+      <div class="trait-top"><span class="trait-label">${esc(t.label)}</span><span class="conf">confidence <b>${Math.round(t.confidence*100)}%</b></span></div>
       <div class="bar"><i style="width:${t.confidence*100}%"></i></div>
-      <div style="margin-top:6px">${t.evidence.map(e=>`<span class="chip" title="${e.quote}">${e.kind} · ${e.date}</span>`).join("")}</div>
+      <div class="quiet" style="margin-bottom:6px">${esc(t.detail)}</div>
+      <div>${t.evidence.map(e=>chip(e)).join("")}</div>
     </div>`).join("");
 }
-const ALERT_LABEL = { "dna-conflict":"conflict", "dna-opportunity":"opportunity", "cio-dna-conflict":"CIO tension", "cio-sell":"CIO sell", "drift-breach":"drift", "client-signal":"client msg", "news-hit":"news" };
 function renderAlerts(traces) {
-  el("alerts").innerHTML = traces.map(t => {
+  el("alerts").innerHTML = traces.length ? traces.map(t => {
     const label = ALERT_LABEL[t.type] || t.severity;
-    return `<div class="alert ${t.severity} ${t.type}"><span class="sev ${t.severity} ${t.type}">${label}</span> ${t.claim}
-      ${t.valueAtStakeCHF?`<div><small class="src">CHF ${Math.round(t.valueAtStakeCHF).toLocaleString()} at stake</small></div>`:""}
-      <div>${t.evidence.map(e=>`<span class="chip">${e.kind} · ${e.date}</span>`).join("")}</div></div>`;
-  }).join("");
+    return `<div class="alert ${esc(t.type)}">
+      <span class="badge ${esc(t.type)}">${esc(label)}</span>
+      <div class="claim">${esc(t.claim)}</div>
+      ${t.valueAtStakeCHF?`<div class="at-stake"><b>${chf(t.valueAtStakeCHF)}</b> at stake</div>`:""}
+      <div>${t.evidence.map(e=>chip(e)).join("")}</div></div>`;
+  }).join("") : "<p class='quiet'>No active alerts for this client.</p>";
 }
 function renderDrift(drift) {
-  el("drift").innerHTML = drift.filter(d=>d.breached).map(d=>`
-    <div class="alert watch"><span class="sev watch">breach</span> ${d.subAssetClass}: ${d.deltaPct.toFixed(1)}pp vs target</div>`).join("") || "<small class='src'>Within ±2.0pp.</small>";
+  const breaches = drift.filter(d=>d.breached);
+  el("drift").innerHTML = breaches.length ? breaches.map(d=>`
+    <div class="alert drift-breach"><span class="badge drift-breach">drift</span>
+      <div class="claim">${esc(d.subAssetClass)} is ${d.deltaPct>0?'over':'under'} target by <b class="mono">${Math.abs(d.deltaPct).toFixed(1)}pp</b></div></div>`).join("")
+    : "<p class='quiet'>All sub-asset classes within ±2.0pp.</p>";
 }
+const NODE_TAG = { crm:"CRM note", trait:"DNA trait", holding:"Holding", news:"Event", swap:"Action" };
 function renderThread() {
   const st = thread.states[threadState];
-  const cols = { crm:60, trait:230, holding:400, news:400, swap:570 };
-  const yByKind = {}; const place = (n,i)=>{ const x=cols[n.kind]||300; yByKind[n.kind]=(yByKind[n.kind]||0)+1; return {x, y: 40 + (yByKind[n.kind]-1)*70 + (n.kind==='news'?170:0)}; };
-  const pos = {}; st.nodes.forEach((n,i)=> pos[n.id]=place(n,i));
-  const edge = (a,b)=>`<line x1="${pos[a].x+120}" y1="${pos[a].y+18}" x2="${pos[b].x}" y2="${pos[b].y+18}" stroke="#9fb1c1"/>`;
-  const node = (n)=>`<g class="node ${n.kind} ${n.active===false?'inactive':''}" transform="translate(${pos[n.id].x},${pos[n.id].y})">
-      <rect width="120" height="36" rx="6"></rect><text x="6" y="15">${(n.label||'').slice(0,22)}</text>
-      <text x="6" y="29" fill="#5b6b7a">${n.date||(n.confidence!=null?Math.round(n.confidence*100)+'%':'')}</text></g>`;
+  const cols = { crm:48, trait:236, holding:430, news:430, swap:586 };
+  const yByKind = {}; const place = (n)=>{ const x=cols[n.kind]??300; yByKind[n.kind]=(yByKind[n.kind]||0)+1; return {x, y: 34 + (yByKind[n.kind]-1)*64 + (n.kind==='news'?168:0)}; };
+  const pos = {}; st.nodes.forEach((n)=> pos[n.id]=place(n));
+  const W=128, H=44;
+  const edge = (a,b)=>`<line x1="${pos[a].x+W}" y1="${pos[a].y+H/2}" x2="${pos[b].x}" y2="${pos[b].y+H/2}" stroke="#b9c4ce" stroke-width="1.4"/>`;
+  const node = (n)=>`<g class="node ${esc(n.kind)} ${n.active===false?'inactive':''}" transform="translate(${pos[n.id].x},${pos[n.id].y})">
+      <rect width="${W}" height="${H}" rx="7"></rect>
+      <text class="ntag" x="8" y="13">${esc(NODE_TAG[n.kind]||n.kind)}</text>
+      <text class="nlabel" x="8" y="27">${esc((n.label||'').slice(0,24))}</text>
+      <text class="nsub" x="8" y="39">${esc(n.date||(n.confidence!=null?Math.round(n.confidence*100)+'%':''))}</text></g>`;
   el("thread").innerHTML = st.edges.map(([a,b])=>edge(a,b)).join("") + st.nodes.map(node).join("");
-  el("alertLine").innerHTML = `<span class="sev ${st.alert.severity}">${st.alert.severity}</span> ${st.alert.claim} <small class="src">(conf ${Math.round(st.alert.confidence*100)}%)</small>`;
+  const sevColor = { act:"var(--conflict)", watch:"var(--watch)", info:"var(--opportunity)" }[st.alert.severity] || "var(--slate)";
+  el("alertLine").innerHTML = `<span class="badge" style="background:${sevColor}">${esc(st.alert.severity)}</span> ${esc(st.alert.claim)} <span class="quiet mono">· confidence ${Math.round(st.alert.confidence*100)}%</span>`;
 }
 
 async function loadClient(id) {
@@ -127,17 +308,18 @@ async function loadClient(id) {
     await refreshAlerts(id);
     renderThread();
     await loadSignals(id);
+    el("receipt").innerHTML = "<span class='hint'>Click any evidence chip to see its exact source quote.</span>";
     el("msg").value = ""; el("msgSource").textContent = "";
     el("clientMsg").value = ""; el("sendNote").textContent = "";
   } catch (err) {
-    el("clientName").textContent = "Failed to load — check server.";
+    el("clientName").textContent = "Couldn't load this client — is the server running?";
   }
 }
 async function refreshAlerts(id) { renderAlerts(await api("/clients/"+id+"/alerts")); }
 async function loadSignals(id) {
   const sigs = await api("/clients/"+id+"/signals");
   el("signals").innerHTML = sigs.slice().reverse().map(s =>
-    `<li><b style="color:${s.flagged?'#0b6b9a':'var(--muted)'}">${s.flagged?'⚑ flagged':'logged'}</b> — "${s.text}" <span class="src">(${s.reason})</span></li>`).join("");
+    `<li><b style="color:${s.flagged?'var(--client)':'var(--muted)'}">${s.flagged?'⚑ flagged':'logged'}</b> — “${esc(s.text)}” <span class="src">${esc(s.reason)}</span></li>`).join("");
 }
 el("send").onclick = async () => {
   const text = el("clientMsg").value.trim();
@@ -145,27 +327,33 @@ el("send").onclick = async () => {
   const btn = el("send"); btn.disabled = true;
   try {
     const r = await api("/clients/"+CLIENT+"/inbound", { method:"POST", headers:{"content-type":"application/json"}, body: JSON.stringify({ text }) });
-    el("sendNote").textContent = r.flagged ? "Logged & flagged for the RM — AI did not reply." : "Logged to context — AI did not reply.";
+    el("sendNote").textContent = r.flagged ? "Logged & flagged for you — the AI did not reply." : "Logged to the client's context — the AI did not reply.";
     el("clientMsg").value = "";
-    await loadSignals(CLIENT);
-    await refreshAlerts(CLIENT);
-    log("Client message received → "+(r.flagged?"flagged HIGH priority":"logged")+" (AI did not respond to client)");
+    await loadSignals(CLIENT); await refreshAlerts(CLIENT);
+    log("Client message received → " + (r.flagged ? "flagged HIGH priority" : "logged") + " (AI did not respond to the client)");
   } catch (err) {
-    el("sendNote").textContent = "Send failed — check server.";
+    el("sendNote").textContent = "Couldn't send — is the server running?";
   } finally { btn.disabled = false; }
 };
+
 function renderInbox(rows) {
-  el("inboxList").innerHTML = rows.map(r => {
+  el("inboxList").innerHTML = rows.map((r,i) => {
     const t = r.top;
     const cls = t ? t.type : "";
-    const badge = t ? `<span class="sev ${t.severity} ${t.type}">${ALERT_LABEL[t.type]||t.severity}</span>` : `<span class="sev">clear</span>`;
-    const claim = t ? t.claim : "No active alerts.";
-    const val = (t && t.valueAtStakeCHF) ? ` · <small class="src">CHF ${Math.round(t.valueAtStakeCHF).toLocaleString()} at stake</small>` : "";
-    return `<div class="inbox-row ${cls}" data-id="${r.id}">
-      <div class="inbox-head">${badge} &nbsp;<b>${r.name}</b> <small class="src">· ${r.mandate}</small>${val}</div>
-      <div>${claim}</div></div>`;
+    const badge = t ? `<span class="badge ${esc(t.type)}">${ALERT_LABEL[t.type]||t.severity}</span>` : `<span class="badge">clear</span>`;
+    const claim = t ? esc(t.claim) : "No active alerts.";
+    const val = (t && t.valueAtStakeCHF) ? ` &nbsp;<span class="at-stake"><b>${chf(t.valueAtStakeCHF)}</b> at stake</span>` : "";
+    return `<div class="inbox-row ${cls}" data-id="${esc(r.id)}" tabindex="0" role="button">
+      <div class="inbox-rank">${i+1}</div>
+      <div class="inbox-main">
+        <div>${badge} <span class="inbox-name">${esc(r.name)}</span><span class="inbox-meta">${esc(r.mandate)} mandate</span>${val}</div>
+        <div class="inbox-claim">${claim}</div>
+      </div></div>`;
   }).join("");
-  document.querySelectorAll(".inbox-row").forEach(row => row.onclick = () => showDetail(row.dataset.id));
+  document.querySelectorAll(".inbox-row").forEach(row => {
+    row.onclick = () => showDetail(row.dataset.id);
+    row.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showDetail(row.dataset.id); } };
+  });
 }
 async function loadInbox() {
   el("detailView").style.display = "none";
@@ -173,7 +361,7 @@ async function loadInbox() {
   el("clientName").textContent = "";
   el("inboxView").style.display = "";
   try { renderInbox(await api("/inbox")); }
-  catch (err) { el("inboxList").innerHTML = "<small class='src'>Failed to load inbox — check server.</small>"; }
+  catch (err) { el("inboxList").innerHTML = "<p class='quiet'>Couldn't load the inbox — is the server running?</p>"; }
 }
 async function showDetail(id) {
   el("inboxView").style.display = "none";
@@ -182,39 +370,38 @@ async function showDetail(id) {
   await loadClient(id);
 }
 el("backBtn").onclick = () => loadInbox();
-async function boot() { await loadInbox(); }
+
 el("cutBtn").onclick = () => {
   if (!thread || !altState) return;
   threadState = threadState === "full_case" ? altState : "full_case";
   renderThread();
-  log(threadState === altState ? "RM challenged evidence node "+thread.cuttableNodeId+" → confidence revised, no divestment recommended" : "RM restored full evidence");
+  el("cutBtn").textContent = threadState === altState ? "Restore evidence" : "Challenge this evidence";
+  log(threadState === altState
+    ? "RM challenged an evidence node → AI lowered its confidence and softened the recommendation"
+    : "RM restored the challenged evidence → AI returned to the full case");
 };
 document.querySelectorAll(".toggle button").forEach(b => b.onclick = () => {
   voice = b.dataset.voice; document.querySelectorAll(".toggle button").forEach(x=>x.classList.remove("on")); b.classList.add("on");
 });
 el("gen").onclick = async () => {
-  const btn = el("gen");
-  btn.disabled = true;
+  const btn = el("gen"); btn.disabled = true;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 6000);
   try {
     const r = await api("/message", { method:"POST", headers:{"content-type":"application/json"},
       body: JSON.stringify({ clientId:CLIENT, eventId:EVENT, voice, live:true }), signal: controller.signal });
-    el("msg").value = r.text; el("msgSource").textContent = "source: " + r.source;
+    el("msg").value = r.text;
+    el("msgSource").textContent = r.source === "cache" ? "Draft ready (from cached model output)." : "Draft ready (generated live).";
   } catch (err) {
-    if (err && err.name === "AbortError") {
-      el("msgSource").textContent = "Request timed out — try again.";
-    } else {
-      el("msgSource").textContent = "Draft unavailable — network error.";
-    }
-  } finally {
-    clearTimeout(timer);
-    btn.disabled = false;
-  }
+    el("msgSource").textContent = err && err.name === "AbortError" ? "Generation timed out — press Generate to retry." : "Couldn't generate — is the server running?";
+  } finally { clearTimeout(timer); btn.disabled = false; }
 };
-el("accept").onclick = () => log("RM ACCEPTED the "+voice+" advisory draft (no order placed — awaiting client)");
+el("accept").onclick = () => log("RM ACCEPTED the " + voice + " draft — no order placed; awaiting the client's decision");
 el("reject").onclick = () => log("RM REJECTED the draft");
-boot();
+
+el("inboxLegend").innerHTML = legendHTML();
+el("detailLegend").innerHTML = legendHTML();
+loadInbox();
 </script>
 </body>
 </html>
