@@ -5,7 +5,7 @@
 | Name | GitHub | Focus / owns |
 |------|--------|--------------|
 | Masha | @mashathepotato | |
-| | | |
+| Varad | @VaradK62442    | |
 | | | |
 | | | |
 
