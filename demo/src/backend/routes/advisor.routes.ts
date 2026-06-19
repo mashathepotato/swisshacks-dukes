@@ -5,6 +5,7 @@ const router = Router();
 const c = new AdvisorController();
 
 router.get("/clients", (req, res) => c.listClients(req, res));
+router.get("/inbox", (req, res) => c.inbox(req, res));
 router.get("/clients/:id", (req, res) => c.getClient(req, res));
 router.get("/clients/:id/alerts", (req, res) => c.getAlerts(req, res));
 router.get("/clients/:id/swap", (req, res) => c.getSwap(req, res));

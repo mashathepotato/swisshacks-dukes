@@ -31,11 +31,20 @@
   textarea { width:100%; min-height:150px; border:1px solid var(--line); border-radius:8px; padding:8px; font:inherit; }
   .ledger li { font-size:12px; color:var(--muted); }
   small.src { color:var(--muted); }
+  .inbox-row { border:1px solid var(--line); border-left-width:4px; border-radius:8px; padding:10px 12px; margin-bottom:8px; cursor:pointer; }
+  .inbox-row:hover { background:#eef3f8; }
+  .inbox-row.act { border-left-color:var(--act); } .inbox-row.watch { border-left-color:var(--watch); }
+  .inbox-row.dna-opportunity { border-left-color:var(--accent); } .inbox-row.cio-dna-conflict { border-left-color:#6b4fa1; }
+  .inbox-head { margin-bottom:3px; }
 </style>
 </head>
 <body>
-<header>Dukes · Next-Generation Advisor &nbsp;&nbsp; <select id="clientPicker" style="font:inherit;padding:3px 8px;border-radius:6px"></select> &nbsp; — &nbsp; <span id="clientName">…</span></header>
-<main>
+<header>Dukes · Next-Generation Advisor <button id="backBtn" style="display:none;margin-left:10px">← Inbox</button> &nbsp; <span id="clientName" style="font-weight:400;color:#c2ccd6"></span></header>
+<section id="inboxView" class="panel" style="margin:16px">
+  <h2>Priority inbox — your book today</h2>
+  <div id="inboxList"></div>
+</section>
+<main id="detailView" style="display:none">
   <section class="panel" id="dna"><h2>Client DNA</h2><div id="traits"></div></section>
   <section class="panel">
     <h2>Glass Thread <button id="cutBtn" style="float:right">Cut this evidence</button></h2>
@@ -115,16 +124,35 @@ async function loadClient(id) {
     el("clientName").textContent = "Failed to load — check server.";
   }
 }
-async function boot() {
-  try {
-    const clients = await api("/clients");
-    el("clientPicker").innerHTML = clients.map(c => `<option value="${c.id}">${c.name} · ${c.mandate}</option>`).join("");
-    el("clientPicker").onchange = (e) => loadClient(e.target.value);
-    if (clients.length) await loadClient(clients[0].id);
-  } catch (err) {
-    el("clientName").textContent = "Failed to load — check server.";
-  }
+function renderInbox(rows) {
+  el("inboxList").innerHTML = rows.map(r => {
+    const t = r.top;
+    const cls = t ? t.type : "";
+    const badge = t ? `<span class="sev ${t.severity} ${t.type}">${ALERT_LABEL[t.type]||t.severity}</span>` : `<span class="sev">clear</span>`;
+    const claim = t ? t.claim : "No active alerts.";
+    const val = (t && t.valueAtStakeCHF) ? ` · <small class="src">CHF ${Math.round(t.valueAtStakeCHF).toLocaleString()} at stake</small>` : "";
+    return `<div class="inbox-row ${cls}" data-id="${r.id}">
+      <div class="inbox-head">${badge} &nbsp;<b>${r.name}</b> <small class="src">· ${r.mandate}</small>${val}</div>
+      <div>${claim}</div></div>`;
+  }).join("");
+  document.querySelectorAll(".inbox-row").forEach(row => row.onclick = () => showDetail(row.dataset.id));
 }
+async function loadInbox() {
+  el("detailView").style.display = "none";
+  el("backBtn").style.display = "none";
+  el("clientName").textContent = "";
+  el("inboxView").style.display = "";
+  try { renderInbox(await api("/inbox")); }
+  catch (err) { el("inboxList").innerHTML = "<small class='src'>Failed to load inbox — check server.</small>"; }
+}
+async function showDetail(id) {
+  el("inboxView").style.display = "none";
+  el("detailView").style.display = "";
+  el("backBtn").style.display = "";
+  await loadClient(id);
+}
+el("backBtn").onclick = () => loadInbox();
+async function boot() { await loadInbox(); }
 el("cutBtn").onclick = () => {
   if (!thread || !altState) return;
   threadState = threadState === "full_case" ? altState : "full_case";

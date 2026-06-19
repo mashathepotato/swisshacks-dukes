@@ -102,6 +102,14 @@ export interface Trace {
   valueAtStakeCHF?: number;
 }
 
+export interface InboxRow {
+  id: string;
+  name: string;
+  mandate: Mandate;
+  top: { type: AlertType; severity: Severity; claim: string; valueAtStakeCHF?: number } | null;
+  score: number;
+}
+
 export interface NewsEvent {
   id: string;
   headline: string;
