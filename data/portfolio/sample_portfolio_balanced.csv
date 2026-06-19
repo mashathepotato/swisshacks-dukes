@@ -1,0 +1,67 @@
+Asset Class,Sub-Asset Class,Region,Industry Group,Issuer / Asset,Security / Details,ISIN,Target (CHF),Current (CHF),Valor,MIC,Yahoo Ticker
+Equities,Domestic (CHF),Schweiz,Consumer Staples,Nestlé S.A.,Registered Shares,CH0038863350,120000,121363.45,3886335,XSWX,NESN.SW
+Equities,Domestic (CHF),Schweiz,Health Care,Roche Holding AG,Genussschein,CH0012032048,110000,112461.84,1203204,,RO.SW
+Equities,Domestic (CHF),Schweiz,Health Care,Novartis AG,Registered Shares,CH0012005267,110000,111130.22,1200526,XSWX,NOVN.SW
+Equities,Domestic (CHF),Schweiz,Financials,Zurich Insurance Group,Registered Shares,CH0011075394,110000,110044.25,1107539,XSWX,ZURN.SW
+Equities,Domestic (CHF),Schweiz,Financials,UBS Group AG,Registered Shares,CH0244767585,120000,120418.93,24476758,XSWX,UBSG.SW
+Equities,Domestic (CHF),Schweiz,Industrials,ABB Ltd.,Registered Shares,CH0012221716,110000,113111.7,1222171,XSWX,ABBN.SW
+Equities,Domestic (CHF),Schweiz,Materials,Sika AG,Registered Shares,CH0418792922,110000,111426.17,41879292,XSWX,SIKA.SW
+Equities,Domestic (CHF),Schweiz,Materials,Holcim AG,Registered Shares,CH0012214059,110000,111103.83,1221405,XSWX,HOLN.SW
+Equities,Domestic (CHF),Schweiz,Industrials,Geberit AG,Registered Shares,CH0030170408,50000,52199.22,3017040,XSWX,GEBN.SW
+Equities,Domestic (CHF),Schweiz,Materials,Givaudan SA,Registered Shares,CH0010645932,50000,50657.48,1064593,XSWX,GIVN.SW
+Equities,Foreign (Dev. Markets),USA,Information Technology,Microsoft Corp.,Registered Shares,US5949181045,210000,260536.4,951692,XNAS,MSFT
+Equities,Foreign (Dev. Markets),USA,Information Technology,Apple Inc.,Registered Shares,US0378331005,210000,259103.95,908440,XNAS,AAPL
+Equities,Foreign (Dev. Markets),USA,Information Technology,NVIDIA Corp.,Registered Shares,US67066G1040,190000,236082.75,994529,XNAS,NVDA
+Equities,Foreign (Dev. Markets),USA,Communication Services,Alphabet Inc.,Reg. Shares Class A,US02079K3059,190000,212382.65,29798540,XNAS,GOOGL
+Equities,Foreign (Dev. Markets),USA,Consumer Discretionary,Amazon.com Inc.,Registered Shares,US0231351067,190000,206405.94,645156,XNAS,AMZN
+Equities,Foreign (Dev. Markets),USA,Communication Services,Meta Platforms Inc.,Registered Shares A,US30303M1027,160000,181838.36,14917609,XNAS,META
+Equities,Foreign (Dev. Markets),USA,Financials,JPMorgan Chase & Co.,Registered Shares,US46625H1005,140000,137096.24,1161460,XNYS,JPM
+Equities,Foreign (Dev. Markets),USA,Consumer Discretionary,Home Depot Inc.,Registered Shares,US4370761029,130000,139861.64,939360,XNYS,HD
+Equities,Foreign (Dev. Markets),USA,Financials,Berkshire Hathaway,Registered Shares Cl. B,US0846701086,130000,125842.17,912499,XNYS,BRK-B
+Equities,Foreign (Dev. Markets),USA,Consumer Discretionary,Tesla Inc.,Registered Shares,US88160R1014,120000,131245.81,11448018,XNAS,TSLA
+Equities,Foreign (Dev. Markets),USA,Financials,Visa Inc.,Registered Shares Class A,US92826C8394,110000,107235.55,3826452,XNYS,V
+Equities,Foreign (Dev. Markets),USA,Financials,Mastercard Inc.,Registered Shares Cl. A,US57636Q1040,110000,107354.86,2282206,XNYS,MA
+Equities,Foreign (Dev. Markets),USA,Health Care,Biogen Inc.,Registered Shares,US09062X1037,100000,101097.29,1720684,XNAS,BIIB
+Equities,Foreign (Dev. Markets),USA,Health Care,Eli Lilly & Co.,Registered Shares,US5324571083,100000,102311.59,947556,XNYS,LLY
+Equities,Foreign (Dev. Markets),USA,Information Technology,Broadcom Inc.,Registered Shares,US11135F1012,100000,125560.38,41112361,XNAS,AVGO
+Equities,Foreign (Dev. Markets),USA,Financials,Bank of America Corp.,Registered Shares,US0605051046,80000,77255.11,748628,XNYS,BAC
+Equities,Foreign (Dev. Markets),USA,Energy,Exxon Mobil Corp.,Registered Shares,US30231G1022,80000,79850,808963,XNYS,XOM
+Equities,Foreign (Dev. Markets),Europa,Information Technology,ASML Holding N.V.,Registered Shares,NL0010273215,170000,209661.32,19531091,XAMS,ASML.AS
+Equities,Foreign (Dev. Markets),Europa,Information Technology,SAP SE,Inhaber-Aktien,DE0007164600,170000,211944.24,345952,XETR,SAP.DE
+Equities,Foreign (Dev. Markets),Europa,Health Care,Novo Nordisk A/S,Navne-Aktier B,DK0062498333,150000,154306.08,129508879,XCSE,NOVO-B.CO
+Equities,Foreign (Dev. Markets),Europa,Consumer Discretionary,LVMH Moët Hennessy,Registered Shares,FR0000121014,140000,150836.5,507170,XPAR,MC.PA
+Equities,Foreign (Dev. Markets),Europa,Industrials,Schneider Electric SE,Actions Port.,FR0000121972,130000,135152.67,509120,XPAR,SU.PA
+Equities,Foreign (Dev. Markets),Europa,Financials,Allianz SE,Vink.Namens-Aktien,DE0008404005,110000,107707.68,322646,XETR,ALV.DE
+Equities,Foreign (Dev. Markets),Europa,Industrials,Siemens AG,Namens-Aktien,DE0007236101,110000,116349.64,827766,XETR,SIE.DE
+Equities,Foreign (Dev. Markets),Global,Materials,Linde PLC,Registered Shares,IE000S9YS762,120000,122427.03,124625792,XNAS,LIN
+Equities,Emerging Markets,Emerging M.,Information Technology,TSMC,Registered Shares ADR,US8740391003,150000,143452.54,724641,XNYS,TSM
+Equities,Emerging Markets,Emerging M.,Information Technology,Samsung Electronics,Co. Ltd. GDR,US7960502018,150000,147273.52,722282,XLON,
+Equities,Emerging Markets,Emerging M.,Information Technology,Infosys Ltd.,Registered Shares ADR,US4567881085,130000,125640.67,516529,XNYS,INFY
+Equities,Emerging Markets,Emerging M.,Energy,Reliance Industries,Ltd. GDR,US7594701077,120000,114722.61,751471,XLON,
+Fixed Income,Domestic Bonds (CHF),Schweiz,Government Bonds,Swiss Confederation,0.50% 27.05.2030 (CHF),CH0224397171,400000,397238.47,22439717,XSWX,
+Fixed Income,Domestic Bonds (CHF),Schweiz,Government Bonds,Swiss Confederation,1.25% 27.06.2037 (CHF),CH0127181193,300000,297752.1,12718119,XSWX,
+Fixed Income,Domestic Bonds (CHF),Schweiz,Government Bonds,Swiss Confederation,1.50% 30.04.2042 (CHF),CH0127181169,250000,248623.86,12718116,XSWX,
+Fixed Income,Domestic Bonds (CHF),Schweiz,Investment Grade,Nestlé S.A.,2.125% 15.07.2030 (CHF),CH1194355116,200000,198174,119435511,XSWX,
+Fixed Income,Foreign Bonds (G7),USA,Government Bonds,US Treasury,4.125% 31.10.2026 (USD),US91282CLS88,300000,294988.12,139263890,XMUN,
+Fixed Income,Foreign Bonds (G7),USA,Government Bonds,US Treasury,4.250% 15.11.2034 (USD),US91282CLW90,270000,265507.46,139442504,ETLX,
+Fixed Income,Foreign Bonds (G7),USA,Government Bonds,iShares USD Treas. ETF,7-10y CHF-Hedged UCITS ETF (Acc),IE00BK7Y2R57,280000,275243.78,48370001,XSWX,
+Fixed Income,Foreign Bonds (G7),Europa,Government Bonds,Germany Bund,2.30% 15.02.2033 (EUR),DE000BU3Z005,230000,226868.88,126652249,MCAD,
+Fixed Income,Foreign Bonds (G7),Europa,Government Bonds,Germany Bund,2.60% 15.08.2034 (EUR),DE000BU2Z031,180000,176799.74,136370237,MCAD,
+Fixed Income,Foreign Bonds (G7),Europa,Government Bonds,France OAT,2.75% 25.02.2030 (EUR),FR001400PM68,180000,177385.49,134595592,FMTS,
+Fixed Income,Foreign Bonds (G7),USA,Investment Grade,Apple Inc.,3.00% 20.06.2027 (USD),US037833CX61,120000,118244.37,37141564,FINR,
+Fixed Income,Foreign Bonds (G7),USA,Investment Grade,Microsoft Corp.,3.125% 06.12.2028 (EUR),XS1001749289,120000,117932.02,23056711,XQOD,
+Fixed Income,Foreign Bonds (G7),USA,Investment Grade,Johnson & Johnson,3.40% 15.01.2038 (USD),US478160CL64,120000,118433.45,39086040,FINR,
+Fixed Income,Foreign Bonds (G7),Europa,Investment Grade,Siemens Fin.,0.50% 20.02.2032 (EUR),XS2118273601,100000,98370.55,52558720,,
+Fixed Income,Foreign Bonds (G7),Europa,Investment Grade,Deutsche Telekom,1.75% 25.03.2031 (EUR),DE000A2TSDE2,100000,98774.2,46877468,TGAT,
+Fixed Income,Emerging Market Bonds,Emerging M.,Government Bonds,United Mexican States,5.75% 12.10.2110,US91086QAZ19,50000,49110.95,11853373,ETLX,
+Fixed Income,Emerging Market Bonds,Emerging M.,Government Bonds,Federative Republic of Brazil,5.625% 21.02.2047,US105756BY51,50000,49213.61,33393607,ETLX,
+Fixed Income,Emerging Market Bonds,Emerging M.,Government Bonds,Republic of Indonesia,5.25% 17.01.2042,USY20721BB49,50000,49201.13,14711996,,
+Fixed Income,Emerging Market Bonds,Emerging M.,Government Bonds,Republic of South Africa,5.75% 30.09.2049,US836205BB97,50000,49266.84,50235648,,
+Real Estate,Swiss Real Estate,Schweiz,Real Estate (Fund),UBS (CH) Property Fund,Swiss Mixed «Sima» (CHF),CH0014420878,200000,202075.78,1442087,XSWX,
+Real Estate,Global Listed REITs,USA,Real Estate (REIT),Prologis Inc.,Logistics Real Estate Shares,US74340W1036,100000,101517.13,13090717,XNYS,
+Real Estate,Global Listed REITs,USA,Real Estate (REIT),Equinix Inc.,Data Center Real Estate Shares,US29444U7000,100000,100710.29,26875198,XNAS,
+Real Estate,Global Listed REITs,USA,Real Estate (REIT),Welltower Inc.,Healthcare Real Estate Shares,US95040Q1040,100000,100696.05,29816226,XNYS,
+Alternatives,Commodities / Gold,Global,Precious Metals,ZKB Gold ETF,Class A (CHF) (Gold-Fonds),CH0047533523,500000,535486.94,4753352,XSWX,
+Alternatives,Private Markets,Global,Private Markets,Partners Group Listed Investments - Listed PE,SICAV EUR (P-Acc.) (PE-Fonds),LU0196152788,350000,360259.56,1902991,TGAT,
+Liquidity,Cash & Money Market,Schweiz,Liquidity,Swiss Bank,CHF Cash / Kontokorrent,Cash-CHF,300000,300000,,,
+Total,,,,,,,10000000,10352327.05,,,

@@ -1,0 +1,279 @@
+Transaction ID,Timestamp,Portfolio,ISIN,Issuer / Asset,Side,Quantity,Price (local),Currency,FX → CHF,Price (CHF),Amount (CHF),Rationale,Price Source
+txn-bal-0072,2023-05-13 00:00:00,Balanced,US02079K3059,Alphabet Inc.,BUY,220.499099,117.51,USD,0.894,105.0539,23164.3,Position open · mandate inception DCA,yfinance
+txn-bal-0243,2023-05-13 00:00:00,Balanced,US836205BB97,Republic of South Africa,BUY,642.541399,100,USD,0.894,89.4,57443.2,Bond purchase at par · mandate inception,issuance_par
+txn-bal-0251,2023-05-13 00:00:00,Balanced,US74340W1036,Prologis Inc.,BUY,613.584945,100.7622,USD,0.894,90.0814,55272.61,Position open · mandate inception DCA,synth_estimated
+txn-bal-0056,2023-05-14 00:00:00,Balanced,US5949181045,Microsoft Corp.,BUY,327.751118,308.97,USD,0.894,276.2192,90531.14,Position open · mandate inception DCA,yfinance
+txn-bal-0086,2023-05-14 00:00:00,Balanced,US46625H1005,JPMorgan Chase & Co.,BUY,235.987057,134.1,USD,0.894,119.8854,28291.4,Position open · mandate inception DCA,yfinance
+txn-bal-0150,2023-05-14 00:00:00,Balanced,US30231G1022,Exxon Mobil Corp.,BUY,297.798867,105.78,USD,0.894,94.5673,28162.04,Position open · mandate inception DCA,yfinance
+txn-bal-0241,2023-05-14 00:00:00,Balanced,US105756BY51,Federative Republic of Brazil,BUY,642.541399,100,USD,0.894,89.4,57443.2,Bond purchase at par · mandate inception,issuance_par
+txn-bal-0258,2023-05-16 00:00:00,Balanced,US29444U7000,Equinix Inc.,BUY,256.884691,148.01,USD,0.89546,132.537,34046.73,Position open · mandate inception DCA,synth_estimated
+txn-bal-0015,2023-05-17 00:00:00,Balanced,CH0011075394,Zurich Insurance Group,BUY,78.484355,418.5,CHF,1,418.5,32845.7,Position open · mandate inception DCA,yfinance
+txn-bal-0178,2023-05-17 00:00:00,Balanced,FR0000121972,Schneider Electric SE,BUY,240.314746,159.52,EUR,0.9741,155.3884,37342.13,Position open · mandate inception DCA,yfinance
+txn-bal-0035,2023-05-18 00:00:00,Balanced,CH0418792922,Sika AG,BUY,331.352039,249.4,CHF,1,249.4,82639.2,Position open · mandate inception DCA,yfinance
+txn-bal-0228,2023-05-19 00:00:00,Balanced,CH1194355116,Nestlé S.A.,BUY,2000,100,CHF,1,100,200000,Bond purchase at par · mandate inception,issuance_par
+txn-bal-0184,2023-05-20 00:00:00,Balanced,DE0008404005,Allianz SE,BUY,134.394565,212.25,EUR,0.97493,206.9289,27810.12,Position open · mandate inception DCA,yfinance
+txn-bal-0082,2023-05-21 00:00:00,Balanced,US30303M1027,Meta Platforms Inc.,BUY,115.841249,245.64,USD,0.90487,222.2723,25748.3,Position open · mandate inception DCA,yfinance
+txn-bal-0105,2023-05-21 00:00:00,Balanced,US88160R1014,Tesla Inc.,BUY,113.052658,180.14,USD,0.90487,163.0033,18427.95,Position open · mandate inception DCA,yfinance
+txn-bal-0161,2023-05-21 00:00:00,Balanced,DE0007164600,SAP SE,BUY,594.65188,124.48,EUR,0.97493,121.3593,72166.53,Position open · mandate inception DCA,yfinance
+txn-bal-0195,2023-05-21 00:00:00,Balanced,IE000S9YS762,Linde PLC,BUY,144.80552,371.49,USD,0.90487,336.1501,48676.4,Position open · mandate inception DCA,yfinance
+txn-bal-0244,2023-05-21 00:00:00,Balanced,CH0014420878,UBS (CH) Property Fund,BUY,453.306893,138.2276,CHF,1,138.2276,62659.51,Position open · mandate inception DCA,synth_estimated
+txn-bal-0001,2023-05-22 00:00:00,Balanced,CH0038863350,Nestlé S.A.,BUY,525.074371,112.96,CHF,1,112.96,59312.4,Position open · mandate inception DCA,yfinance
+txn-bal-0005,2023-05-24 00:00:00,Balanced,CH0012032048,Roche Holding AG,BUY,128.844378,314.2,CHF,1,314.2,40482.91,Position open · mandate inception DCA,yfinance
+txn-bal-0009,2023-05-24 00:00:00,Balanced,CH0012005267,Novartis AG,BUY,436.092252,85.8605,CHF,1,85.8605,37443.08,Position open · mandate inception DCA,yfinance
+txn-bal-0022,2023-05-24 00:00:00,Balanced,CH0244767585,UBS Group AG,BUY,1456.430057,17.855,CHF,1,17.855,26004.56,Position open · mandate inception DCA,yfinance
+txn-bal-0111,2023-05-24 00:00:00,Balanced,US92826C8394,Visa Inc.,BUY,208.019116,222.25,USD,0.90131,200.3162,41669.59,Position open · mandate inception DCA,yfinance
+txn-bal-0045,2023-05-25 00:00:00,Balanced,CH0030170408,Geberit AG,BUY,31.690764,485.5,CHF,1,485.5,15385.87,Position open · mandate inception DCA,yfinance
+txn-bal-0143,2023-05-25 00:00:00,Balanced,US0605051046,Bank of America Corp.,BUY,882.358421,28.17,USD,0.904,25.4657,22469.86,Position open · mandate inception DCA,yfinance
+txn-bal-0172,2023-05-25 00:00:00,Balanced,FR0000121014,LVMH Moët Hennessy,BUY,142.130184,823.4,EUR,0.97262,800.8553,113825.72,Position open · mandate inception DCA,yfinance
+txn-bal-0200,2023-05-25 00:00:00,Balanced,US8740391003,TSMC,BUY,156.951831,100.95,USD,0.904,91.2588,14323.24,Position open · mandate inception DCA,yfinance
+txn-bal-0216,2023-05-25 00:00:00,Balanced,US4567881085,Infosys Ltd.,BUY,5209.758626,15.66,USD,0.904,14.1566,73752.68,Position open · mandate inception DCA,yfinance
+txn-bal-0232,2023-05-25 00:00:00,Balanced,DE000BU3Z005,Germany Bund,BUY,2509.355511,100,EUR,0.97262,97.262,244064.94,Bond purchase at par · mandate inception,issuance_par
+txn-bal-0041,2023-05-27 00:00:00,Balanced,CH0012214059,Holcim AG,BUY,534.513104,56.5,CHF,1,56.5,30199.99,Position open · mandate inception DCA,yfinance
+txn-bal-0118,2023-05-27 00:00:00,Balanced,US57636Q1040,Mastercard Inc.,BUY,141.265318,374.37,USD,0.90505,338.8236,47864.02,Position open · mandate inception DCA,yfinance
+txn-bal-0131,2023-05-27 00:00:00,Balanced,US5324571083,Eli Lilly & Co.,BUY,40.508132,425.79,USD,0.90505,385.3612,15610.26,Position open · mandate inception DCA,yfinance
+txn-bal-0189,2023-05-27 00:00:00,Balanced,DE0007236101,Siemens AG,BUY,198.351003,156.68,EUR,0.97059,152.072,30163.64,Position open · mandate inception DCA,yfinance
+txn-bal-0233,2023-05-27 00:00:00,Balanced,DE000BU2Z031,Germany Bund,BUY,1963.843443,100,EUR,0.97059,97.059,190608.68,Bond purchase at par · mandate inception,issuance_par
+txn-bal-0077,2023-05-28 00:00:00,Balanced,US0231351067,Amazon.com Inc.,BUY,325.657428,120.11,USD,0.90505,108.7056,35400.77,Position open · mandate inception DCA,yfinance
+txn-bal-0275,2023-05-28 00:00:00,Balanced,LU0196152788,Partners Group Listed Investments - Listed PE,BUY,723.651975,129.3835,EUR,0.97059,125.5783,90874.98,Position open · mandate inception DCA,synth_estimated
+txn-bal-0052,2023-05-29 00:00:00,Balanced,CH0010645932,Givaudan SA,BUY,8.605412,3051,CHF,1,3051,26255.11,Position open · mandate inception DCA,yfinance
+txn-bal-0138,2023-05-29 00:00:00,Balanced,US11135F1012,Broadcom Inc.,BUY,139.39909,81.273,USD,0.90569,73.6081,10260.91,Position open · mandate inception DCA,yfinance
+txn-bal-0165,2023-05-29 00:00:00,Balanced,DK0062498333,Novo Nordisk A/S,BUY,1658.726787,568.8,DKK,0.130375,74.1573,123006.7,Position open · mandate inception DCA,yfinance
+txn-bal-0235,2023-05-29 00:00:00,Balanced,US037833CX61,Apple Inc.,BUY,1542.099359,100,USD,0.90569,90.569,139666.4,Bond purchase at par · mandate inception,issuance_par
+txn-bal-0063,2023-05-31 00:00:00,Balanced,US0378331005,Apple Inc.,BUY,299.280772,177.25,USD,0.9058,160.553,48050.44,Position open · mandate inception DCA,yfinance
+txn-bal-0124,2023-06-01 00:00:00,Balanced,US09062X1037,Biogen Inc.,BUY,236.11472,302.41,USD,0.90989,275.1598,64969.29,Position open · mandate inception DCA,yfinance
+txn-bal-0208,2023-06-01 00:00:00,Balanced,US7960502018,Samsung Electronics,BUY,494.293973,133.8646,USD,0.90989,121.8021,60206.03,Position open · mandate inception DCA,synth_estimated
+txn-bal-0220,2023-06-01 00:00:00,Balanced,US7594701077,Reliance Industries,BUY,367.364924,127.8745,USD,0.90989,116.3518,42743.55,Position open · mandate inception DCA,synth_estimated
+txn-bal-0029,2023-06-02 00:00:00,Balanced,CH0012221716,ABB Ltd.,BUY,413.137493,33.94,CHF,1,33.94,14021.89,Position open · mandate inception DCA,yfinance
+txn-bal-0093,2023-06-02 00:00:00,Balanced,US4370761029,Home Depot Inc.,BUY,253.893329,295.94,USD,0.90559,268.0003,68043.49,Position open · mandate inception DCA,yfinance
+txn-bal-0263,2023-06-02 00:00:00,Balanced,US95040Q1040,Welltower Inc.,BUY,567.152835,98.851,USD,0.90559,89.5185,50770.64,Position open · mandate inception DCA,synth_estimated
+txn-bal-0067,2023-06-03 00:00:00,Balanced,US67066G1040,NVIDIA Corp.,BUY,428.145745,39.327,USD,0.90559,35.6141,15248.04,Position open · mandate inception DCA,yfinance
+txn-bal-0100,2023-06-03 00:00:00,Balanced,US0846701086,Berkshire Hathaway,BUY,136.774092,329.48,USD,0.90559,298.3738,40809.81,Position open · mandate inception DCA,yfinance
+txn-bal-0154,2023-06-03 00:00:00,Balanced,NL0010273215,ASML Holding N.V.,BUY,47.945533,674.6,EUR,0.97438,657.3167,31515.4,Position open · mandate inception DCA,yfinance
+txn-bal-0268,2023-06-03 00:00:00,Balanced,CH0047533523,ZKB Gold ETF,BUY,950.771651,155.3584,CHF,1,155.3584,147710.41,Position open · mandate inception DCA,synth_estimated
+txn-bal-0240,2023-06-06 00:00:00,Balanced,US91086QAZ19,United Mexican States,BUY,642.541399,100,USD,0.9059,90.59,58207.83,Bond purchase at par · mandate inception,issuance_par
+txn-bal-0237,2023-06-09 00:00:00,Balanced,US478160CL64,Johnson & Johnson,BUY,1542.099359,100,USD,0.8987,89.87,138588.47,Bond purchase at par · mandate inception,issuance_par
+txn-bal-0231,2023-06-10 00:00:00,Balanced,IE00BK7Y2R57,iShares USD Treas. ETF,BUY,3054.867578,100,EUR,0.96913,96.913,296056.38,Bond purchase at par · mandate inception,issuance_par
+txn-bal-0238,2023-06-10 00:00:00,Balanced,XS2118273601,Siemens Fin.,BUY,1285.082799,100,USD,0.8987,89.87,115490.39,Bond purchase at par · mandate inception,issuance_par
+txn-bal-0242,2023-06-11 00:00:00,Balanced,USY20721BB49,Republic of Indonesia,BUY,642.541399,100,USD,0.8987,89.87,57745.2,Bond purchase at par · mandate inception,issuance_par
+txn-bal-0227,2023-06-12 00:00:00,Balanced,CH0127181169,Swiss Confederation,BUY,2500,100,CHF,1,100,250000,Bond purchase at par · mandate inception,issuance_par
+txn-bal-0234,2023-06-18 00:00:00,Balanced,FR001400PM68,France OAT,BUY,1963.843443,100,EUR,0.976,97.6,191671.12,Bond purchase at par · mandate inception,issuance_par
+txn-bal-0230,2023-06-20 00:00:00,Balanced,US91282CLW90,US Treasury,BUY,3469.723557,100,USD,0.89578,89.578,310810.91,Bond purchase at par · mandate inception,issuance_par
+txn-bal-0229,2023-06-23 00:00:00,Balanced,US91282CLS88,US Treasury,BUY,3855.248397,100,USD,0.89488,89.488,344998.47,Bond purchase at par · mandate inception,issuance_par
+txn-bal-0225,2023-06-30 00:00:00,Balanced,CH0224397171,Swiss Confederation,BUY,4000,100,CHF,1,100,400000,Bond purchase at par · mandate inception,issuance_par
+txn-bal-0239,2023-07-07 00:00:00,Balanced,DE000A2TSDE2,Deutsche Telekom,BUY,1091.024135,100,EUR,0.97491,97.491,106365.04,Bond purchase at par · mandate inception,issuance_par
+txn-bal-0226,2023-07-08 00:00:00,Balanced,CH0127181193,Swiss Confederation,BUY,3000,100,CHF,1,100,300000,Bond purchase at par · mandate inception,issuance_par
+txn-bal-0236,2023-07-12 00:00:00,Balanced,XS1001749289,Microsoft Corp.,BUY,1542.099359,100,USD,0.87876,87.876,135513.52,Bond purchase at par · mandate inception,issuance_par
+txn-bal-0039,2023-07-19 00:00:00,Balanced,CH0418792922,Sika AG,BUY,123.50292,256.3,CHF,1,256.3,31653.8,DCA into existing position,yfinance
+txn-bal-0158,2023-08-09 00:00:00,Balanced,NL0010273215,ASML Holding N.V.,BUY,15.716096,614.1,EUR,0.95954,589.2535,9260.76,Tactical add · CIO conviction maintained,yfinance
+txn-bal-0007,2023-08-15 00:00:00,Balanced,CH0012032048,Roche Holding AG,BUY,48.959738,282.2,CHF,1,282.2,13816.44,DCA into existing position,yfinance
+txn-bal-0070,2023-09-01 00:00:00,Balanced,US67066G1040,NVIDIA Corp.,BUY,144.610253,48.509,USD,0.8832,42.8431,6195.56,DCA into existing position,yfinance
+txn-bal-0169,2023-09-09 00:00:00,Balanced,DK0062498333,Novo Nordisk A/S,BUY,429.666327,677.6,DKK,0.128015,86.743,37270.53,DCA into existing position,yfinance
+txn-bal-0098,2023-09-15 00:00:00,Balanced,US4370761029,Home Depot Inc.,BUY,68.819128,321.4,USD,0.8964,288.1029,19826.99,Add on dip · technical entry,yfinance
+txn-bal-0174,2023-09-19 00:00:00,Balanced,FR0000121014,LVMH Moët Hennessy,BUY,33.393826,736.8,EUR,0.95937,706.8638,23604.89,Quarterly rebalance · drift below target,yfinance
+txn-bal-0064,2023-09-20 00:00:00,Balanced,US0378331005,Apple Inc.,BUY,99.063731,175.49,USD,0.89731,157.4689,15599.46,Tactical add · CIO conviction maintained,yfinance
+txn-bal-0050,2023-10-10 00:00:00,Balanced,CH0030170408,Geberit AG,BUY,17.115153,461.8,CHF,1,461.8,7903.78,DCA into existing position,yfinance
+txn-bal-0167,2023-10-14 00:00:00,Balanced,DK0062498333,Novo Nordisk A/S,BUY,512.016081,716.5,DKK,0.128263,91.9004,47054.5,Top-up after deposit,yfinance
+txn-bal-0148,2023-10-18 00:00:00,Balanced,US0605051046,Bank of America Corp.,BUY,212.619457,27.31,USD,0.90011,24.582,5226.61,Top-up after deposit,yfinance
+txn-bal-0042,2023-10-19 00:00:00,Balanced,CH0012214059,Holcim AG,BUY,120.861213,56.48,CHF,1,56.48,6826.24,Top-up after deposit,yfinance
+txn-bal-0204,2023-10-21 00:00:00,Balanced,US8740391003,TSMC,BUY,57.342415,91.31,USD,0.89179,81.4293,4669.36,Tactical add · CIO conviction maintained,yfinance
+txn-bal-0113,2023-10-24 00:00:00,Balanced,US92826C8394,Visa Inc.,BUY,37.233021,234.65,USD,0.8906,208.9793,7780.93,Top-up after deposit,yfinance
+txn-bal-0248,2023-10-25 00:00:00,Balanced,CH0014420878,UBS (CH) Property Fund,BUY,120.181185,144.865,CHF,1,144.865,17410.05,Add on dip · technical entry,synth_estimated
+txn-bal-0032,2023-11-02 00:00:00,Balanced,CH0012221716,ABB Ltd.,BUY,218.156801,30.95,CHF,1,30.95,6751.95,Top-up after deposit,yfinance
+txn-bal-0152,2023-11-05 00:00:00,Balanced,US30231G1022,Exxon Mobil Corp.,BUY,105.790179,107.78,USD,0.9061,97.6595,10331.41,DCA into existing position,yfinance
+txn-bal-0221,2023-11-08 00:00:00,Balanced,US7594701077,Reliance Industries,BUY,165.306159,134.1462,USD,0.89997,120.7275,19957,Quarterly rebalance · drift below target,synth_estimated
+txn-bal-0049,2023-11-10 00:00:00,Balanced,CH0030170408,Geberit AG,BUY,9.085412,460,CHF,1,460,4179.29,Add on dip · technical entry,yfinance
+txn-bal-0128,2023-11-11 00:00:00,Balanced,US09062X1037,Biogen Inc.,BUY,55.846461,224.79,USD,0.90315,203.0191,11337.9,Tactical add · CIO conviction maintained,yfinance
+txn-bal-0191,2023-11-29 00:00:00,Balanced,DE0007236101,Siemens AG,BUY,65.810251,152.88,EUR,0.9651,147.5445,9709.94,Quarterly rebalance · drift below target,yfinance
+txn-bal-0073,2023-12-13 00:00:00,Balanced,US02079K3059,Alphabet Inc.,BUY,85.474331,132.57,USD,0.87513,116.016,9916.39,Top-up after deposit,yfinance
+txn-bal-0168,2023-12-17 00:00:00,Balanced,DK0062498333,Novo Nordisk A/S,BUY,335.813879,663.8,DKK,0.12784,84.8602,28497.23,DCA into existing position,yfinance
+txn-bal-0002,2023-12-21 00:00:00,Balanced,CH0038863350,Nestlé S.A.,BUY,246.088797,96.99,CHF,1,96.99,23868.15,Top-up after deposit,yfinance
+txn-bal-0097,2023-12-24 00:00:00,Balanced,US4370761029,Home Depot Inc.,BUY,46.904241,348.59,USD,0.85627,298.4872,14000.31,Quarterly rebalance · drift below target,yfinance
+txn-bal-0202,2023-12-25 00:00:00,Balanced,US8740391003,TSMC,BUY,56.657633,103.15,USD,0.85507,88.2005,4997.23,DCA into existing position,yfinance
+txn-bal-0217,2024-01-03 00:00:00,Balanced,US4567881085,Infosys Ltd.,BUY,1118.648923,18.04,USD,0.85012,15.3362,17155.79,Top-up after deposit,yfinance
+txn-bal-0256,2024-01-04 00:00:00,Balanced,US74340W1036,Prologis Inc.,BUY,150.110835,119.098,USD,0.8489,101.1023,15176.55,DCA into existing position,synth_estimated
+txn-bal-0033,2024-01-14 00:00:00,Balanced,CH0012221716,ABB Ltd.,SELL,88.882783,36.62,CHF,1,36.62,3254.89,Trim on rally · realising gains,yfinance
+txn-bal-0223,2024-01-15 00:00:00,Balanced,US7594701077,Reliance Industries,BUY,182.714389,120.9581,USD,0.85332,103.216,18859.04,DCA into existing position,synth_estimated
+txn-bal-0059,2024-01-17 00:00:00,Balanced,US5949181045,Microsoft Corp.,BUY,74.88944,389.47,USD,0.8613,335.4505,25121.7,Add on dip · technical entry,yfinance
+txn-bal-0010,2024-01-18 00:00:00,Balanced,CH0012005267,Novartis AG,BUY,132.743565,93.12,CHF,1,93.12,12361.08,Quarterly rebalance · drift below target,yfinance
+txn-bal-0170,2024-01-22 00:00:00,Balanced,DK0062498333,Novo Nordisk A/S,SELL,528.425147,726.6,DKK,0.126824,92.1503,48694.55,Trim on rally · realising gains,yfinance
+txn-bal-0125,2024-01-25 00:00:00,Balanced,US09062X1037,Biogen Inc.,BUY,69.783716,246.21,USD,0.86302,212.4842,14827.93,Add on dip · technical entry,yfinance
+txn-bal-0019,2024-02-04 00:00:00,Balanced,CH0011075394,Zurich Insurance Group,BUY,36.065111,437.3,CHF,1,437.3,15771.27,Add on dip · technical entry,yfinance
+txn-bal-0209,2024-02-07 00:00:00,Balanced,US7960502018,Samsung Electronics,BUY,86.507795,128.2945,USD,0.8695,111.5521,9650.12,Tactical add · CIO conviction maintained,synth_estimated
+txn-bal-0109,2024-02-09 00:00:00,Balanced,US88160R1014,Tesla Inc.,BUY,54.891428,193.57,USD,0.87345,169.0737,9280.7,Top-up after deposit,yfinance
+txn-bal-0080,2024-02-17 00:00:00,Balanced,US0231351067,Amazon.com Inc.,BUY,83.385691,169.51,USD,0.8798,149.1349,12435.72,Quarterly rebalance · drift below target,yfinance
+txn-bal-0252,2024-02-19 00:00:00,Balanced,US74340W1036,Prologis Inc.,BUY,204.837852,117.6949,USD,0.88065,103.6481,21231.04,Top-up after deposit,synth_estimated
+txn-bal-0144,2024-02-25 00:00:00,Balanced,US0605051046,Bank of America Corp.,BUY,304.055985,33.92,USD,0.87995,29.8479,9075.43,Quarterly rebalance · drift below target,yfinance
+txn-bal-0201,2024-02-25 00:00:00,Balanced,US8740391003,TSMC,BUY,62.670237,129.53,USD,0.87995,113.9799,7143.15,Tactical add · CIO conviction maintained,yfinance
+txn-bal-0218,2024-03-01 00:00:00,Balanced,US4567881085,Infosys Ltd.,BUY,1711.957907,19.83,USD,0.8844,17.5377,30023.72,Quarterly rebalance · drift below target,yfinance
+txn-bal-0185,2024-03-05 00:00:00,Balanced,DE0008404005,Allianz SE,BUY,45.293263,254.45,EUR,0.9608,244.4756,11073.1,Top-up after deposit,yfinance
+txn-bal-0197,2024-03-05 00:00:00,Balanced,IE000S9YS762,Linde PLC,BUY,42.757938,460.96,USD,0.8852,408.0418,17447.03,Top-up after deposit,yfinance
+txn-bal-0156,2024-03-07 00:00:00,Balanced,NL0010273215,ASML Holding N.V.,BUY,19.190205,949.2,EUR,0.96144,912.5989,17512.96,Quarterly rebalance · drift below target,yfinance
+txn-bal-0214,2024-03-07 00:00:00,Balanced,US7960502018,Samsung Electronics,SELL,117.062953,134.1416,USD,0.8821,118.3263,13851.63,Trim on rally · realising gains,synth_estimated
+txn-bal-0133,2024-03-23 00:00:00,Balanced,US5324571083,Eli Lilly & Co.,BUY,17.205849,770.61,USD,0.89768,691.7612,11902.34,Quarterly rebalance · drift below target,yfinance
+txn-bal-0026,2024-04-02 00:00:00,Balanced,CH0244767585,UBS Group AG,BUY,393.898234,27.73,CHF,1,27.73,10922.8,Top-up after deposit,yfinance
+txn-bal-0213,2024-04-10 00:00:00,Balanced,US7960502018,Samsung Electronics,BUY,170.243675,138.0315,USD,0.90298,124.6397,21219.12,Tactical add · CIO conviction maintained,synth_estimated
+txn-bal-0122,2024-04-18 00:00:00,Balanced,US57636Q1040,Mastercard Inc.,BUY,39.823801,454.7,USD,0.9104,413.9589,16485.42,Top-up after deposit,yfinance
+txn-bal-0159,2024-04-21 00:00:00,Balanced,NL0010273215,ASML Holding N.V.,BUY,22.870894,821,EUR,0.97113,797.2977,18234.91,Quarterly rebalance · drift below target,yfinance
+txn-bal-0155,2024-05-04 00:00:00,Balanced,NL0010273215,ASML Holding N.V.,BUY,19.329987,835.9,EUR,0.97617,815.9805,15772.89,Tactical add · CIO conviction maintained,yfinance
+txn-bal-0078,2024-05-24 00:00:00,Balanced,US0231351067,Amazon.com Inc.,BUY,130.336588,180.75,USD,0.91433,165.2651,21540.1,Top-up after deposit,yfinance
+txn-bal-0273,2024-05-31 00:00:00,Balanced,CH0047533523,ZKB Gold ETF,BUY,374.624359,175.7157,CHF,1,175.7157,65827.37,Tactical add · CIO conviction maintained,synth_estimated
+txn-bal-0193,2024-06-12 00:00:00,Balanced,DE0007236101,Siemens AG,BUY,63.465892,178.1,EUR,0.96422,171.7276,10898.84,DCA into existing position,yfinance
+txn-bal-0163,2024-06-28 00:00:00,Balanced,DE0007164600,SAP SE,BUY,104.463387,189.52,EUR,0.9622,182.3561,19049.54,DCA into existing position,yfinance
+txn-bal-0048,2024-07-02 00:00:00,Balanced,CH0030170408,Geberit AG,BUY,8.714658,531,CHF,1,531,4627.48,Top-up after deposit,yfinance
+txn-bal-0140,2024-07-06 00:00:00,Balanced,US11135F1012,Broadcom Inc.,BUY,27.645395,170.331,USD,0.90025,153.3405,4239.16,Add on dip · technical entry,yfinance
+txn-bal-0270,2024-07-20 00:00:00,Balanced,CH0047533523,ZKB Gold ETF,BUY,295.352337,184.3477,CHF,1,184.3477,54447.54,Tactical add · CIO conviction maintained,synth_estimated
+txn-bal-0255,2024-07-21 00:00:00,Balanced,US74340W1036,Prologis Inc.,BUY,113.863449,106.322,USD,0.8873,94.3395,10741.82,Top-up after deposit,synth_estimated
+txn-bal-0151,2024-07-22 00:00:00,Balanced,US30231G1022,Exxon Mobil Corp.,BUY,93.052958,115.27,USD,0.88801,102.3609,9524.99,Add on dip · technical entry,yfinance
+txn-bal-0079,2024-07-27 00:00:00,Balanced,US0231351067,Amazon.com Inc.,BUY,158.957955,182.5,USD,0.88064,160.7168,25547.21,Tactical add · CIO conviction maintained,yfinance
+txn-bal-0108,2024-07-29 00:00:00,Balanced,US88160R1014,Tesla Inc.,BUY,29.526034,232.1,USD,0.8843,205.246,6060.1,Add on dip · technical entry,yfinance
+txn-bal-0114,2024-07-29 00:00:00,Balanced,US92826C8394,Visa Inc.,BUY,40.302409,261.6,USD,0.8843,231.3329,9323.27,Add on dip · technical entry,yfinance
+txn-bal-0121,2024-07-30 00:00:00,Balanced,US57636Q1040,Mastercard Inc.,BUY,37.077704,447.45,USD,0.8861,396.4855,14700.77,Quarterly rebalance · drift below target,yfinance
+txn-bal-0025,2024-08-06 00:00:00,Balanced,CH0244767585,UBS Group AG,BUY,303.322892,23.82,CHF,1,23.82,7225.15,Quarterly rebalance · drift below target,yfinance
+txn-bal-0018,2024-08-08 00:00:00,Balanced,CH0011075394,Zurich Insurance Group,BUY,27.223635,459.3,CHF,1,459.3,12503.82,Quarterly rebalance · drift below target,yfinance
+txn-bal-0264,2024-08-12 00:00:00,Balanced,US95040Q1040,Welltower Inc.,BUY,108.090514,87.8304,USD,0.86504,75.9768,8212.38,Top-up after deposit,synth_estimated
+txn-bal-0129,2024-08-15 00:00:00,Balanced,US09062X1037,Biogen Inc.,BUY,75.398751,201.63,USD,0.864806,174.3708,13147.34,Add on dip · technical entry,yfinance
+txn-bal-0060,2024-08-22 00:00:00,Balanced,US5949181045,Microsoft Corp.,BUY,87.686168,415.55,USD,0.8511,353.6746,31012.37,Quarterly rebalance · drift below target,yfinance
+txn-bal-0276,2024-08-24 00:00:00,Balanced,LU0196152788,Partners Group Listed Investments - Listed PE,BUY,249.531345,144.9839,EUR,0.94685,137.278,34255.17,Add on dip · technical entry,synth_estimated
+txn-bal-0176,2024-09-01 00:00:00,Balanced,FR0000121014,LVMH Moët Hennessy,SELL,15.583624,674.3,EUR,0.93841,632.7698,9860.85,Trim on rally · realising gains,yfinance
+txn-bal-0135,2024-09-04 00:00:00,Balanced,US5324571083,Eli Lilly & Co.,BUY,15.949523,946.31,USD,0.84993,804.2972,12828.16,Top-up after deposit,yfinance
+txn-bal-0198,2024-09-14 00:00:00,Balanced,IE000S9YS762,Linde PLC,SELL,13.568504,468.81,USD,0.84988,398.4322,5406.13,Trim on rally · realising gains,yfinance
+txn-bal-0205,2024-09-20 00:00:00,Balanced,US8740391003,TSMC,BUY,45.593887,174.08,USD,0.84778,147.5815,6728.82,Add on dip · technical entry,yfinance
+txn-bal-0166,2024-09-21 00:00:00,Balanced,DK0062498333,Novo Nordisk A/S,BUY,619.611974,850,DKK,0.126823,107.7995,66793.89,Top-up after deposit,yfinance
+txn-bal-0061,2024-09-26 00:00:00,Balanced,US5949181045,Microsoft Corp.,SELL,37.900325,431.31,USD,0.85057,366.8594,13904.09,Trim on rally · realising gains,yfinance
+txn-bal-0265,2024-09-28 00:00:00,Balanced,US95040Q1040,Welltower Inc.,BUY,173.247079,88.3256,USD,0.84624,74.7447,12949.3,Top-up after deposit,synth_estimated
+txn-bal-0119,2024-09-30 00:00:00,Balanced,US57636Q1040,Mastercard Inc.,BUY,36.467228,493.8,USD,0.8405,415.0389,15135.32,Top-up after deposit,yfinance
+txn-bal-0211,2024-10-06 00:00:00,Balanced,US7960502018,Samsung Electronics,BUY,168.006625,142.7299,USD,0.85181,121.5788,20426.04,Top-up after deposit,synth_estimated
+txn-bal-0012,2024-10-09 00:00:00,Balanced,CH0012005267,Novartis AG,BUY,114.761053,99.27,CHF,1,99.27,11392.33,Tactical add · CIO conviction maintained,yfinance
+txn-bal-0030,2024-10-11 00:00:00,Balanced,CH0012221716,ABB Ltd.,BUY,167.8296,49.82,CHF,1,49.82,8361.27,Add on dip · technical entry,yfinance
+txn-bal-0175,2024-10-25 00:00:00,Balanced,FR0000121014,LVMH Moët Hennessy,BUY,39.841759,627,EUR,0.93721,587.6307,23412.24,Add on dip · technical entry,yfinance
+txn-bal-0187,2024-11-01 00:00:00,Balanced,DE0008404005,Allianz SE,BUY,38.959501,291.6,EUR,0.93987,274.0661,10677.48,DCA into existing position,yfinance
+txn-bal-0101,2024-11-05 00:00:00,Balanced,US0846701086,Berkshire Hathaway,BUY,51.030307,445.06,USD,0.86417,384.6075,19626.64,Tactical add · CIO conviction maintained,yfinance
+txn-bal-0134,2024-11-09 00:00:00,Balanced,US5324571083,Eli Lilly & Co.,BUY,21.35515,831.54,USD,0.87278,725.7515,15498.53,Top-up after deposit,yfinance
+txn-bal-0058,2024-11-13 00:00:00,Balanced,US5949181045,Microsoft Corp.,BUY,111.554625,425.2,USD,0.88216,375.0944,41843.52,Tactical add · CIO conviction maintained,yfinance
+txn-bal-0091,2024-11-17 00:00:00,Balanced,US46625H1005,JPMorgan Chase & Co.,BUY,75.394494,245.31,USD,0.89044,218.4338,16468.71,Quarterly rebalance · drift below target,yfinance
+txn-bal-0261,2024-11-19 00:00:00,Balanced,US29444U7000,Equinix Inc.,BUY,73.185864,143.7999,USD,0.8832,127.0041,9294.9,Top-up after deposit,synth_estimated
+txn-bal-0190,2024-11-26 00:00:00,Balanced,DE0007236101,Siemens AG,BUY,53.44643,180.32,EUR,0.92829,167.3893,8946.36,DCA into existing position,yfinance
+txn-bal-0096,2024-11-28 00:00:00,Balanced,US4370761029,Home Depot Inc.,BUY,72.170646,427.19,USD,0.882,376.7816,27192.57,Top-up after deposit,yfinance
+txn-bal-0031,2024-12-03 00:00:00,Balanced,CH0012221716,ABB Ltd.,BUY,233.698478,51.26,CHF,1,51.26,11979.38,Add on dip · technical entry,yfinance
+txn-bal-0089,2024-12-09 00:00:00,Balanced,US46625H1005,JPMorgan Chase & Co.,BUY,78.425274,243.81,USD,0.87867,214.2285,16800.93,Quarterly rebalance · drift below target,yfinance
+txn-bal-0027,2024-12-15 00:00:00,Balanced,CH0244767585,UBS Group AG,BUY,359.982508,28.48,CHF,1,28.48,10252.3,Tactical add · CIO conviction maintained,yfinance
+txn-bal-0112,2024-12-20 00:00:00,Balanced,US92826C8394,Visa Inc.,BUY,77.479591,317.71,USD,0.89899,285.6181,22129.57,Add on dip · technical entry,yfinance
+txn-bal-0186,2024-12-27 00:00:00,Balanced,DE0008404005,Allianz SE,BUY,56.103289,295.1,EUR,0.93683,276.4585,15510.23,Quarterly rebalance · drift below target,yfinance
+txn-bal-0196,2025-01-03 00:00:00,Balanced,IE000S9YS762,Linde PLC,BUY,54.02828,413.5,USD,0.91201,377.1161,20374.94,Quarterly rebalance · drift below target,yfinance
+txn-bal-0016,2025-01-06 00:00:00,Balanced,CH0011075394,Zurich Insurance Group,BUY,34.281742,548,CHF,1,548,18786.39,Add on dip · technical entry,yfinance
+txn-bal-0006,2025-01-11 00:00:00,Balanced,CH0012032048,Roche Holding AG,BUY,26.895023,287,CHF,1,287,7718.87,Top-up after deposit,yfinance
+txn-bal-0180,2025-01-24 00:00:00,Balanced,FR0000121972,Schneider Electric SE,BUY,54.07194,270.65,EUR,0.94518,255.813,13832.3,Add on dip · technical entry,yfinance
+txn-bal-0102,2025-02-01 00:00:00,Balanced,US0846701086,Berkshire Hathaway,BUY,42.045571,468.67,USD,0.909369,426.194,17919.57,Add on dip · technical entry,yfinance
+txn-bal-0126,2025-02-01 00:00:00,Balanced,US09062X1037,Biogen Inc.,BUY,72.470235,143.93,USD,0.909369,130.8855,9485.3,Tactical add · CIO conviction maintained,yfinance
+txn-bal-0147,2025-02-09 00:00:00,Balanced,US0605051046,Bank of America Corp.,BUY,292.449805,47.4,USD,0.9051,42.9017,12546.61,Add on dip · technical entry,yfinance
+txn-bal-0253,2025-02-21 00:00:00,Balanced,US74340W1036,Prologis Inc.,BUY,180.119682,90.9783,USD,0.89806,81.704,14716.5,DCA into existing position,synth_estimated
+txn-bal-0103,2025-02-24 00:00:00,Balanced,US0846701086,Berkshire Hathaway,BUY,41.372896,498.42,USD,0.89845,447.8055,18527.01,Tactical add · CIO conviction maintained,yfinance
+txn-bal-0272,2025-03-06 00:00:00,Balanced,CH0047533523,ZKB Gold ETF,BUY,227.275534,202.0487,CHF,1,202.0487,45920.74,Quarterly rebalance · drift below target,synth_estimated
+txn-bal-0068,2025-03-10 00:00:00,Balanced,US67066G1040,NVIDIA Corp.,BUY,147.584405,106.98,USD,0.87734,93.8578,13851.95,Top-up after deposit,yfinance
+txn-bal-0277,2025-03-10 00:00:00,Balanced,LU0196152788,Partners Group Listed Investments - Listed PE,BUY,362.352232,177.5528,EUR,0.95282,169.1759,61301.26,Add on dip · technical entry,synth_estimated
+txn-bal-0145,2025-04-09 00:00:00,Balanced,US0605051046,Bank of America Corp.,BUY,182.037664,37.15,USD,0.84566,31.4163,5718.94,Add on dip · technical entry,yfinance
+txn-bal-0069,2025-04-15 00:00:00,Balanced,US67066G1040,NVIDIA Corp.,BUY,177.313327,112.2,USD,0.81596,91.5507,16233.16,Top-up after deposit,yfinance
+txn-bal-0020,2025-04-17 00:00:00,Balanced,CH0011075394,Zurich Insurance Group,BUY,16.561276,559.8,CHF,1,559.8,9271,Tactical add · CIO conviction maintained,yfinance
+txn-bal-0046,2025-04-24 00:00:00,Balanced,CH0030170408,Geberit AG,BUY,8.557238,554.6,CHF,1,554.6,4745.84,Tactical add · CIO conviction maintained,yfinance
+txn-bal-0095,2025-04-24 00:00:00,Balanced,US4370761029,Home Depot Inc.,BUY,70.950061,359.64,USD,0.8298,298.4293,21173.58,Tactical add · CIO conviction maintained,yfinance
+txn-bal-0037,2025-04-26 00:00:00,Balanced,CH0418792922,Sika AG,BUY,86.902357,205.5,CHF,1,205.5,17858.43,Add on dip · technical entry,yfinance
+txn-bal-0047,2025-05-01 00:00:00,Balanced,CH0030170408,Geberit AG,BUY,11.12328,570.2,CHF,1,570.2,6342.49,Top-up after deposit,yfinance
+txn-bal-0260,2025-05-04 00:00:00,Balanced,US29444U7000,Equinix Inc.,BUY,96.701994,150.5856,USD,0.82898,124.8325,12071.55,Quarterly rebalance · drift below target,synth_estimated
+txn-bal-0094,2025-05-15 00:00:00,Balanced,US4370761029,Home Depot Inc.,BUY,61.053068,378.63,USD,0.841232,318.5157,19446.36,Tactical add · CIO conviction maintained,yfinance
+txn-bal-0259,2025-05-21 00:00:00,Balanced,US29444U7000,Equinix Inc.,BUY,98.957343,144.4188,USD,0.826712,119.3928,11814.79,Tactical add · CIO conviction maintained,synth_estimated
+txn-bal-0106,2025-05-24 00:00:00,Balanced,US88160R1014,Tesla Inc.,BUY,52.788152,339.34,USD,0.82838,281.1025,14838.88,Quarterly rebalance · drift below target,yfinance
+txn-bal-0245,2025-05-25 00:00:00,Balanced,CH0014420878,UBS (CH) Property Fund,BUY,83.696288,181.0258,CHF,1,181.0258,15151.19,Add on dip · technical entry,synth_estimated
+txn-bal-0013,2025-06-04 00:00:00,Balanced,CH0012005267,Novartis AG,BUY,117.114378,96.04,CHF,1,96.04,11247.67,Add on dip · technical entry,yfinance
+txn-bal-0036,2025-06-17 00:00:00,Balanced,CH0418792922,Sika AG,BUY,101.787431,215.6,CHF,1,215.6,21945.37,DCA into existing position,yfinance
+txn-bal-0162,2025-06-18 00:00:00,Balanced,DE0007164600,SAP SE,BUY,228.035558,252.95,EUR,0.93792,237.2469,54100.72,Quarterly rebalance · drift below target,yfinance
+txn-bal-0203,2025-06-22 00:00:00,Balanced,US8740391003,TSMC,BUY,82.340606,209.51,USD,0.81639,171.0419,14083.69,Top-up after deposit,yfinance
+txn-bal-0084,2025-06-29 00:00:00,Balanced,US30303M1027,Meta Platforms Inc.,BUY,48.02504,733.63,USD,0.80089,587.557,28217.45,Top-up after deposit,yfinance
+txn-bal-0011,2025-06-30 00:00:00,Balanced,CH0012005267,Novartis AG,BUY,119.763848,96.17,CHF,1,96.17,11517.69,Add on dip · technical entry,yfinance
+txn-bal-0017,2025-06-30 00:00:00,Balanced,CH0011075394,Zurich Insurance Group,BUY,27.127471,554.6,CHF,1,554.6,15044.89,Quarterly rebalance · drift below target,yfinance
+txn-bal-0141,2025-07-07 00:00:00,Balanced,US11135F1012,Broadcom Inc.,SELL,16.35398,274.18,USD,0.79404,217.7099,3560.42,Trim on rally · realising gains,yfinance
+txn-bal-0136,2025-07-30 00:00:00,Balanced,US5324571083,Eli Lilly & Co.,BUY,18.823123,760.08,USD,0.80547,612.2216,11523.92,Quarterly rebalance · drift below target,yfinance
+txn-bal-0222,2025-08-01 00:00:00,Balanced,US7594701077,Reliance Industries,BUY,106.683453,142.3822,USD,0.8139,115.8849,12363,Add on dip · technical entry,synth_estimated
+txn-bal-0206,2025-08-14 00:00:00,Balanced,US8740391003,TSMC,SELL,48.257103,241,USD,0.80472,193.9375,9358.86,Trim on rally · realising gains,yfinance
+txn-bal-0173,2025-08-16 00:00:00,Balanced,FR0000121014,LVMH Moët Hennessy,BUY,34.165485,476.1,EUR,0.9409,447.9625,15304.86,Tactical add · CIO conviction maintained,yfinance
+txn-bal-0087,2025-08-23 00:00:00,Balanced,US46625H1005,JPMorgan Chase & Co.,BUY,78.529644,296.24,USD,0.80867,239.5604,18812.59,DCA into existing position,yfinance
+txn-bal-0192,2025-09-19 00:00:00,Balanced,DE0007236101,Siemens AG,BUY,44.671326,228.4,EUR,0.93425,213.3827,9532.09,Top-up after deposit,yfinance
+txn-bal-0088,2025-09-25 00:00:00,Balanced,US46625H1005,JPMorgan Chase & Co.,BUY,61.002838,313.45,USD,0.79466,249.0862,15194.96,Add on dip · technical entry,yfinance
+txn-bal-0107,2025-09-26 00:00:00,Balanced,US88160R1014,Tesla Inc.,BUY,51.423647,440.4,USD,0.80004,352.3376,18118.49,Top-up after deposit,yfinance
+txn-bal-0003,2025-10-01 00:00:00,Balanced,CH0038863350,Nestlé S.A.,BUY,231.093015,73.88,CHF,1,73.88,17073.15,Quarterly rebalance · drift below target,yfinance
+txn-bal-0210,2025-10-06 00:00:00,Balanced,US7960502018,Samsung Electronics,BUY,190.177263,153.7564,USD,0.79719,122.5731,23310.61,Top-up after deposit,synth_estimated
+txn-bal-0065,2025-10-14 00:00:00,Balanced,US0378331005,Apple Inc.,BUY,84.111165,247.77,USD,0.80429,199.2789,16761.58,Add on dip · technical entry,yfinance
+txn-bal-0075,2025-10-16 00:00:00,Balanced,US02079K3059,Alphabet Inc.,BUY,65.092732,251.46,USD,0.79655,200.3005,13038.1,Top-up after deposit,yfinance
+txn-bal-0057,2025-10-24 00:00:00,Balanced,US5949181045,Microsoft Corp.,BUY,119.024161,523.61,USD,0.79508,416.3118,49551.17,Top-up after deposit,yfinance
+txn-bal-0074,2025-10-26 00:00:00,Balanced,US02079K3059,Alphabet Inc.,BUY,109.045196,259.92,USD,0.79508,206.6572,22534.98,Quarterly rebalance · drift below target,yfinance
+txn-bal-0083,2025-10-30 00:00:00,Balanced,US30303M1027,Meta Platforms Inc.,BUY,40.691796,666.47,USD,0.7998,533.0427,21690.46,Top-up after deposit,yfinance
+txn-bal-0254,2025-11-03 00:00:00,Balanced,US74340W1036,Prologis Inc.,BUY,110.210501,112.2271,USD,0.8049,90.3316,9955.49,Top-up after deposit,synth_estimated
+txn-bal-0182,2025-11-04 00:00:00,Balanced,FR0000121972,Schneider Electric SE,SELL,27.370735,239.25,EUR,0.93089,222.7154,6095.89,Trim on rally · realising gains,yfinance
+txn-bal-0179,2025-11-05 00:00:00,Balanced,FR0000121972,Schneider Electric SE,BUY,93.172671,242.25,EUR,0.9306,225.4378,21004.65,DCA into existing position,yfinance
+txn-bal-0053,2025-11-06 00:00:00,Balanced,CH0010645932,Givaudan SA,BUY,3.222719,3315,CHF,1,3315,10683.31,DCA into existing position,yfinance
+txn-bal-0212,2025-11-11 00:00:00,Balanced,US7960502018,Samsung Electronics,BUY,105.106484,160.8897,USD,0.80516,129.5419,13615.7,Quarterly rebalance · drift below target,synth_estimated
+txn-bal-0132,2025-11-25 00:00:00,Balanced,US5324571083,Eli Lilly & Co.,BUY,15.68592,1109.9399,USD,0.80861,897.5086,14078.25,Add on dip · technical entry,yfinance
+txn-bal-0246,2025-11-26 00:00:00,Balanced,CH0014420878,UBS (CH) Property Fund,BUY,86.646685,208.7113,CHF,1,208.7113,18084.14,Tactical add · CIO conviction maintained,synth_estimated
+txn-bal-0271,2025-12-09 00:00:00,Balanced,CH0047533523,ZKB Gold ETF,BUY,270.894379,220.3076,CHF,1,220.3076,59680.1,Quarterly rebalance · drift below target,synth_estimated
+txn-bal-0249,2025-12-13 00:00:00,Balanced,CH0014420878,UBS (CH) Property Fund,SELL,113.894559,209.7588,CHF,1,209.7588,23890.38,Trim on rally · realising gains,synth_estimated
+txn-bal-0269,2025-12-22 00:00:00,Balanced,CH0047533523,ZKB Gold ETF,BUY,435.838228,218.839,CHF,1,218.839,95378.41,Top-up after deposit,synth_estimated
+txn-bal-0038,2025-12-24 00:00:00,Balanced,CH0418792922,Sika AG,BUY,96.142093,161.7,CHF,1,161.7,15546.18,Tactical add · CIO conviction maintained,yfinance
+txn-bal-0090,2025-12-31 00:00:00,Balanced,US46625H1005,JPMorgan Chase & Co.,BUY,71.104242,322.22,USD,0.7917,255.1016,18138.8,Add on dip · technical entry,yfinance
+txn-bal-0023,2026-01-05 00:00:00,Balanced,CH0244767585,UBS Group AG,BUY,513.831992,38.17,CHF,1,38.17,19612.97,DCA into existing position,yfinance
+txn-bal-0120,2026-01-08 00:00:00,Balanced,US57636Q1040,Mastercard Inc.,BUY,45.96937,580.07,USD,0.79765,462.6928,21269.7,Add on dip · technical entry,yfinance
+txn-bal-0024,2026-01-13 00:00:00,Balanced,CH0244767585,UBS Group AG,BUY,300.10135,37.95,CHF,1,37.95,11388.85,DCA into existing position,yfinance
+txn-bal-0127,2026-01-16 00:00:00,Balanced,US09062X1037,Biogen Inc.,BUY,79.973048,164.42,USD,0.80342,132.0983,10564.3,Tactical add · CIO conviction maintained,yfinance
+txn-bal-0157,2026-01-20 00:00:00,Balanced,NL0010273215,ASML Holding N.V.,BUY,22.697717,1140,EUR,0.92864,1058.6496,24028.93,DCA into existing position,yfinance
+txn-bal-0116,2026-01-31 00:00:00,Balanced,US92826C8394,Visa Inc.,BUY,72.342552,321.83,USD,0.76441,246.0101,17797,Add on dip · technical entry,yfinance
+txn-bal-0139,2026-02-01 00:00:00,Balanced,US11135F1012,Broadcom Inc.,BUY,45.489009,331.3,USD,0.76441,253.249,11520.05,Quarterly rebalance · drift below target,yfinance
+txn-bal-0247,2026-02-17 00:00:00,Balanced,CH0014420878,UBS (CH) Property Fund,BUY,142.76885,206.3984,CHF,1,206.3984,29467.26,Add on dip · technical entry,synth_estimated
+txn-bal-0266,2026-02-17 00:00:00,Balanced,US95040Q1040,Welltower Inc.,BUY,151.807112,100.34,USD,0.7696,77.2216,11722.79,Add on dip · technical entry,synth_estimated
+txn-bal-0181,2026-02-28 00:00:00,Balanced,FR0000121972,Schneider Electric SE,BUY,71.454322,276.7,EUR,0.91257,252.5081,18042.8,Quarterly rebalance · drift below target,yfinance
+txn-bal-0054,2026-03-10 00:00:00,Balanced,CH0010645932,Givaudan SA,BUY,1.47617,2829,CHF,1,2829,4176.08,Quarterly rebalance · drift below target,yfinance
+txn-bal-0146,2026-03-18 00:00:00,Balanced,US0605051046,Bank of America Corp.,BUY,304.411493,46.83,USD,0.78477,36.7508,11187.36,DCA into existing position,yfinance
+txn-bal-0115,2026-03-22 00:00:00,Balanced,US92826C8394,Visa Inc.,BUY,44.381869,301.62,USD,0.7887,237.8877,10557.9,DCA into existing position,yfinance
+txn-bal-0043,2026-03-26 00:00:00,Balanced,CH0012214059,Holcim AG,BUY,162.368677,66.28,CHF,1,66.28,10761.8,DCA into existing position,yfinance
+txn-bal-0021,2026-04-18 00:00:00,Balanced,CH0011075394,Zurich Insurance Group,SELL,16.416419,559.8,CHF,1,559.8,9189.91,"Final precision rebalance · land on target (110,000 CHF)",yfinance
+txn-bal-0028,2026-04-18 00:00:00,Balanced,CH0244767585,UBS Group AG,BUY,113.786672,34.45,CHF,1,34.45,3919.95,"Final precision rebalance · land on target (120,000 CHF)",yfinance
+txn-bal-0044,2026-04-18 00:00:00,Balanced,CH0012214059,Holcim AG,BUY,641.142919,74.04,CHF,1,74.04,47470.22,"Final precision rebalance · land on target (110,000 CHF)",yfinance
+txn-bal-0051,2026-04-18 00:00:00,Balanced,CH0030170408,Geberit AG,BUY,11.599167,560.4,CHF,1,560.4,6500.17,"Final precision rebalance · land on target (50,000 CHF)",yfinance
+txn-bal-0062,2026-04-18 00:00:00,Balanced,US5949181045,Microsoft Corp.,SELL,21.192412,422.79,USD,0.7832,331.1291,7017.43,"Final precision rebalance · land on target (210,000 CHF)",yfinance
+txn-bal-0278,2026-04-18 00:00:00,Balanced,LU0196152788,Partners Group Listed Investments - Listed PE,BUY,721.214844,198.3871,EUR,0.9226,183.0319,132005.35,"Final precision rebalance · land on target (350,000 CHF)",synth_estimated
+txn-bal-0123,2026-04-19 00:00:00,Balanced,US57636Q1040,Mastercard Inc.,SELL,17.777731,521.3,USD,0.7832,408.2822,7258.33,"Final precision rebalance · land on target (110,000 CHF)",yfinance
+txn-bal-0262,2026-04-19 00:00:00,Balanced,US29444U7000,Equinix Inc.,BUY,173.404074,179.6278,USD,0.7832,140.6845,24395.26,"Final precision rebalance · land on target (100,000 CHF)",synth_estimated
+txn-bal-0267,2026-04-19 00:00:00,Balanced,US95040Q1040,Welltower Inc.,BUY,202.004888,107.4482,USD,0.7832,84.1534,16999.41,"Final precision rebalance · land on target (100,000 CHF)",synth_estimated
+txn-bal-0081,2026-04-20 00:00:00,Balanced,US0231351067,Amazon.com Inc.,BUY,220.200164,248.28,USD,0.78366,194.5671,42843.71,"Final precision rebalance · land on target (190,000 CHF)",yfinance
+txn-bal-0137,2026-04-20 00:00:00,Balanced,US5324571083,Eli Lilly & Co.,BUY,0.295694,919.9,USD,0.78366,720.8888,213.16,"Final precision rebalance · land on target (100,000 CHF)",yfinance
+txn-bal-0160,2026-04-20 00:00:00,Balanced,NL0010273215,ASML Holding N.V.,SELL,1.22326,1245,EUR,0.92,1145.4,1401.12,"Final precision rebalance · land on target (170,000 CHF)",yfinance
+txn-bal-0257,2026-04-20 00:00:00,Balanced,US74340W1036,Prologis Inc.,SELL,81.814242,101.2509,USD,0.78366,79.3463,6491.65,"Final precision rebalance · land on target (100,000 CHF)",synth_estimated
+txn-bal-0008,2026-04-21 00:00:00,Balanced,CH0012032048,Roche Holding AG,BUY,130.258236,327.8,CHF,1,327.8,42698.65,"Final precision rebalance · land on target (110,000 CHF)",yfinance
+txn-bal-0066,2026-04-21 00:00:00,Balanced,US0378331005,Apple Inc.,BUY,432.969702,266.17,USD,0.77851,207.216,89718.25,"Final precision rebalance · land on target (210,000 CHF)",yfinance
+txn-bal-0117,2026-04-21 00:00:00,Balanced,US92826C8394,Visa Inc.,SELL,46.699609,309.94,USD,0.77851,241.2914,11268.21,"Final precision rebalance · land on target (110,000 CHF)",yfinance
+txn-bal-0171,2026-04-21 00:00:00,Balanced,DK0062498333,Novo Nordisk A/S,BUY,1096.411857,247.1,DKK,0.122754,30.3325,33256.93,"Final precision rebalance · land on target (150,000 CHF)",yfinance
+txn-bal-0199,2026-04-21 00:00:00,Balanced,IE000S9YS762,Linde PLC,BUY,78.027806,494.84,USD,0.77851,385.2379,30059.27,"Final precision rebalance · land on target (120,000 CHF)",yfinance
+txn-bal-0215,2026-04-21 00:00:00,Balanced,US7960502018,Samsung Electronics,SELL,22.632282,180.0063,USD,0.77851,140.1367,3171.61,"Final precision rebalance · land on target (150,000 CHF)",synth_estimated
+txn-bal-0250,2026-04-21 00:00:00,Balanced,CH0014420878,UBS (CH) Property Fund,BUY,207.31789,200.5977,CHF,1,200.5977,41587.49,"Final precision rebalance · land on target (200,000 CHF)",synth_estimated
+txn-bal-0177,2026-04-22 00:00:00,Balanced,FR0000121014,LVMH Moët Hennessy,BUY,103.197019,474.3,EUR,0.91664,434.7623,44866.18,"Final precision rebalance · land on target (140,000 CHF)",yfinance
+txn-bal-0207,2026-04-23 00:00:00,Balanced,US8740391003,TSMC,BUY,71.905943,382.66,USD,0.78482,300.3192,21594.74,"Final precision rebalance · land on target (150,000 CHF)",yfinance
+txn-bal-0099,2026-04-24 00:00:00,Balanced,US4370761029,Home Depot Inc.,SELL,35.68325,335.89,USD,0.78624,264.0902,9423.6,"Final precision rebalance · land on target (130,000 CHF)",yfinance
+txn-bal-0194,2026-04-24 00:00:00,Balanced,DE0007236101,Siemens AG,BUY,27.817652,243.1,EUR,0.9186,223.3117,6212.01,"Final precision rebalance · land on target (110,000 CHF)",yfinance
+txn-bal-0085,2026-04-25 00:00:00,Balanced,US30303M1027,Meta Platforms Inc.,BUY,136.425743,675.03,USD,0.78624,530.7356,72406,"Final precision rebalance · land on target (160,000 CHF)",yfinance
+txn-bal-0092,2026-04-25 00:00:00,Balanced,US46625H1005,JPMorgan Chase & Co.,SELL,10.337314,308.28,USD,0.78624,242.3821,2505.58,"Final precision rebalance · land on target (140,000 CHF)",yfinance
+txn-bal-0164,2026-04-25 00:00:00,Balanced,DE0007164600,SAP SE,BUY,375.335909,147.28,EUR,0.9186,135.2914,50779.72,"Final precision rebalance · land on target (170,000 CHF)",yfinance
+txn-bal-0188,2026-04-25 00:00:00,Balanced,DE0008404005,Allianz SE,BUY,51.193572,388,EUR,0.9186,356.4168,18246.25,"Final precision rebalance · land on target (110,000 CHF)",yfinance
+txn-bal-0055,2026-04-26 00:00:00,Balanced,CH0010645932,Givaudan SA,BUY,4.798524,2814,CHF,1,2814,13503.05,"Final precision rebalance · land on target (50,000 CHF)",yfinance
+txn-bal-0142,2026-04-26 00:00:00,Balanced,US11135F1012,Broadcom Inc.,BUY,110.303395,422.76,USD,0.78624,332.3908,36663.84,"Final precision rebalance · land on target (100,000 CHF)",yfinance
+txn-bal-0149,2026-04-27 00:00:00,Balanced,US0605051046,Bank of America Corp.,SELL,153.38327,52.63,USD,0.7863,41.383,6347.46,"Final precision rebalance · land on target (80,000 CHF)",yfinance
+txn-bal-0076,2026-04-28 00:00:00,Balanced,US02079K3059,Alphabet Inc.,BUY,150.237753,349.78,USD,0.78529,274.6787,41267.12,"Final precision rebalance · land on target (190,000 CHF)",yfinance
+txn-bal-0153,2026-04-28 00:00:00,Balanced,US30231G1022,Exxon Mobil Corp.,BUY,185.86892,150.56,USD,0.78529,118.2333,21975.89,"Final precision rebalance · land on target (80,000 CHF)",yfinance
+txn-bal-0183,2026-04-28 00:00:00,Balanced,FR0000121972,Schneider Electric SE,BUY,102.971245,270.8,EUR,0.92058,249.2931,25670.02,"Final precision rebalance · land on target (130,000 CHF)",yfinance
+txn-bal-0034,2026-04-29 00:00:00,Balanced,CH0012221716,ABB Ltd.,BUY,411.407811,76.68,CHF,1,76.68,31546.75,"Final precision rebalance · land on target (110,000 CHF)",yfinance
+txn-bal-0130,2026-04-29 00:00:00,Balanced,US09062X1037,Biogen Inc.,BUY,55.017201,194.38,USD,0.78899,153.3639,8437.65,"Final precision rebalance · land on target (100,000 CHF)",yfinance
+txn-bal-0014,2026-04-30 00:00:00,Balanced,CH0012005267,Novartis AG,BUY,28.618937,115.9,CHF,1,115.9,3316.93,"Final precision rebalance · land on target (110,000 CHF)",yfinance
+txn-bal-0071,2026-04-30 00:00:00,Balanced,US67066G1040,NVIDIA Corp.,BUY,208.26951,199.57,USD,0.79056,157.7721,32859.11,"Final precision rebalance · land on target (190,000 CHF)",yfinance
+txn-bal-0219,2026-04-30 00:00:00,Balanced,US4567881085,Infosys Ltd.,BUY,5823.598131,12.46,USD,0.79056,9.8504,57364.64,"Final precision rebalance · land on target (130,000 CHF)",yfinance
+txn-bal-0224,2026-04-30 00:00:00,Balanced,US7594701077,Reliance Industries,BUY,252.03241,145.5202,USD,0.79056,115.0425,28994.43,"Final precision rebalance · land on target (120,000 CHF)",synth_estimated
+txn-bal-0110,2026-05-01 00:00:00,Balanced,US88160R1014,Tesla Inc.,BUY,54.091369,390.82,USD,0.7814,305.3868,16518.79,"Final precision rebalance · land on target (120,000 CHF)",yfinance
+txn-bal-0274,2026-05-01 00:00:00,Balanced,CH0047533523,ZKB Gold ETF,BUY,27.145028,186.106,CHF,1,186.106,5051.85,"Final precision rebalance · land on target (500,000 CHF)",synth_estimated
+txn-bal-0004,2026-05-02 00:00:00,Balanced,CH0038863350,Nestlé S.A.,BUY,549.735545,79.05,CHF,1,79.05,43456.6,"Final precision rebalance · land on target (120,000 CHF)",yfinance
+txn-bal-0040,2026-05-02 00:00:00,Balanced,CH0418792922,Sika AG,BUY,45.466587,143.7,CHF,1,143.7,6533.55,"Final precision rebalance · land on target (110,000 CHF)",yfinance
+txn-bal-0104,2026-05-02 00:00:00,Balanced,US0846701086,Berkshire Hathaway,BUY,73.260734,473.01,USD,0.7814,369.61,27077.9,"Final precision rebalance · land on target (130,000 CHF)",yfinance

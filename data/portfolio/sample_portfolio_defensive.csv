@@ -1,0 +1,72 @@
+Asset Class,Sub-Asset Class,Region,Industry Group,Issuer / Asset,Security / Details,ISIN,Target (CHF),Current (CHF),Valor,MIC,Yahoo Ticker
+Equities,Domestic (CHF),Schweiz,Consumer Staples,Nestlé S.A.,Registered Shares,CH0038863350,100000,101136.21,3886335,XSWX,NESN.SW
+Equities,Domestic (CHF),Schweiz,Health Care,Roche Holding AG,Genussschein,CH0012032048,90000,92014.23,1203204,,RO.SW
+Equities,Domestic (CHF),Schweiz,Health Care,Novartis AG,Registered Shares,CH0012005267,90000,90924.72,1200526,XSWX,NOVN.SW
+Equities,Domestic (CHF),Schweiz,Financials,Zurich Insurance Group,Registered Shares,CH0011075394,90000,90036.21,1107539,XSWX,ZURN.SW
+Equities,Domestic (CHF),Schweiz,Consumer Staples,Chocoladefabriken Lindt,Inhaberaktie,CH0010570759,75000,75000.29,1057075,XSWX,LISN.SW
+Equities,Domestic (CHF),Schweiz,Financials,Swiss Re AG,Registered Shares,CH0126881561,75000,76667.48,12688156,XSWX,SREN.SW
+Equities,Domestic (CHF),Schweiz,Utilities,BKW AG,Registered Shares,CH0130293662,50000,49718.4,13029366,XSWX,BKW.SW
+Equities,Domestic (CHF),Schweiz,Telecommunication,Swisscom AG,Registered Shares,CH0008742519,50000,50063.26,874251,XSWX,SCMN.SW
+Equities,Domestic (CHF),Schweiz,Financials,Banque Cantonale Vaudoise,Registered Shares,CH0531751755,30000,30188.63,53175175,XSWX,BCVN.SW
+Equities,Domestic (CHF),Schweiz,Financials,St.Galler Kantonalbank,Registered Shares,CH0011484067,30000,30559.34,1148406,XSWX,SGKN.SW
+Equities,Foreign (Dev. Markets),USA,Consumer Staples,Procter & Gamble Co.,Registered Shares,US7427181091,80000,81136.44,963896,XNYS,PG
+Equities,Foreign (Dev. Markets),USA,Consumer Staples,Costco Wholesale Corp.,Registered Shares,US22160K1051,80000,80749.59,903618,XNAS,COST
+Equities,Foreign (Dev. Markets),USA,Health Care,Johnson & Johnson,Registered Shares,US4781601046,80000,82685.6,943981,XNYS,JNJ
+Equities,Foreign (Dev. Markets),USA,Consumer Staples,Walmart Inc.,Registered Shares,US9311421039,70000,70440.71,984101,XNAS,WMT
+Equities,Foreign (Dev. Markets),USA,Consumer Staples,The Coca-Cola Co.,Registered Shares,US1912161007,70000,70531.83,919390,XNYS,KO
+Equities,Foreign (Dev. Markets),USA,Consumer Staples,PepsiCo Inc.,Registered Shares,US7134481081,70000,71434.06,961618,XNAS,PEP
+Equities,Foreign (Dev. Markets),USA,Health Care,Abbott Laboratories,Registered Shares,US0028241000,70000,70792.15,903037,XNYS,ABT
+Equities,Foreign (Dev. Markets),USA,Health Care,Medtronic PLC,Registered Shares,IE00BTN1Y115,60000,61083.16,25187155,XNYS,MDT
+Equities,Foreign (Dev. Markets),USA,Utilities,NextEra Energy Inc.,Registered Shares,US65339F1012,60000,60328.74,11363205,XNYS,NEE
+Equities,Foreign (Dev. Markets),USA,Consumer Staples,Colgate-Palmolive Co.,Registered Shares,US1941621039,40000,40245.36,919477,XNYS,CL
+Equities,Foreign (Dev. Markets),Europa,Health Care,Novo Nordisk A/S,Navne-Aktier B,DK0062498333,80000,82296.58,129508879,XCSE,NOVO-B.CO
+Equities,Foreign (Dev. Markets),Europa,Consumer Staples,L'Oréal S.A.,Registered Shares,FR0000120321,80000,80186.81,502805,XPAR,OR.PA
+Equities,Foreign (Dev. Markets),Europa,Health Care,Sanofi S.A.,Registered Shares,FR0000120578,80000,81570.91,699381,XPAR,SAN.PA
+Equities,Foreign (Dev. Markets),Europa,Consumer Staples,Unilever PLC,Registered Shares,GB00B10RZP78,80000,80491.1,2477074,,ULVR.L
+Equities,Foreign (Dev. Markets),Europa,Health Care,AstraZeneca PLC,Registered Shares,GB0009895292,70000,70928.47,982352,XLON,AZN.L
+Equities,Foreign (Dev. Markets),Europa,Utilities,Iberdrola S.A.,Registered Shares,ES0144580Y14,50000,49497.03,2969533,XMAD,IBE.MC
+Equities,Foreign (Dev. Markets),Europa,Financials,Muenchener Rueckvers.,Registered Shares,DE0008430026,50000,48004.95,341960,XETR,MUV2.DE
+Equities,Foreign (Dev. Markets),Global,Materials,Linde PLC,Registered Shares,IE000S9YS762,50000,51011.26,124625792,XNAS,LIN
+Equities,Foreign (Dev. Markets),Global,Consumer Staples,Nestlé S.A. (ADR),Sponsored ADR,US6410694060,50000,50474.89,213743,OTCM,NSRGY
+Equities,Emerging Markets,Emerging M.,Telecommunication,China Mobile Ltd.,Registered Shares,HK0941009539,100000,96427.28,1099448,XHKG,0941.HK
+Equities,Emerging Markets,Emerging M.,Financials,Industrial & Comm Bank,H-Shares,CNE1000003G1,100000,97233.19,2739966,XHKG,1398.HK
+Fixed Income,Domestic Bonds (CHF),Schweiz,Government Bonds,Swiss Confederation,0.50% 27.05.2030 (CHF),CH0224397171,350000,347583.66,22439717,XSWX,
+Fixed Income,Domestic Bonds (CHF),Schweiz,Government Bonds,Swiss Confederation,1.25% 27.06.2037 (CHF),CH0127181193,350000,347377.45,12718119,XSWX,
+Fixed Income,Domestic Bonds (CHF),Schweiz,Government Bonds,Swiss Confederation,1.50% 30.04.2042 (CHF),CH0127181169,250000,248623.86,12718116,XSWX,
+Fixed Income,Domestic Bonds (CHF),Schweiz,Government Bonds,Swiss Confederation,4.00% 06.01.2049 (CHF),CH0009755197,250000,247668.25,975519,XSWX,
+Fixed Income,Domestic Bonds (CHF),Schweiz,Investment Grade,Nestlé S.A.,2.125% 15.07.2030 (CHF),CH1194355116,200000,198174,119435511,XSWX,
+Fixed Income,Domestic Bonds (CHF),Schweiz,Investment Grade,Pfandbriefbank,1.00% 12.04.2029 (CHF),CH0419041212,200000,198376.09,41904121,XSWX,
+Fixed Income,Domestic Bonds (CHF),Schweiz,Investment Grade,ZKB Bond,0.75% 27.01.2032 (CHF),CH1498422984,200000,198012.69,149842298,XSWX,
+Fixed Income,Domestic Bonds (CHF),Schweiz,Investment Grade,Swisscom AG,0.25% 18.05.2033 (CHF),CH1112455766,200000,198843.99,111245576,XSWX,
+Fixed Income,Domestic Bonds (CHF),Schweiz,Investment Grade,Eurofima,2.875% 04.02.2030 (CHF),CH0020469075,100000,99004.6,2046907,XSWX,
+Fixed Income,Domestic Bonds (CHF),Schweiz,Investment Grade,Kanton Zürich,1.30% 24.06.2037 (CHF),CH1346743052,100000,99006.34,134674305,XSWX,
+Fixed Income,Foreign Bonds (G7),USA,Government Bonds,US Treasury,4.125% 31.10.2026 (USD),US91282CLS88,320000,314654,139263890,XMUN,
+Fixed Income,Foreign Bonds (G7),USA,Government Bonds,US Treasury,4.250% 15.11.2034 (USD),US91282CLW90,320000,314675.51,139442504,ETLX,
+Fixed Income,Foreign Bonds (G7),USA,Government Bonds,US Treasury,4.750% 15.11.2053 (USD),US912810TV08,320000,314529.44,130563314,ETLX,
+Fixed Income,Foreign Bonds (G7),USA,Government Bonds,iShares USD Treas. ETF,7-10y CHF-Hedged UCITS ETF (Acc),IE00BK7Y2R57,320000,314564.32,48370001,XSWX,
+Fixed Income,Foreign Bonds (G7),USA,Government Bonds,Vanguard USD Treasury,UCITS ETF EUR Hedged (Acc),IE00BMX0B631,280000,275443.61,56312229,XETR,
+Fixed Income,Foreign Bonds (G7),Europa,Government Bonds,Germany Bund,2.30% 15.02.2033 (EUR),DE000BU3Z005,270000,266324.33,126652249,MCAD,
+Fixed Income,Foreign Bonds (G7),Europa,Government Bonds,Germany Bund,2.60% 15.08.2034 (EUR),DE000BU2Z031,270000,265199.6,136370237,MCAD,
+Fixed Income,Foreign Bonds (G7),Europa,Government Bonds,Germany Bund,3.25% 04.07.2042 (EUR),DE0001135432,250000,246423.83,11530565,XQOD,
+Fixed Income,Foreign Bonds (G7),Europa,Government Bonds,France OAT,2.75% 25.02.2030 (EUR),FR001400PM68,250000,246368.74,134595592,FMTS,
+Fixed Income,Foreign Bonds (G7),Europa,Government Bonds,France OAT,3.25% 25.05.2045 (EUR),FR0011461037,200000,196530.16,21046078,FMTS,
+Fixed Income,Foreign Bonds (G7),USA,Investment Grade,Johnson & Johnson,3.40% 15.01.2038 (USD),US478160CL64,200000,197389.08,39086040,FINR,
+Fixed Income,Foreign Bonds (G7),USA,Investment Grade,Walmart Inc.,3.70% 26.06.2028 (USD),US931142EE96,150000,148037.12,42386430,FINR,
+Fixed Income,Foreign Bonds (G7),USA,Investment Grade,Coca-Cola Co.,2.25% 05.01.2032 (USD),US191216DP21,150000,147833.89,111357776,FINR,
+Fixed Income,Foreign Bonds (G7),Europa,Investment Grade,Siemens Fin.,0.50% 20.02.2032 (EUR),XS2118273601,150000,147555.83,52558720,,
+Fixed Income,Foreign Bonds (G7),Europa,Investment Grade,Sanofi S.A.,0.875% 21.03.2029 (EUR),FR0013409844,150000,147642.71,46925911,,
+Fixed Income,Foreign Bonds (G7),Europa,Investment Grade,BASF SE,4.50% 08.03.2035 (EUR),XS2595418679,100000,98351.52,125474294,,
+Fixed Income,Emerging Market Bonds,Emerging M.,Government Bonds,Republic of Indonesia,5.25% 17.01.2042,USY20721BB49,50000,49201.13,14711996,,
+Fixed Income,Emerging Market Bonds,Emerging M.,Government Bonds,Kingdom of Saudi Arabia,4.50% 26.10.2046 (USD),XS1508675508,50000,49290.97,34357187,ETLX,
+Real Estate,Swiss Real Estate,Schweiz,Real Estate (Fund),UBS (CH) Property Fund,Swiss Mixed «Sima» (CHF),CH0014420878,130000,131349.26,1442087,XSWX,
+Real Estate,Swiss Real Estate,Schweiz,Real Estate (Fund),UBS (CH) Real Estate Fund Interswiss,Swiss Commercial / Residential (CHF),CH0002769351,120000,119764.56,276935,XSWX,
+Real Estate,Global Listed REITs,USA,Real Estate (REIT),Prologis Inc.,Logistics Real Estate Shares,US74340W1036,100000,101517.13,13090717,XNYS,
+Real Estate,Global Listed REITs,USA,Real Estate (REIT),Welltower Inc.,Healthcare Real Estate Shares,US95040Q1040,100000,100696.05,29816226,XNYS,
+Alternatives,Commodities / Gold,Global,Precious Metals,ZKB Gold ETF,Class A (CHF) (Gold-Fonds),CH0047533523,400000,428389.55,4753352,XSWX,
+Alternatives,Commodities / Gold,Global,Precious Metals,iShares Physical Gold,ETC (CHF),IE00B4ND3602,350000,369601.84,12881542,XLON,
+Alternatives,Private Markets,Global,Private Markets,Partners Group Listed Investments - Listed PE,SICAV EUR (P-Acc.) (PE-Fonds),LU0196152788,100000,102931.3,1902991,TGAT,
+Alternatives,Private Markets,Global,Private Markets,iShares Listed Private Eq,UCITS ETF USD,IE00B1TXHL60,100000,104360.12,3007862,XETR,
+Liquidity,Cash & Money Market,Schweiz,Liquidity,Swiss Bank,CHF Cash / Kontokorrent,Cash-CHF,200000,200000,,,
+Liquidity,Cash & Money Market,Schweiz,Liquidity,ZKB Cash Account,CHF Kontokorrent,Cash-ZKB,150000,150000,,,
+Liquidity,Cash & Money Market,USA,Liquidity,USD Cash Account,USD Kontokorrent (in CHF),Cash-USD,100000,100000,,,
+Total,,,,,,,10000000,9995155.41,,,

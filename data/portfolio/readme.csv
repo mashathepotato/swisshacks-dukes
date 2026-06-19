@@ -1,0 +1,101 @@
+SwissHacks 2026 — Portfolios & Transaction History
+""
+What's in this workbook
+  Portfolio Strategies          CIO sub-asset-class targets (weights + CHF) per strategy.
+  CIO Recommendation List       The bank's conviction list: BUY / HOLD / SELL ratings for held
+                                instruments plus BUY-rated swap candidates not yet held.
+  Sample Portfolio Defensive    Positions for the Defensive mandate (Target + Current values).
+  Sample Portfolio Balanced     Positions for the Balanced mandate (Target + Current values).
+  Sample Portfolio Growth       Positions for the Growth mandate (Target + Current values).
+  Transactions Defensive        3-year trade history for the Defensive portfolio.
+  Transactions Balanced         3-year trade history for the Balanced portfolio.
+  Transactions Growth           3-year trade history for the Growth portfolio.
+"  Cash Flows                    Deposits, withdrawals, and management fees per portfolio."
+""
+Conventions
+  • All CHF amounts are in Swiss Francs.
+  • ISINs follow ISO 6166 (12 chars). Cash positions use the placeholder Cash-XXX.
+  • Equity prices come from real historical closes; bonds are priced at par (100% face).
+"  • For bonds, Quantity = face value ÷ 100, so Quantity × Price (local) = face value."
+"  • For equities, Quantity = number of shares."
+  • Summing BUY − SELL quantities for an ISIN gives the current position; multiplied by
+    the current price (in CHF) it matches Current (CHF) on the Sample Portfolio sheet.
+""
+"Targets, current values, and mandate drift"
+"  Each portfolio was rebalanced to exactly CHF 10,000,000 in a rebalance window in"
+"  late April 2026, completed 2026-05-02 (the final 'precision rebalance' trades at the"
+  end of each Transactions sheet). Target (CHF) is that rebalance allocation per
+"  position — it still sums to CHF 10,000,000."
+  Current (CHF) is the position's market value today: prices have moved since the
+"  rebalance, so portfolio totals no longer equal CHF 10M and sub-asset-class weights"
+  have drifted off their Portfolio Strategies targets.
+"  Market since the rebalance: a tech-led rally — global tech up strongly, broad"
+"  developed-market equities up moderately, financials lagging, EM equities slightly"
+"  down (FX), bonds roughly flat, gold up. The same ISIN moved identically everywhere;"
+  portfolios drift differently only because their allocations differ.
+  THE BANK'S DRIFT RULE: a sub-asset class may deviate at most ±2.0 percentage points
+"  from its target weight (recomputed against the drifted total). Beyond that, the RM"
+  must propose a rebalance — detecting such breaches is part of your mission.
+""
+Looking up instruments in market-data providers
+  Each Sample Portfolio sheet has three extra columns to save you a search:
+  • Valor          SIX Financial Data unique numeric identifier for the instrument.
+    MIC            Market Identifier Code of the most-liquid listing.
+"                   Combine as f""{Valor}_{MIC}"" for SIX MCP listing tools"
+"                   (end_of_day_snapshot, intraday_snapshot, end_of_day_history)."
+"                   Use Valor alone for instrument tools (instrument_base, etc.)."
+  • Yahoo Ticker   Ticker on Yahoo Finance for the most-liquid listing.
+                   Use directly with yfinance / Yahoo Finance API.
+  Notes:
+  • Bonds and cash positions have blank Valor and Yahoo Ticker — bonds vary too
+    much by ISIN to index by issuer name; for bonds use SIX `instrument_symbology`
+    with the ISIN directly.
+"  • A few specialty funds (UBS Real Estate Interswiss, Partners Group LIP) have no"
+    Yahoo coverage and no clean SIX match — both columns will be blank.
+""
+SIX coverage
+"  Every ISIN in this workbook — portfolio holdings, bonds, and CIO recommendation-list"
+"  candidates — resolves directly in SIX MCP by ISIN (instruments(ids, scheme: ISIN))."
+"  The Valor and MIC columns are that resolution, precomputed for you."
+"  Caveat: resolution covers IDENTITY (reference data, symbology). Some bonds list only"
+"  on thin venues (ETLX, FINR, OTCM, …) where end-of-day price HISTORY may be sparse —"
+"  for bond prices, par-pricing (as used in the transaction sheets) is the safe fallback."
+""
+CIO Recommendation List columns
+"  Rating           BUY (CIO preferred) · HOLD (keep, no new money) · SELL (replace)."
+  Rating Since     Date the current rating took effect. A days-old SELL on a position
+                   still held tells you how long the gap has gone unactioned.
+  CIO View         One-line rationale behind the rating.
+  As Of            Publication date of this list (same for every row).
+  Notes:
+  • Mandate compliance is enforced at sub-asset-class weights (Portfolio Strategies);
+"    within a slot, selection is constrained by CIO rating and the client's personal context."
+  • A SELL rating on a held position means the asset left the recommended list but the
+    quarterly review hasn't actioned it yet — exactly the alert your dashboard should raise.
+  • Two legacy cantonal-bank holdings are deliberately NOT on the list: CIO research
+    does not cover them. Absence is itself a signal.
+  • Every SELL has at least one not-held BUY candidate in the same Industry Group.
+""
+Transaction columns
+  Transaction ID   Unique row identifier (not chronologically ordered — sort by Timestamp).
+  Timestamp        Date of the trade or income event.
+  Portfolio        Defensive · Balanced · Growth
+  ISIN             Security identifier.
+  Issuer / Asset   Human-readable issuer name.
+  Side             BUY · SELL
+  Quantity         Shares (equities/ETFs) or face value ÷ 100 (bonds).
+  Price (local)    Price per unit in the security's native currency.
+"  Currency         Native currency (CHF, USD, EUR, GBP, …)."
+  FX → CHF         Native-to-CHF FX rate on the transaction date.
+  Price (CHF)      = Price (local) × FX → CHF.
+  Amount (CHF)     = Quantity × Price (CHF).
+  Rationale        Short human-readable reason for the trade.
+  Price Source     yfinance · synth_estimated · issuance_par · cash
+""
+Cash Flow columns
+  Flow ID          Unique row identifier.
+  Timestamp        Date of the cash event.
+  Portfolio        Defensive · Balanced · Growth
+  Side             DEPOSIT · WITHDRAWAL · FEE · COUPON
+  Amount (CHF)     Absolute CHF amount of the flow.
+  Rationale        Short human-readable description.

@@ -1,0 +1,251 @@
+Transaction ID,Timestamp,Portfolio,ISIN,Issuer / Asset,Side,Quantity,Price (local),Currency,FX → CHF,Price (CHF),Amount (CHF),Rationale,Price Source
+txn-def-0038,2023-05-13 00:00:00,Defensive,CH0008742519,Swisscom AG,BUY,24.366447,590.4,CHF,1,590.4,14385.95,Position open · mandate inception DCA,yfinance
+txn-def-0185,2023-05-13 00:00:00,Defensive,CH1194355116,Nestlé S.A.,BUY,2000,100,CHF,1,100,200000,Bond purchase at par · mandate inception,issuance_par
+txn-def-0186,2023-05-13 00:00:00,Defensive,CH0419041212,Pfandbriefbank,BUY,2000,100,CHF,1,100,200000,Bond purchase at par · mandate inception,issuance_par
+txn-def-0221,2023-05-13 00:00:00,Defensive,US95040Q1040,Welltower Inc.,BUY,504.411368,100.6201,USD,0.894,89.9543,45373.99,Position open · mandate inception DCA,synth_estimated
+txn-def-0023,2023-05-14 00:00:00,Defensive,CH0010570759,Chocoladefabriken Lindt,BUY,0.276465,112000,CHF,1,112000,30964.1,Position open · mandate inception DCA,yfinance
+txn-def-0197,2023-05-14 00:00:00,Defensive,DE000BU2Z031,Germany Bund,BUY,2945.765165,100,EUR,0.97565,97.565,287403.58,Bond purchase at par · mandate inception,issuance_par
+txn-def-0101,2023-05-16 00:00:00,Defensive,US65339F1012,NextEra Energy Inc.,BUY,381.425889,75.84,USD,0.89546,67.9117,25903.27,Position open · mandate inception DCA,yfinance
+txn-def-0227,2023-05-16 00:00:00,Defensive,CH0047533523,ZKB Gold ETF,BUY,898.414705,152.2568,CHF,1,152.2568,136789.77,Position open · mandate inception DCA,synth_estimated
+txn-def-0133,2023-05-17 00:00:00,Defensive,GB00B10RZP78,Unilever PLC,BUY,6.797256,4614.7056,GBP,1.11894,5163.5786,35098.17,Position open · mandate inception DCA,yfinance
+txn-def-0151,2023-05-17 00:00:00,Defensive,DE0008430026,Muenchener Rueckvers.,BUY,49.876209,327.6,EUR,0.9741,319.1152,15916.25,Position open · mandate inception DCA,yfinance
+txn-def-0081,2023-05-18 00:00:00,Defensive,US7134481081,PepsiCo Inc.,BUY,264.967161,191.56,USD,0.898742,172.163,45617.55,Position open · mandate inception DCA,yfinance
+txn-def-0201,2023-05-18 00:00:00,Defensive,US478160CL64,Johnson & Johnson,BUY,2570.165598,100,USD,0.898742,89.8742,230991.58,Bond purchase at par · mandate inception,issuance_par
+txn-def-0244,2023-05-18 00:00:00,Defensive,IE00B1TXHL60,iShares Listed Private Eq,BUY,477.365747,93.6325,EUR,0.9737,91.1699,43521.4,Position open · mandate inception DCA,synth_estimated
+txn-def-0140,2023-05-19 00:00:00,Defensive,GB0009895292,AstraZeneca PLC,BUY,2.043118,12010,GBP,1.12304,13487.7099,27556.99,Position open · mandate inception DCA,yfinance
+txn-def-0217,2023-05-19 00:00:00,Defensive,US74340W1036,Prologis Inc.,BUY,544.061043,100.9993,USD,0.90487,91.3912,49722.4,Position open · mandate inception DCA,synth_estimated
+txn-def-0168,2023-05-20 00:00:00,Defensive,HK0941009539,China Mobile Ltd.,BUY,4098.846045,66.4,HKD,0.115599,7.6758,31461.81,Position open · mandate inception DCA,yfinance
+txn-def-0033,2023-05-21 00:00:00,Defensive,CH0130293662,BKW AG,BUY,139.787464,164.7,CHF,1,164.7,23022.99,Position open · mandate inception DCA,yfinance
+txn-def-0145,2023-05-21 00:00:00,Defensive,ES0144580Y14,Iberdrola S.A.,BUY,964.304065,11.63,EUR,0.97493,11.3384,10933.7,Position open · mandate inception DCA,yfinance
+txn-def-0196,2023-05-21 00:00:00,Defensive,DE000BU3Z005,Germany Bund,BUY,2945.765165,100,EUR,0.97493,97.493,287191.48,Bond purchase at par · mandate inception,issuance_par
+txn-def-0015,2023-05-22 00:00:00,Defensive,CH0012005267,Novartis AG,BUY,251.460868,86.4765,CHF,1,86.4765,21745.46,Position open · mandate inception DCA,yfinance
+txn-def-0065,2023-05-22 00:00:00,Defensive,US4781601046,Johnson & Johnson,BUY,214.66312,156.87,USD,0.89819,140.8991,30245.83,Position open · mandate inception DCA,yfinance
+txn-def-0088,2023-05-22 00:00:00,Defensive,US0028241000,Abbott Laboratories,BUY,408.218675,108.25,USD,0.89819,97.2291,39690.72,Position open · mandate inception DCA,yfinance
+txn-def-0074,2023-05-23 00:00:00,Defensive,US1912161007,The Coca-Cola Co.,BUY,377.549319,61.4,USD,0.8983,55.1556,20823.97,Position open · mandate inception DCA,yfinance
+txn-def-0119,2023-05-24 00:00:00,Defensive,FR0000120321,L'Oréal S.A.,BUY,121.092427,404,EUR,0.97074,392.179,47489.9,Position open · mandate inception DCA,yfinance
+txn-def-0108,2023-05-25 00:00:00,Defensive,US1941621039,Colgate-Palmolive Co.,BUY,216.494258,76.25,USD,0.904,68.93,14922.95,Position open · mandate inception DCA,yfinance
+txn-def-0199,2023-05-25 00:00:00,Defensive,FR001400PM68,France OAT,BUY,2727.560338,100,EUR,0.97262,97.262,265287.98,Bond purchase at par · mandate inception,issuance_par
+txn-def-0239,2023-05-25 00:00:00,Defensive,LU0196152788,Partners Group Listed Investments - Listed PE,BUY,272.942589,127.8324,EUR,0.97262,124.3323,33935.59,Position open · mandate inception DCA,synth_estimated
+txn-def-0162,2023-05-26 00:00:00,Defensive,US6410694060,Nestlé S.A. (ADR),BUY,248.537362,123.96,USD,0.90505,112.19,27883.41,Position open · mandate inception DCA,yfinance
+txn-def-0181,2023-05-26 00:00:00,Defensive,CH0224397171,Swiss Confederation,BUY,3500,100,CHF,1,100,350000,Bond purchase at par · mandate inception,issuance_par
+txn-def-0206,2023-05-26 00:00:00,Defensive,XS2595418679,BASF SE,BUY,1285.082799,100,USD,0.90505,90.505,116306.42,Bond purchase at par · mandate inception,issuance_par
+txn-def-0209,2023-05-26 00:00:00,Defensive,CH0014420878,UBS (CH) Property Fund,BUY,221.42992,133.6348,CHF,1,133.6348,29590.74,Position open · mandate inception DCA,synth_estimated
+txn-def-0008,2023-05-27 00:00:00,Defensive,CH0012032048,Roche Holding AG,BUY,132.776695,314.8,CHF,1,314.8,41798.1,Position open · mandate inception DCA,yfinance
+txn-def-0019,2023-05-27 00:00:00,Defensive,CH0011075394,Zurich Insurance Group,BUY,51.513543,425.6,CHF,1,425.6,21924.16,Position open · mandate inception DCA,yfinance
+txn-def-0061,2023-05-28 00:00:00,Defensive,US22160K1051,Costco Wholesale Corp.,BUY,40.326017,507.26,USD,0.90505,459.0957,18513.5,Position open · mandate inception DCA,yfinance
+txn-def-0125,2023-05-28 00:00:00,Defensive,FR0000120578,Sanofi S.A.,BUY,450.729555,99.4,EUR,0.97059,96.4766,43484.88,Position open · mandate inception DCA,yfinance
+txn-def-0184,2023-05-28 00:00:00,Defensive,CH0009755197,Swiss Confederation,BUY,2500,100,CHF,1,100,250000,Bond purchase at par · mandate inception,issuance_par
+txn-def-0001,2023-05-29 00:00:00,Defensive,CH0038863350,Nestlé S.A.,BUY,607.590274,112.06,CHF,1,112.06,68086.56,Position open · mandate inception DCA,yfinance
+txn-def-0029,2023-05-29 00:00:00,Defensive,CH0126881561,Swiss Re AG,BUY,303.848636,91.34,CHF,1,91.34,27753.53,Position open · mandate inception DCA,yfinance
+txn-def-0175,2023-05-29 00:00:00,Defensive,CNE1000003G1,Industrial & Comm Bank,BUY,56575.051421,4.25,HKD,0.115594,0.4913,27793.88,Position open · mandate inception DCA,yfinance
+txn-def-0094,2023-05-30 00:00:00,Defensive,IE00BTN1Y115,Medtronic PLC,BUY,469.101255,82.5,USD,0.90446,74.618,35003.37,Position open · mandate inception DCA,yfinance
+txn-def-0213,2023-05-30 00:00:00,Defensive,CH0002769351,UBS (CH) Real Estate Fund Interswiss,BUY,318.622433,133.6436,CHF,1,133.6436,42581.86,Position open · mandate inception DCA,synth_estimated
+txn-def-0233,2023-05-30 00:00:00,Defensive,IE00B4ND3602,iShares Physical Gold,BUY,1600.717262,70.4379,EUR,0.96837,68.2099,109184.83,Position open · mandate inception DCA,synth_estimated
+txn-def-0156,2023-05-31 00:00:00,Defensive,IE000S9YS762,Linde PLC,BUY,59.629422,353.66,USD,0.9058,320.3452,19102,Position open · mandate inception DCA,yfinance
+txn-def-0114,2023-06-01 00:00:00,Defensive,DK0062498333,Novo Nordisk A/S,BUY,746.284093,549.3,DKK,0.130664,71.7737,53563.6,Position open · mandate inception DCA,yfinance
+txn-def-0192,2023-06-01 00:00:00,Defensive,US91282CLW90,US Treasury,BUY,4112.264957,100,USD,0.90989,90.989,374170.87,Bond purchase at par · mandate inception,issuance_par
+txn-def-0203,2023-06-01 00:00:00,Defensive,US191216DP21,Coca-Cola Co.,BUY,1927.624198,100,USD,0.90989,90.989,175392.6,Bond purchase at par · mandate inception,issuance_par
+txn-def-0070,2023-06-02 00:00:00,Defensive,US9311421039,Walmart Inc.,BUY,267.783622,49.6067,USD,0.90559,44.9233,12029.72,Position open · mandate inception DCA,yfinance
+txn-def-0044,2023-06-03 00:00:00,Defensive,CH0531751755,Banque Cantonale Vaudoise,BUY,111.97169,92.55,CHF,1,92.55,10362.98,Position open · mandate inception DCA,yfinance
+txn-def-0050,2023-06-03 00:00:00,Defensive,CH0011484067,St.Galler Kantonalbank,BUY,22.342045,485,CHF,1,485,10835.89,Position open · mandate inception DCA,yfinance
+txn-def-0057,2023-06-03 00:00:00,Defensive,US7427181091,Procter & Gamble Co.,BUY,334.073031,146.52,USD,0.90559,132.6871,44327.17,Position open · mandate inception DCA,yfinance
+txn-def-0188,2023-06-07 00:00:00,Defensive,CH1112455766,Swisscom AG,BUY,2000,100,CHF,1,100,200000,Bond purchase at par · mandate inception,issuance_par
+txn-def-0198,2023-06-08 00:00:00,Defensive,DE0001135432,Germany Bund,BUY,2727.560338,100,EUR,0.97382,97.382,265615.27,Bond purchase at par · mandate inception,issuance_par
+txn-def-0191,2023-06-12 00:00:00,Defensive,US91282CLS88,US Treasury,BUY,4112.264957,100,USD,0.9032,90.32,371419.76,Bond purchase at par · mandate inception,issuance_par
+txn-def-0202,2023-06-13 00:00:00,Defensive,US931142EE96,Walmart Inc.,BUY,1927.624198,100,USD,0.9083,90.83,175086.1,Bond purchase at par · mandate inception,issuance_par
+txn-def-0187,2023-06-14 00:00:00,Defensive,CH1498422984,ZKB Bond,BUY,2000,100,CHF,1,100,200000,Bond purchase at par · mandate inception,issuance_par
+txn-def-0194,2023-06-14 00:00:00,Defensive,IE00BK7Y2R57,iShares USD Treas. ETF,BUY,3491.277232,100,EUR,0.97662,97.662,340965.12,Bond purchase at par · mandate inception,issuance_par
+txn-def-0183,2023-06-16 00:00:00,Defensive,CH0127181169,Swiss Confederation,BUY,2500,100,CHF,1,100,250000,Bond purchase at par · mandate inception,issuance_par
+txn-def-0182,2023-06-19 00:00:00,Defensive,CH0127181193,Swiss Confederation,BUY,3500,100,CHF,1,100,350000,Bond purchase at par · mandate inception,issuance_par
+txn-def-0204,2023-06-20 00:00:00,Defensive,XS2118273601,Siemens Fin.,BUY,1927.624198,100,USD,0.89578,89.578,172672.73,Bond purchase at par · mandate inception,issuance_par
+txn-def-0195,2023-06-24 00:00:00,Defensive,IE00BMX0B631,Vanguard USD Treasury,BUY,3054.867578,100,EUR,0.9805,98.05,299529.76,Bond purchase at par · mandate inception,issuance_par
+txn-def-0193,2023-06-25 00:00:00,Defensive,US912810TV08,US Treasury,BUY,4112.264957,100,USD,0.89488,89.488,367998.37,Bond purchase at par · mandate inception,issuance_par
+txn-def-0208,2023-06-26 00:00:00,Defensive,XS1508675508,Kingdom of Saudi Arabia,BUY,642.541399,100,USD,0.89578,89.578,57557.58,Bond purchase at par · mandate inception,issuance_par
+txn-def-0189,2023-06-27 00:00:00,Defensive,CH0020469075,Eurofima,BUY,1000,100,CHF,1,100,100000,Bond purchase at par · mandate inception,issuance_par
+txn-def-0205,2023-06-28 00:00:00,Defensive,FR0013409844,Sanofi S.A.,BUY,1636.536203,100,EUR,0.9792,97.92,160249.63,Bond purchase at par · mandate inception,issuance_par
+txn-def-0207,2023-06-29 00:00:00,Defensive,USY20721BB49,Republic of Indonesia,BUY,642.541399,100,USD,0.89666,89.666,57614.12,Bond purchase at par · mandate inception,issuance_par
+txn-def-0200,2023-07-02 00:00:00,Defensive,FR0011461037,France OAT,BUY,2182.04827,100,EUR,0.97716,97.716,213221.02,Bond purchase at par · mandate inception,issuance_par
+txn-def-0190,2023-07-06 00:00:00,Defensive,CH1346743052,Kanton Zürich,BUY,1000,100,CHF,1,100,100000,Bond purchase at par · mandate inception,issuance_par
+txn-def-0086,2023-07-17 00:00:00,Defensive,US7134481081,PepsiCo Inc.,BUY,56.217369,185.63,USD,0.8619,159.9945,8994.47,Add on dip · technical entry,yfinance
+txn-def-0098,2023-07-18 00:00:00,Defensive,IE00BTN1Y115,Medtronic PLC,BUY,111.376576,86.6,USD,0.86035,74.5063,8298.26,Add on dip · technical entry,yfinance
+txn-def-0012,2023-07-19 00:00:00,Defensive,CH0012032048,Roche Holding AG,BUY,40.761524,290.8,CHF,1,290.8,11853.45,Tactical add · CIO conviction maintained,yfinance
+txn-def-0128,2023-07-21 00:00:00,Defensive,FR0000120578,Sanofi S.A.,BUY,138.963357,98.61,EUR,0.96452,95.1113,13216.99,Tactical add · CIO conviction maintained,yfinance
+txn-def-0009,2023-07-30 00:00:00,Defensive,CH0012032048,Roche Holding AG,BUY,29.051732,289.2,CHF,1,289.2,8401.76,Tactical add · CIO conviction maintained,yfinance
+txn-def-0097,2023-08-10 00:00:00,Defensive,IE00BTN1Y115,Medtronic PLC,BUY,159.16876,83.12,USD,0.8767,72.8713,11598.84,Quarterly rebalance · drift below target,yfinance
+txn-def-0045,2023-08-11 00:00:00,Defensive,CH0531751755,Banque Cantonale Vaudoise,BUY,24.523683,97.75,CHF,1,97.75,2397.19,Tactical add · CIO conviction maintained,yfinance
+txn-def-0096,2023-08-15 00:00:00,Defensive,IE00BTN1Y115,Medtronic PLC,BUY,125.679236,82.84,USD,0.87798,72.7319,9140.88,Quarterly rebalance · drift below target,yfinance
+txn-def-0103,2023-08-23 00:00:00,Defensive,US65339F1012,NextEra Energy Inc.,BUY,82.484525,67.89,USD,0.8798,59.7296,4926.77,Quarterly rebalance · drift below target,yfinance
+txn-def-0173,2023-08-23 00:00:00,Defensive,HK0941009539,China Mobile Ltd.,BUY,2050.240837,65,HKD,0.112288,7.2987,14964.13,Quarterly rebalance · drift below target,yfinance
+txn-def-0121,2023-08-28 00:00:00,Defensive,FR0000120321,L'Oréal S.A.,BUY,37.430192,405.2,EUR,0.9553,387.0876,14488.76,Add on dip · technical entry,yfinance
+txn-def-0158,2023-08-28 00:00:00,Defensive,IE000S9YS762,Linde PLC,BUY,18.686781,382.07,USD,0.88473,338.0288,6316.67,Tactical add · CIO conviction maintained,yfinance
+txn-def-0160,2023-09-01 00:00:00,Defensive,IE000S9YS762,Linde PLC,BUY,15.355218,388.91,USD,0.8832,343.4853,5274.29,DCA into existing position,yfinance
+txn-def-0235,2023-09-02 00:00:00,Defensive,IE00B4ND3602,iShares Physical Gold,BUY,503.217873,70.7104,EUR,0.95772,67.7208,34078.31,Tactical add · CIO conviction maintained,synth_estimated
+txn-def-0170,2023-09-04 00:00:00,Defensive,HK0941009539,China Mobile Ltd.,BUY,1238.339192,65.45,HKD,0.11283,7.3847,9144.79,Tactical add · CIO conviction maintained,yfinance
+txn-def-0178,2023-09-04 00:00:00,Defensive,CNE1000003G1,Industrial & Comm Bank,BUY,17234.342897,3.73,HKD,0.11283,0.4209,7253.17,Add on dip · technical entry,yfinance
+txn-def-0027,2023-09-05 00:00:00,Defensive,CH0010570759,Chocoladefabriken Lindt,BUY,0.114951,103000,CHF,1,103000,11839.98,Quarterly rebalance · drift below target,yfinance
+txn-def-0152,2023-09-15 00:00:00,Defensive,DE0008430026,Muenchener Rueckvers.,BUY,19.25036,374.8,EUR,0.9531,357.2219,6876.65,Add on dip · technical entry,yfinance
+txn-def-0072,2023-10-09 00:00:00,Defensive,US9311421039,Walmart Inc.,BUY,58.919709,51.9467,USD,0.9087,47.2039,2781.24,Add on dip · technical entry,yfinance
+txn-def-0130,2023-10-20 00:00:00,Defensive,FR0000120578,Sanofi S.A.,BUY,197.88766,98.83,EUR,0.94391,93.2866,18460.27,DCA into existing position,yfinance
+txn-def-0166,2023-10-24 00:00:00,Defensive,US6410694060,Nestlé S.A. (ADR),BUY,96.315363,109.66,USD,0.8906,97.6632,9406.47,Add on dip · technical entry,yfinance
+txn-def-0076,2023-10-30 00:00:00,Defensive,US1912161007,The Coca-Cola Co.,BUY,101.891277,56.15,USD,0.9024,50.6698,5162.81,Top-up after deposit,yfinance
+txn-def-0055,2023-11-17 00:00:00,Defensive,CH0011484067,St.Galler Kantonalbank,SELL,2.688044,488,CHF,1,488,1311.77,Trim on rally · realising gains,yfinance
+txn-def-0179,2023-11-17 00:00:00,Defensive,CNE1000003G1,Industrial & Comm Bank,BUY,11499.333654,3.75,HKD,0.113868,0.427,4910.27,Quarterly rebalance · drift below target,yfinance
+txn-def-0245,2023-12-09 00:00:00,Defensive,IE00B1TXHL60,iShares Listed Private Eq,BUY,97.400759,82.6969,EUR,0.94466,78.1205,7609,Top-up after deposit,synth_estimated
+txn-def-0034,2023-12-11 00:00:00,Defensive,CH0130293662,BKW AG,BUY,57.272913,153.5,CHF,1,153.5,8791.39,Quarterly rebalance · drift below target,yfinance
+txn-def-0230,2023-12-26 00:00:00,Defensive,CH0047533523,ZKB Gold ETF,BUY,366.22827,165.9694,CHF,1,165.9694,60782.68,Add on dip · technical entry,synth_estimated
+txn-def-0211,2024-01-16 00:00:00,Defensive,CH0014420878,UBS (CH) Property Fund,BUY,53.83333,150.1417,CHF,1,150.1417,8082.63,Add on dip · technical entry,synth_estimated
+txn-def-0003,2024-02-01 00:00:00,Defensive,CH0038863350,Nestlé S.A.,BUY,107.481549,98.35,CHF,1,98.35,10570.81,Tactical add · CIO conviction maintained,yfinance
+txn-def-0117,2024-02-13 00:00:00,Defensive,DK0062498333,Novo Nordisk A/S,BUY,359.665019,832.3,DKK,0.126559,105.3351,37885.34,DCA into existing position,yfinance
+txn-def-0225,2024-02-22 00:00:00,Defensive,US95040Q1040,Welltower Inc.,BUY,149.554858,86.841,USD,0.87925,76.355,11419.26,DCA into existing position,synth_estimated
+txn-def-0249,2024-02-24 00:00:00,Defensive,IE00B1TXHL60,iShares Listed Private Eq,BUY,177.251651,83.4115,EUR,0.95268,79.4645,14085.21,Top-up after deposit,synth_estimated
+txn-def-0228,2024-02-26 00:00:00,Defensive,CH0047533523,ZKB Gold ETF,BUY,309.169042,174.8896,CHF,1,174.8896,54070.45,Add on dip · technical entry,synth_estimated
+txn-def-0109,2024-02-28 00:00:00,Defensive,US1941621039,Colgate-Palmolive Co.,BUY,96.240684,86.81,USD,0.8788,76.2886,7342.07,DCA into existing position,yfinance
+txn-def-0237,2024-03-06 00:00:00,Defensive,IE00B4ND3602,iShares Physical Gold,BUY,425.114728,78.6545,EUR,0.95916,75.4423,32071.62,Quarterly rebalance · drift below target,synth_estimated
+txn-def-0210,2024-03-09 00:00:00,Defensive,CH0014420878,UBS (CH) Property Fund,BUY,95.674213,157.6244,CHF,1,157.6244,15080.59,Top-up after deposit,synth_estimated
+txn-def-0026,2024-03-14 00:00:00,Defensive,CH0010570759,Chocoladefabriken Lindt,BUY,0.074334,109800,CHF,1,109800,8161.83,Quarterly rebalance · drift below target,yfinance
+txn-def-0006,2024-03-15 00:00:00,Defensive,CH0038863350,Nestlé S.A.,SELL,85.520155,95.23,CHF,1,95.23,8144.08,Trim on rally · realising gains,yfinance
+txn-def-0153,2024-03-21 00:00:00,Defensive,DE0008430026,Muenchener Rueckvers.,BUY,15.357783,443.8,EUR,0.96858,429.8558,6601.63,Tactical add · CIO conviction maintained,yfinance
+txn-def-0236,2024-03-24 00:00:00,Defensive,IE00B4ND3602,iShares Physical Gold,BUY,692.171211,82.1407,EUR,0.975,80.0872,55434.03,DCA into existing position,synth_estimated
+txn-def-0046,2024-03-27 00:00:00,Defensive,CH0531751755,Banque Cantonale Vaudoise,BUY,33.279853,105.1,CHF,1,105.1,3497.71,DCA into existing position,yfinance
+txn-def-0021,2024-04-02 00:00:00,Defensive,CH0011075394,Zurich Insurance Group,BUY,13.778608,483.6,CHF,1,483.6,6663.33,DCA into existing position,yfinance
+txn-def-0040,2024-04-07 00:00:00,Defensive,CH0008742519,Swisscom AG,BUY,6.188522,522.5,CHF,1,522.5,3233.5,Tactical add · CIO conviction maintained,yfinance
+txn-def-0062,2024-04-09 00:00:00,Defensive,US22160K1051,Costco Wholesale Corp.,BUY,9.402842,718.59,USD,0.90501,650.3311,6114.96,DCA into existing position,yfinance
+txn-def-0248,2024-04-09 00:00:00,Defensive,IE00B1TXHL60,iShares Listed Private Eq,BUY,84.456933,84.4944,EUR,0.98303,83.0605,7015.04,Tactical add · CIO conviction maintained,synth_estimated
+txn-def-0082,2024-04-19 00:00:00,Defensive,US7134481081,PepsiCo Inc.,BUY,71.580095,174.13,USD,0.9121,158.824,11368.64,Tactical add · CIO conviction maintained,yfinance
+txn-def-0129,2024-04-26 00:00:00,Defensive,FR0000120578,Sanofi S.A.,BUY,206.373903,91.23,EUR,0.97893,89.3078,18430.8,Quarterly rebalance · drift below target,yfinance
+txn-def-0020,2024-04-28 00:00:00,Defensive,CH0011075394,Zurich Insurance Group,BUY,18.686766,439.9,CHF,1,439.9,8220.31,DCA into existing position,yfinance
+txn-def-0224,2024-05-03 00:00:00,Defensive,US95040Q1040,Welltower Inc.,BUY,96.712245,91.6645,USD,0.90977,83.3936,8065.18,Quarterly rebalance · drift below target,synth_estimated
+txn-def-0024,2024-05-06 00:00:00,Defensive,CH0010570759,Chocoladefabriken Lindt,BUY,0.110486,106000,CHF,1,106000,11711.49,Quarterly rebalance · drift below target,yfinance
+txn-def-0223,2024-05-24 00:00:00,Defensive,US95040Q1040,Welltower Inc.,BUY,193.286828,89.7506,USD,0.91433,82.0617,15861.44,Quarterly rebalance · drift below target,synth_estimated
+txn-def-0067,2024-05-26 00:00:00,Defensive,US4781601046,Johnson & Johnson,BUY,47.714383,146.97,USD,0.91433,134.3791,6411.81,Add on dip · technical entry,yfinance
+txn-def-0126,2024-06-11 00:00:00,Defensive,FR0000120578,Sanofi S.A.,BUY,110.068077,89.89,EUR,0.96502,86.7456,9547.93,DCA into existing position,yfinance
+txn-def-0099,2024-06-17 00:00:00,Defensive,IE00BTN1Y115,Medtronic PLC,BUY,94.66387,79.95,USD,0.89073,71.2139,6741.38,Top-up after deposit,yfinance
+txn-def-0110,2024-06-20 00:00:00,Defensive,US1941621039,Colgate-Palmolive Co.,BUY,91.263516,96.95,USD,0.8843,85.7329,7824.28,DCA into existing position,yfinance
+txn-def-0147,2024-07-07 00:00:00,Defensive,ES0144580Y14,Iberdrola S.A.,BUY,255.860459,11.875,EUR,0.97317,11.5564,2956.82,Quarterly rebalance · drift below target,yfinance
+txn-def-0136,2024-07-09 00:00:00,Defensive,GB00B10RZP78,Unilever PLC,BUY,2.806987,4673.5259,GBP,1.15055,5377.1252,15093.52,DCA into existing position,yfinance
+txn-def-0092,2024-08-20 00:00:00,Defensive,US0028241000,Abbott Laboratories,BUY,134.135974,110.77,USD,0.86237,95.5247,12813.3,Quarterly rebalance · drift below target,yfinance
+txn-def-0105,2024-08-22 00:00:00,Defensive,US65339F1012,NextEra Energy Inc.,BUY,120.21217,78.92,USD,0.8511,67.1688,8074.51,Top-up after deposit,yfinance
+txn-def-0011,2024-09-14 00:00:00,Defensive,CH0012032048,Roche Holding AG,BUY,29.950971,285.2,CHF,1,285.2,8542.02,Tactical add · CIO conviction maintained,yfinance
+txn-def-0095,2024-09-16 00:00:00,Defensive,IE00BTN1Y115,Medtronic PLC,BUY,140.607239,90.11,USD,0.8477,76.3862,10740.46,DCA into existing position,yfinance
+txn-def-0090,2024-09-17 00:00:00,Defensive,US0028241000,Abbott Laboratories,BUY,147.855109,118.13,USD,0.84458,99.7702,14751.54,DCA into existing position,yfinance
+txn-def-0059,2024-10-21 00:00:00,Defensive,US7427181091,Procter & Gamble Co.,BUY,109.641425,169.54,USD,0.86493,146.6402,16077.84,Top-up after deposit,yfinance
+txn-def-0030,2024-10-30 00:00:00,Defensive,CH0126881561,Swiss Re AG,BUY,62.877278,111.7,CHF,1,111.7,7023.39,DCA into existing position,yfinance
+txn-def-0164,2024-10-31 00:00:00,Defensive,US6410694060,Nestlé S.A. (ADR),BUY,64.159934,94.52,USD,0.8663,81.8827,5253.59,Top-up after deposit,yfinance
+txn-def-0002,2024-11-10 00:00:00,Defensive,CH0038863350,Nestlé S.A.,BUY,126.091392,78.98,CHF,1,78.98,9958.7,Quarterly rebalance · drift below target,yfinance
+txn-def-0154,2024-11-15 00:00:00,Defensive,DE0008430026,Muenchener Rueckvers.,BUY,10.285224,472.1,EUR,0.9376,442.641,4552.66,Quarterly rebalance · drift below target,yfinance
+txn-def-0137,2024-11-16 00:00:00,Defensive,GB00B10RZP78,Unilever PLC,BUY,1.642182,4857.4722,GBP,1.1277,5477.7712,8995.49,Tactical add · CIO conviction maintained,yfinance
+txn-def-0163,2024-11-25 00:00:00,Defensive,US6410694060,Nestlé S.A. (ADR),BUY,114.679293,85.34,USD,0.89047,75.9927,8714.79,Add on dip · technical entry,yfinance
+txn-def-0106,2024-11-29 00:00:00,Defensive,US65339F1012,NextEra Energy Inc.,BUY,108.615611,78.67,USD,0.88234,69.4137,7539.41,DCA into existing position,yfinance
+txn-def-0159,2024-12-10 00:00:00,Defensive,IE000S9YS762,Linde PLC,BUY,18.750181,444.81,USD,0.87859,390.8056,7327.68,Quarterly rebalance · drift below target,yfinance
+txn-def-0171,2024-12-12 00:00:00,Defensive,HK0941009539,China Mobile Ltd.,BUY,1599.282042,74.55,HKD,0.113595,8.4685,13543.53,DCA into existing position,yfinance
+txn-def-0177,2024-12-24 00:00:00,Defensive,CNE1000003G1,Industrial & Comm Bank,BUY,11762.446458,5.16,HKD,0.115633,0.5967,7018.26,Quarterly rebalance · drift below target,yfinance
+txn-def-0112,2025-01-01 00:00:00,Defensive,US1941621039,Colgate-Palmolive Co.,BUY,81.389373,90.91,USD,0.90324,82.1136,6683.17,Add on dip · technical entry,yfinance
+txn-def-0017,2025-01-28 00:00:00,Defensive,CH0012005267,Novartis AG,BUY,99.64821,92.44,CHF,1,92.44,9211.48,Top-up after deposit,yfinance
+txn-def-0013,2025-02-19 00:00:00,Defensive,CH0012032048,Roche Holding AG,BUY,44.499266,316.4,CHF,1,316.4,14079.57,Quarterly rebalance · drift below target,yfinance
+txn-def-0123,2025-02-19 00:00:00,Defensive,FR0000120321,L'Oréal S.A.,SELL,18.154372,333.95,EUR,0.94406,315.2689,5723.51,Trim on rally · realising gains,yfinance
+txn-def-0148,2025-02-28 00:00:00,Defensive,ES0144580Y14,Iberdrola S.A.,BUY,356.404781,13.95,EUR,0.93542,13.0491,4650.76,Add on dip · technical entry,yfinance
+txn-def-0231,2025-03-02 00:00:00,Defensive,CH0047533523,ZKB Gold ETF,SELL,188.428037,199.7351,CHF,1,199.7351,37635.68,Trim on rally · realising gains,synth_estimated
+txn-def-0048,2025-03-08 00:00:00,Defensive,CH0531751755,Banque Cantonale Vaudoise,BUY,44.39053,97.05,CHF,1,97.05,4308.1,Top-up after deposit,yfinance
+txn-def-0041,2025-03-21 00:00:00,Defensive,CH0008742519,Swisscom AG,BUY,9.043093,529.5,CHF,1,529.5,4788.32,Quarterly rebalance · drift below target,yfinance
+txn-def-0053,2025-04-02 00:00:00,Defensive,CH0011484067,St.Galler Kantonalbank,BUY,6.250816,490,CHF,1,490,3062.9,Top-up after deposit,yfinance
+txn-def-0122,2025-04-06 00:00:00,Defensive,FR0000120321,L'Oréal S.A.,BUY,42.748611,349.7,EUR,0.94883,331.8059,14184.24,Quarterly rebalance · drift below target,yfinance
+txn-def-0075,2025-04-18 00:00:00,Defensive,US1912161007,The Coca-Cola Co.,BUY,122.64877,73,USD,0.81375,59.4038,7285.8,DCA into existing position,yfinance
+txn-def-0172,2025-04-21 00:00:00,Defensive,HK0941009539,China Mobile Ltd.,BUY,1000.670822,83.55,HKD,0.104839,8.7593,8765.17,Add on dip · technical entry,yfinance
+txn-def-0042,2025-05-08 00:00:00,Defensive,CH0008742519,Swisscom AG,BUY,10.036329,540,CHF,1,540,5419.62,Quarterly rebalance · drift below target,yfinance
+txn-def-0079,2025-05-08 00:00:00,Defensive,US1912161007,The Coca-Cola Co.,SELL,67.481006,71.17,USD,0.82395,58.6405,3957.12,Trim on rally · realising gains,yfinance
+txn-def-0005,2025-05-13 00:00:00,Defensive,CH0038863350,Nestlé S.A.,BUY,139.275575,85.07,CHF,1,85.07,11848.17,Top-up after deposit,yfinance
+txn-def-0127,2025-05-18 00:00:00,Defensive,FR0000120578,Sanofi S.A.,BUY,193.390326,91.79,EUR,0.9343,85.7594,16585.04,Top-up after deposit,yfinance
+txn-def-0068,2025-05-25 00:00:00,Defensive,US4781601046,Johnson & Johnson,SELL,39.900219,152.94,USD,0.82838,126.6924,5055.06,Trim on rally · realising gains,yfinance
+txn-def-0084,2025-05-25 00:00:00,Defensive,US7134481081,PepsiCo Inc.,BUY,55.741482,129.34,USD,0.82838,107.1427,5972.29,Quarterly rebalance · drift below target,yfinance
+txn-def-0142,2025-05-28 00:00:00,Defensive,GB0009895292,AstraZeneca PLC,BUY,0.546842,10386,GBP,1.11781,11609.5748,6348.6,DCA into existing position,yfinance
+txn-def-0169,2025-06-04 00:00:00,Defensive,HK0941009539,China Mobile Ltd.,BUY,1901.124985,88.85,HKD,0.10489,9.3195,17717.49,Add on dip · technical entry,yfinance
+txn-def-0165,2025-06-06 00:00:00,Defensive,US6410694060,Nestlé S.A. (ADR),BUY,73.825205,105.48,USD,0.81925,86.4145,6379.57,Add on dip · technical entry,yfinance
+txn-def-0063,2025-06-15 00:00:00,Defensive,US22160K1051,Costco Wholesale Corp.,BUY,8.748652,990.21,USD,0.809,801.0799,7008.37,DCA into existing position,yfinance
+txn-def-0131,2025-06-22 00:00:00,Defensive,FR0000120578,Sanofi S.A.,SELL,106.394554,83.22,EUR,0.93967,78.1993,8319.98,Trim on rally · realising gains,yfinance
+txn-def-0120,2025-07-02 00:00:00,Defensive,FR0000120321,L'Oréal S.A.,BUY,33.35853,372.85,EUR,0.93341,348.0219,11609.5,Add on dip · technical entry,yfinance
+txn-def-0219,2025-07-15 00:00:00,Defensive,US74340W1036,Prologis Inc.,BUY,153.185513,118.3216,USD,0.79787,94.4052,14461.52,DCA into existing position,synth_estimated
+txn-def-0083,2025-07-29 00:00:00,Defensive,US7134481081,PepsiCo Inc.,BUY,95.848421,143.89,USD,0.8031,115.5581,11076.06,DCA into existing position,yfinance
+txn-def-0036,2025-08-01 00:00:00,Defensive,CH0130293662,BKW AG,SELL,12.774815,181.3,CHF,1,181.3,2316.07,Trim on rally · realising gains,yfinance
+txn-def-0051,2025-08-04 00:00:00,Defensive,CH0011484067,St.Galler Kantonalbank,BUY,5.810135,507,CHF,1,507,2945.74,Top-up after deposit,yfinance
+txn-def-0149,2025-08-06 00:00:00,Defensive,ES0144580Y14,Iberdrola S.A.,SELL,183.948956,15.55,EUR,0.93431,14.5285,2672.51,Trim on rally · realising gains,yfinance
+txn-def-0247,2025-08-06 00:00:00,Defensive,IE00B1TXHL60,iShares Listed Private Eq,BUY,165.620269,94.1177,EUR,0.93431,87.9351,14563.84,Top-up after deposit,synth_estimated
+txn-def-0066,2025-08-13 00:00:00,Defensive,US4781601046,Johnson & Johnson,BUY,44.779328,174.42,USD,0.80614,140.6069,6296.28,DCA into existing position,yfinance
+txn-def-0241,2025-08-13 00:00:00,Defensive,LU0196152788,Partners Group Listed Investments - Listed PE,BUY,51.71475,205.7792,EUR,0.94132,193.7041,10017.36,Quarterly rebalance · drift below target,synth_estimated
+txn-def-0039,2025-08-20 00:00:00,Defensive,CH0008742519,Swisscom AG,BUY,12.732089,592.5,CHF,1,592.5,7543.76,Tactical add · CIO conviction maintained,yfinance
+txn-def-0222,2025-09-01 00:00:00,Defensive,US95040Q1040,Welltower Inc.,BUY,143.567175,91.4674,USD,0.80064,73.2325,10513.78,Tactical add · CIO conviction maintained,synth_estimated
+txn-def-0054,2025-09-02 00:00:00,Defensive,CH0011484067,St.Galler Kantonalbank,BUY,7.720517,503,CHF,1,503,3883.42,DCA into existing position,yfinance
+txn-def-0091,2025-09-06 00:00:00,Defensive,US0028241000,Abbott Laboratories,BUY,187.022777,132.94,USD,0.80513,107.034,20017.79,DCA into existing position,yfinance
+txn-def-0146,2025-09-09 00:00:00,Defensive,ES0144580Y14,Iberdrola S.A.,BUY,473.591126,15.685,EUR,0.93301,14.6343,6930.66,Add on dip · technical entry,yfinance
+txn-def-0157,2025-09-14 00:00:00,Defensive,IE000S9YS762,Linde PLC,BUY,18.143069,482.04,USD,0.79595,383.6797,6961.13,Tactical add · CIO conviction maintained,yfinance
+txn-def-0141,2025-09-18 00:00:00,Defensive,GB0009895292,AstraZeneca PLC,BUY,0.660834,11248,GBP,1.07441,12084.9632,7986.16,Quarterly rebalance · drift below target,yfinance
+txn-def-0116,2025-10-07 00:00:00,Defensive,DK0062498333,Novo Nordisk A/S,BUY,295.36933,375.7,DKK,0.124689,46.8457,13836.77,DCA into existing position,yfinance
+txn-def-0104,2025-10-15 00:00:00,Defensive,US65339F1012,NextEra Energy Inc.,BUY,136.370303,85.79,USD,0.80153,68.7633,9377.27,Tactical add · CIO conviction maintained,yfinance
+txn-def-0138,2025-10-19 00:00:00,Defensive,GB00B10RZP78,Unilever PLC,SELL,1.284884,4989.0156,GBP,1.06458,5311.2061,6824.29,Trim on rally · realising gains,yfinance
+txn-def-0215,2025-10-23 00:00:00,Defensive,CH0002769351,UBS (CH) Real Estate Fund Interswiss,BUY,103.555038,158.2042,CHF,1,158.2042,16382.85,Tactical add · CIO conviction maintained,synth_estimated
+txn-def-0111,2025-10-24 00:00:00,Defensive,US1941621039,Colgate-Palmolive Co.,BUY,80.938787,78,USD,0.79508,62.0162,5019.52,Tactical add · CIO conviction maintained,yfinance
+txn-def-0047,2025-11-12 00:00:00,Defensive,CH0531751755,Banque Cantonale Vaudoise,BUY,25.270609,96.7,CHF,1,96.7,2443.67,Quarterly rebalance · drift below target,yfinance
+txn-def-0077,2025-11-12 00:00:00,Defensive,US1912161007,The Coca-Cola Co.,BUY,161.904035,71.51,USD,0.80033,57.2316,9266.03,Quarterly rebalance · drift below target,yfinance
+txn-def-0134,2025-11-18 00:00:00,Defensive,GB00B10RZP78,Unilever PLC,BUY,2.496216,4781.541,GBP,1.04735,5007.9472,12500.92,Add on dip · technical entry,yfinance
+txn-def-0246,2025-11-26 00:00:00,Defensive,IE00B1TXHL60,iShares Listed Private Eq,BUY,85.54675,102.058,EUR,0.93436,95.3589,8157.65,Add on dip · technical entry,synth_estimated
+txn-def-0052,2025-11-29 00:00:00,Defensive,CH0011484067,St.Galler Kantonalbank,BUY,8.232546,542,CHF,1,542,4462.04,Tactical add · CIO conviction maintained,yfinance
+txn-def-0234,2025-11-29 00:00:00,Defensive,IE00B4ND3602,iShares Physical Gold,BUY,427.011303,80.0481,EUR,0.93327,74.7064,31900.5,DCA into existing position,synth_estimated
+txn-def-0143,2025-12-10 00:00:00,Defensive,GB0009895292,AstraZeneca PLC,SELL,0.37007,13514,GBP,1.07216,14489.1703,5362.01,Trim on rally · realising gains,yfinance
+txn-def-0010,2025-12-19 00:00:00,Defensive,CH0012032048,Roche Holding AG,BUY,30.619539,334.2,CHF,1,334.2,10233.05,Top-up after deposit,yfinance
+txn-def-0058,2026-01-03 00:00:00,Defensive,US7427181091,Procter & Gamble Co.,BUY,110.664495,141.79,USD,0.79203,112.3019,12427.84,DCA into existing position,yfinance
+txn-def-0031,2026-01-04 00:00:00,Defensive,CH0126881561,Swiss Re AG,BUY,61.607619,132.85,CHF,1,132.85,8184.57,Add on dip · technical entry,yfinance
+txn-def-0135,2026-01-09 00:00:00,Defensive,GB00B10RZP78,Unilever PLC,BUY,1.753599,4744,GBP,1.07346,5092.4942,8930.19,DCA into existing position,yfinance
+txn-def-0085,2026-02-04 00:00:00,Defensive,US7134481081,PepsiCo Inc.,BUY,70.237949,166.18,USD,0.77576,128.9158,9054.78,Top-up after deposit,yfinance
+txn-def-0218,2026-02-09 00:00:00,Defensive,US74340W1036,Prologis Inc.,BUY,204.756534,99.2162,USD,0.77583,76.9749,15761.11,DCA into existing position,synth_estimated
+txn-def-0016,2026-02-11 00:00:00,Defensive,CH0012005267,Novartis AG,BUY,81.298215,123.1,CHF,1,123.1,10007.81,Add on dip · technical entry,yfinance
+txn-def-0176,2026-02-14 00:00:00,Defensive,CNE1000003G1,Industrial & Comm Bank,BUY,14347.475312,6.41,HKD,0.098442,0.631,9053.45,Tactical add · CIO conviction maintained,yfinance
+txn-def-0214,2026-02-14 00:00:00,Defensive,CH0002769351,UBS (CH) Real Estate Fund Interswiss,BUY,94.013555,158.5803,CHF,1,158.5803,14908.69,Top-up after deposit,synth_estimated
+txn-def-0089,2026-02-19 00:00:00,Defensive,US0028241000,Abbott Laboratories,BUY,127.415213,112.19,USD,0.7722,86.6331,11038.38,Tactical add · CIO conviction maintained,yfinance
+txn-def-0004,2026-02-23 00:00:00,Defensive,CH0038863350,Nestlé S.A.,BUY,138.253075,81.4,CHF,1,81.4,11253.8,Top-up after deposit,yfinance
+txn-def-0078,2026-03-01 00:00:00,Defensive,US1912161007,The Coca-Cola Co.,BUY,151.574651,81.56,USD,0.77323,63.0646,9559,Tactical add · CIO conviction maintained,yfinance
+txn-def-0102,2026-03-03 00:00:00,Defensive,US65339F1012,NextEra Energy Inc.,BUY,109.567132,92.59,USD,0.77871,72.1008,7899.87,Top-up after deposit,yfinance
+txn-def-0025,2026-03-05 00:00:00,Defensive,CH0010570759,Chocoladefabriken Lindt,BUY,0.085792,122200,CHF,1,122200,10483.74,DCA into existing position,yfinance
+txn-def-0035,2026-03-09 00:00:00,Defensive,CH0130293662,BKW AG,BUY,55.175303,147.4,CHF,1,147.4,8132.84,DCA into existing position,yfinance
+txn-def-0115,2026-03-09 00:00:00,Defensive,DK0062498333,Novo Nordisk A/S,BUY,318.650188,254.5,DKK,0.120487,30.6639,9771.07,Tactical add · CIO conviction maintained,yfinance
+txn-def-0229,2026-03-13 00:00:00,Defensive,CH0047533523,ZKB Gold ETF,BUY,235.415679,206.6562,CHF,1,206.6562,48650.12,DCA into existing position,synth_estimated
+txn-def-0240,2026-03-17 00:00:00,Defensive,LU0196152788,Partners Group Listed Investments - Listed PE,BUY,72.667865,204.2211,EUR,0.90617,185.059,13447.84,DCA into existing position,synth_estimated
+txn-def-0071,2026-03-23 00:00:00,Defensive,US9311421039,Walmart Inc.,BUY,106.888594,120.72,USD,0.78782,95.1056,10165.71,Add on dip · technical entry,yfinance
+txn-def-0242,2026-03-24 00:00:00,Defensive,LU0196152788,Partners Group Listed Investments - Listed PE,SELL,19.914545,206.5455,EUR,0.91307,188.5905,3755.69,Trim on rally · realising gains,synth_estimated
+txn-def-0060,2026-04-18 00:00:00,Defensive,US7427181091,Procter & Gamble Co.,BUY,160.002407,146.93,USD,0.7832,115.0756,18412.37,"Final precision rebalance · land on target (80,000 CHF)",yfinance
+txn-def-0107,2026-04-18 00:00:00,Defensive,US65339F1012,NextEra Energy Inc.,SELL,123.526344,91.98,USD,0.7832,72.0387,8898.68,"Final precision rebalance · land on target (60,000 CHF)",yfinance
+txn-def-0139,2026-04-18 00:00:00,Defensive,GB00B10RZP78,Unilever PLC,BUY,3.464958,4299,GBP,1.0592,4553.501,15777.69,"Final precision rebalance · land on target (80,000 CHF)",yfinance
+txn-def-0238,2026-04-18 00:00:00,Defensive,IE00B4ND3602,iShares Physical Gold,BUY,1635.253533,78.2269,EUR,0.9226,72.1722,118019.77,"Final precision rebalance · land on target (350,000 CHF)",synth_estimated
+txn-def-0022,2026-04-19 00:00:00,Defensive,CH0011075394,Zurich Insurance Group,BUY,82.379678,559.8,CHF,1,559.8,46116.14,"Final precision rebalance · land on target (90,000 CHF)",yfinance
+txn-def-0037,2026-04-19 00:00:00,Defensive,CH0130293662,BKW AG,BUY,91.88441,157.6,CHF,1,157.6,14480.98,"Final precision rebalance · land on target (50,000 CHF)",yfinance
+txn-def-0073,2026-04-19 00:00:00,Defensive,US9311421039,Walmart Inc.,BUY,256.517716,127.5,USD,0.7832,99.858,25615.35,"Final precision rebalance · land on target (70,000 CHF)",yfinance
+txn-def-0155,2026-04-19 00:00:00,Defensive,DE0008430026,Muenchener Rueckvers.,BUY,21.569105,564.8,EUR,0.9226,521.0845,11239.33,"Final precision rebalance · land on target (50,000 CHF)",yfinance
+txn-def-0243,2026-04-19 00:00:00,Defensive,LU0196152788,Partners Group Listed Investments - Listed PE,BUY,210.232311,201.1501,EUR,0.9226,185.5811,39015.13,"Final precision rebalance · land on target (100,000 CHF)",synth_estimated
+txn-def-0043,2026-04-20 00:00:00,Defensive,CH0008742519,Swisscom AG,BUY,11.872569,660.5,CHF,1,660.5,7841.83,"Final precision rebalance · land on target (50,000 CHF)",yfinance
+txn-def-0124,2026-04-20 00:00:00,Defensive,FR0000120321,L'Oréal S.A.,BUY,26.751391,350.95,EUR,0.92,322.874,8637.33,"Final precision rebalance · land on target (80,000 CHF)",yfinance
+txn-def-0056,2026-04-21 00:00:00,Defensive,CH0011484067,St.Galler Kantonalbank,BUY,2.331985,655,CHF,1,655,1527.45,"Final precision rebalance · land on target (30,000 CHF)",yfinance
+txn-def-0069,2026-04-22 00:00:00,Defensive,US4781601046,Johnson & Johnson,BUY,191.169441,226.1,USD,0.78055,176.4824,33738.03,"Final precision rebalance · land on target (80,000 CHF)",yfinance
+txn-def-0087,2026-04-22 00:00:00,Defensive,US7134481081,PepsiCo Inc.,SELL,22.193449,153.79,USD,0.78055,120.0408,2664.12,"Final precision rebalance · land on target (70,000 CHF)",yfinance
+txn-def-0113,2026-04-22 00:00:00,Defensive,US1941621039,Colgate-Palmolive Co.,BUY,21.5429,82.35,USD,0.78055,64.2783,1384.74,"Final precision rebalance · land on target (40,000 CHF)",yfinance
+txn-def-0144,2026-04-22 00:00:00,Defensive,GB0009895292,AstraZeneca PLC,BUY,1.929299,14536,GBP,1.05428,15325.0147,29566.53,"Final precision rebalance · land on target (70,000 CHF)",yfinance
+txn-def-0226,2026-04-22 00:00:00,Defensive,US95040Q1040,Welltower Inc.,BUY,114.769954,107.045,USD,0.78055,83.554,9589.48,"Final precision rebalance · land on target (100,000 CHF)",synth_estimated
+txn-def-0028,2026-04-23 00:00:00,Defensive,CH0010570759,Chocoladefabriken Lindt,BUY,0.11437,103500,CHF,1,103500,11837.31,"Final precision rebalance · land on target (75,000 CHF)",yfinance
+txn-def-0174,2026-04-23 00:00:00,Defensive,HK0941009539,China Mobile Ltd.,SELL,255.920706,84,HKD,0.100199,8.4167,2154.01,"Final precision rebalance · land on target (100,000 CHF)",yfinance
+txn-def-0161,2026-04-24 00:00:00,Defensive,IE000S9YS762,Linde PLC,SELL,3.043405,510.3,USD,0.78624,401.2183,1221.07,"Final precision rebalance · land on target (50,000 CHF)",yfinance
+txn-def-0212,2026-04-24 00:00:00,Defensive,CH0014420878,UBS (CH) Property Fund,BUY,266.077638,197.1625,CHF,1,197.1625,52460.53,"Final precision rebalance · land on target (130,000 CHF)",synth_estimated
+txn-def-0007,2026-04-25 00:00:00,Defensive,CH0038863350,Nestlé S.A.,BUY,260.154732,81.17,CHF,1,81.17,21116.76,"Final precision rebalance · land on target (100,000 CHF)",yfinance
+txn-def-0049,2026-04-25 00:00:00,Defensive,CH0531751755,Banque Cantonale Vaudoise,BUY,24.415885,122.3,CHF,1,122.3,2986.06,"Final precision rebalance · land on target (30,000 CHF)",yfinance
+txn-def-0220,2026-04-25 00:00:00,Defensive,US74340W1036,Prologis Inc.,BUY,388.909931,100.7428,USD,0.78624,79.208,30804.8,"Final precision rebalance · land on target (100,000 CHF)",synth_estimated
+txn-def-0100,2026-04-26 00:00:00,Defensive,IE00BTN1Y115,Medtronic PLC,SELL,96.887378,83.32,USD,0.78624,65.5095,6347.05,"Final precision rebalance · land on target (60,000 CHF)",yfinance
+txn-def-0150,2026-04-26 00:00:00,Defensive,ES0144580Y14,Iberdrola S.A.,BUY,940.642564,19.925,EUR,0.9186,18.3031,17216.68,"Final precision rebalance · land on target (50,000 CHF)",yfinance
+txn-def-0018,2026-04-27 00:00:00,Defensive,CH0012005267,Novartis AG,BUY,344.124189,114.08,CHF,1,114.08,39257.69,"Final precision rebalance · land on target (90,000 CHF)",yfinance
+txn-def-0167,2026-04-27 00:00:00,Defensive,US6410694060,Nestlé S.A. (ADR),BUY,52.630963,102.25,USD,0.7863,80.3992,4231.49,"Final precision rebalance · land on target (50,000 CHF)",yfinance
+txn-def-0180,2026-04-27 00:00:00,Defensive,CNE1000003G1,Industrial & Comm Bank,BUY,31307.367434,7.22,HKD,0.100374,0.7247,22688.46,"Final precision rebalance · land on target (100,000 CHF)",yfinance
+txn-def-0250,2026-04-27 00:00:00,Defensive,IE00B1TXHL60,iShares Listed Private Eq,SELL,71.830671,104.7641,EUR,0.9206,96.4458,6927.77,"Final precision rebalance · land on target (100,000 CHF)",synth_estimated
+txn-def-0064,2026-04-28 00:00:00,Defensive,US22160K1051,Costco Wholesale Corp.,BUY,42.127867,994,USD,0.78529,780.5783,32884.1,"Final precision rebalance · land on target (80,000 CHF)",yfinance
+txn-def-0118,2026-04-28 00:00:00,Defensive,DK0062498333,Novo Nordisk A/S,BUY,479.402974,265.15,DKK,0.123189,32.6636,15659.01,"Final precision rebalance · land on target (80,000 CHF)",yfinance
+txn-def-0232,2026-04-28 00:00:00,Defensive,CH0047533523,ZKB Gold ETF,BUY,444.721553,185.5734,CHF,1,185.5734,82528.48,"Final precision rebalance · land on target (400,000 CHF)",synth_estimated
+txn-def-0014,2026-04-29 00:00:00,Defensive,CH0012032048,Roche Holding AG,SELL,33.603692,323.8,CHF,1,323.8,10880.88,"Final precision rebalance · land on target (90,000 CHF)",yfinance
+txn-def-0032,2026-04-29 00:00:00,Defensive,CH0126881561,Swiss Re AG,BUY,197.709857,124.35,CHF,1,124.35,24585.22,"Final precision rebalance · land on target (75,000 CHF)",yfinance
+txn-def-0132,2026-04-29 00:00:00,Defensive,FR0000120578,Sanofi S.A.,SELL,1.242833,78.32,EUR,0.92448,72.4053,89.99,"Final precision rebalance · land on target (80,000 CHF)",yfinance
+txn-def-0080,2026-04-30 00:00:00,Defensive,US1912161007,The Coca-Cola Co.,BUY,275.93891,78.76,USD,0.79056,62.2645,17181.2,"Final precision rebalance · land on target (70,000 CHF)",yfinance
+txn-def-0093,2026-05-01 00:00:00,Defensive,US0028241000,Abbott Laboratories,BUY,61.811026,89.46,USD,0.7814,69.904,4320.84,"Final precision rebalance · land on target (70,000 CHF)",yfinance
+txn-def-0216,2026-05-02 00:00:00,Defensive,CH0002769351,UBS (CH) Real Estate Fund Interswiss,BUY,299.888021,149.0639,CHF,1,149.0639,44702.47,"Final precision rebalance · land on target (120,000 CHF)",synth_estimated

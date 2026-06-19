@@ -1,0 +1,18 @@
+Asset Class,Sub-Asset Class,Benchmark / Index Reference,Def %,Balanced %,Growth %,Def (CHF),Balanced (CHF),Growth (CHF)
+Equities,Domestic (CHF),SPI (Swiss Performance Index),6.8,10,12,680000,1000000,1200000
+Equities,Foreign (Dev. Markets),MSCI World ex-CH (USD/EUR),12.7,34.5,57.5,1270000,3450000,5750000
+Equities,Emerging Markets,MSCI Emerging Markets (USD),2,5.5,5.5,200000,550000,550000
+Fixed Income,Domestic Bonds (CHF),SBI Domestic AAA-BBB (CHF),22,11.5,3,2200000,1150000,300000
+Fixed Income,Foreign Bonds (G7),Bloomberg Global Aggregate Swiss Franc Hedged Index,37,20,6,3700000,2000000,600000
+Fixed Income,Emerging Market Bonds,JPM EMBI Global Diversified,1,2,0.5,100000,200000,50000
+Real Estate,Swiss Real Estate,SXI Real Estate Funds (CHF),2.5,2,1,250000,200000,100000
+Real Estate,Global Listed REITs,FTSE EPRA Nareit Developed,2,3,4,200000,300000,400000
+Alternatives,Cryptocurrencies	,Nasdaq Crypto Index (NCI),0,0,1.5,0,0,150000
+Alternatives,Private Markets,LPX 50 Listed Private Equity,2,3.5,5.5,200000,350000,550000
+Alternatives,Commodities / Gold,LBMA Gold Price (CHF),7.5,5,1.5,750000,500000,150000
+Liquidity,Cash & Money Market,SARON / Swiss 3M LIBOR,4.5,3,2,450000,300000,200000
+TOTAL,GLOBAL MANDATE,MULTI-ASSET COMPOSITE,100,100,100,10000000,10000000,10000000
+,,,,,,,,
+,,,,,,,,
+,,,,,,,,
+Target amount,10000000,,,,,,,

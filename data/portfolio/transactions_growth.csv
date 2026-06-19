@@ -1,0 +1,355 @@
+Transaction ID,Timestamp,Portfolio,ISIN,Issuer / Asset,Side,Quantity,Price (local),Currency,FX → CHF,Price (CHF),Amount (CHF),Rationale,Price Source
+txn-gro-0100,2023-05-13 00:00:00,Growth,US11135F1012,Broadcom Inc.,BUY,221.875012,63.115,USD,0.894,56.4248,12519.26,Position open · mandate inception DCA,yfinance
+txn-gro-0347,2023-05-13 00:00:00,Growth,CH0454664027,21Shares Ethereum ETP,BUY,322.744521,93.4015,CHF,1,93.4015,30144.81,Position open · mandate inception DCA,synth_estimated
+txn-gro-0117,2023-05-14 00:00:00,Growth,US79466L3024,Salesforce Inc.,BUY,353.149484,201.81,USD,0.894,180.4181,63714.57,Position open · mandate inception DCA,yfinance
+txn-gro-0226,2023-05-14 00:00:00,Growth,LU1778762911,Spotify Technology S.A.,BUY,165.266961,142.53,USD,0.894,127.4218,21058.62,Position open · mandate inception DCA,yfinance
+txn-gro-0269,2023-05-14 00:00:00,Growth,US29362U1043,Entegris Inc.,BUY,342.453295,90.22,USD,0.894,80.6567,27621.15,Position open · mandate inception DCA,yfinance
+txn-gro-0275,2023-05-14 00:00:00,Growth,US8740391003,TSMC,BUY,234.592254,83.43,USD,0.894,74.5864,17497.4,Position open · mandate inception DCA,yfinance
+txn-gro-0127,2023-05-15 00:00:00,Growth,US9024941034,"Tyson Foods, Inc.",BUY,982.53968,49.47,USD,0.89838,44.4429,43666.87,Position open · mandate inception DCA,yfinance
+txn-gro-0196,2023-05-15 00:00:00,Growth,US23804L1035,Datadog Inc.,BUY,126.597453,88.5,USD,0.89838,79.5066,10065.34,Position open · mandate inception DCA,yfinance
+txn-gro-0122,2023-05-16 00:00:00,Growth,US00724F1012,Adobe Inc.,BUY,312.922912,345.11,USD,0.89546,309.0322,96703.25,Position open · mandate inception DCA,yfinance
+txn-gro-0186,2023-05-16 00:00:00,Growth,US0404131064,Arista Networks Inc.,BUY,218.145576,34.035,USD,0.89546,30.477,6648.42,Position open · mandate inception DCA,yfinance
+txn-gro-0191,2023-05-16 00:00:00,Growth,US8334451098,Snowflake Inc.,BUY,255.104042,171.71,USD,0.89546,153.7594,39224.66,Position open · mandate inception DCA,yfinance
+txn-gro-0288,2023-05-16 00:00:00,Growth,US7960502018,Samsung Electronics,BUY,316.52196,137.6107,USD,0.89546,123.2249,39003.38,Position open · mandate inception DCA,synth_estimated
+txn-gro-0337,2023-05-16 00:00:00,Growth,CH0047533523,ZKB Gold ETF,BUY,345.31343,152.2568,CHF,1,152.2568,52576.33,Position open · mandate inception DCA,synth_estimated
+txn-gro-0065,2023-05-17 00:00:00,Growth,US5949181045,Microsoft Corp.,BUY,345.112571,314,USD,0.89635,281.4539,97133.28,Position open · mandate inception DCA,yfinance
+txn-gro-0182,2023-05-17 00:00:00,Growth,US6974351057,Palo Alto Networks Inc,BUY,261.031188,95.76,USD,0.89635,85.8345,22405.48,Position open · mandate inception DCA,yfinance
+txn-gro-0320,2023-05-17 00:00:00,Growth,US2538681030,Digital Realty Trust,BUY,629.530591,123.4961,USD,0.89635,110.6958,69686.37,Position open · mandate inception DCA,synth_estimated
+txn-gro-0302,2023-05-18 00:00:00,Growth,US91282CLW90,US Treasury,BUY,2570.165598,100,USD,0.898742,89.8742,230991.58,Bond purchase at par · mandate inception,issuance_par
+txn-gro-0314,2023-05-18 00:00:00,Growth,US29444U7000,Equinix Inc.,BUY,529.873584,145.1238,USD,0.898742,130.4289,69110.81,Position open · mandate inception DCA,synth_estimated
+txn-gro-0342,2023-05-18 00:00:00,Growth,CH0454664001,21Shares Bitcoin ETP,BUY,439.513642,83.8414,CHF,1,83.8414,36849.43,Position open · mandate inception DCA,synth_estimated
+txn-gro-0058,2023-05-19 00:00:00,Growth,US69608A1088,Palantir Technologies,BUY,744.813021,11.71,USD,0.90487,10.596,7892.06,Position open · mandate inception DCA,yfinance
+txn-gro-0332,2023-05-19 00:00:00,Growth,IE00B1TXHL60,iShares Listed Private Eq,BUY,985.786048,93.363,EUR,0.97493,91.0224,89728.63,Position open · mandate inception DCA,synth_estimated
+txn-gro-0025,2023-05-20 00:00:00,Growth,CH0013841017,Lonza Group AG,BUY,128.095908,578,CHF,1,578,74039.43,Position open · mandate inception DCA,yfinance
+txn-gro-0239,2023-05-21 00:00:00,Growth,NL0011585146,Ferrari N.V.,BUY,178.394207,275.9,EUR,0.97493,268.9832,47985.04,Position open · mandate inception DCA,yfinance
+txn-gro-0030,2023-05-22 00:00:00,Growth,CH0024608827,Partners Group Holding,BUY,80.708221,856.4,CHF,1,856.4,69118.52,Position open · mandate inception DCA,yfinance
+txn-gro-0168,2023-05-22 00:00:00,Growth,US78409V1044,S&P Global Inc.,BUY,123.724623,372.35,USD,0.89819,334.4411,41378.59,Position open · mandate inception DCA,yfinance
+txn-gro-0107,2023-05-23 00:00:00,Growth,US88160R1014,Tesla Inc.,BUY,196.447146,185.77,USD,0.8983,166.8772,32782.55,Position open · mandate inception DCA,yfinance
+txn-gro-0163,2023-05-23 00:00:00,Growth,US90353T1007,Uber Technologies Inc.,BUY,627.358279,38.66,USD,0.8983,34.7283,21787.07,Position open · mandate inception DCA,yfinance
+txn-gro-0175,2023-05-23 00:00:00,Growth,US22788C1053,CrowdStrike Holdings,BUY,77.522166,143.9,USD,0.8983,129.2654,10020.93,Position open · mandate inception DCA,yfinance
+txn-gro-0208,2023-05-23 00:00:00,Growth,DE0007164600,SAP SE,BUY,611.385724,121.82,EUR,0.971,118.2872,72319.12,Position open · mandate inception DCA,yfinance
+txn-gro-0305,2023-05-23 00:00:00,Growth,US91086QAZ19,United Mexican States,BUY,160.63535,100,USD,0.8983,89.83,14429.87,Bond purchase at par · mandate inception,issuance_par
+txn-gro-0325,2023-05-23 00:00:00,Growth,LU0196152788,Partners Group Listed Investments - Listed PE,BUY,1006.500439,127.1971,EUR,0.971,123.5084,124311.26,Position open · mandate inception DCA,synth_estimated
+txn-gro-0001,2023-05-24 00:00:00,Growth,CH0244767585,UBS Group AG,BUY,2264.701739,17.855,CHF,1,17.855,40436.25,Position open · mandate inception DCA,yfinance
+txn-gro-0014,2023-05-24 00:00:00,Growth,CH0418792922,Sika AG,BUY,623.026234,247.3,CHF,1,247.3,154074.39,Position open · mandate inception DCA,yfinance
+txn-gro-0020,2023-05-24 00:00:00,Growth,CH0025751329,Logitech International,BUY,841.232964,57.72,CHF,1,57.72,48555.97,Position open · mandate inception DCA,yfinance
+txn-gro-0081,2023-05-24 00:00:00,Growth,US0231351067,Amazon.com Inc.,BUY,322.931548,116.75,USD,0.90131,105.2279,33981.42,Position open · mandate inception DCA,yfinance
+txn-gro-0282,2023-05-24 00:00:00,Growth,US58733R1023,MercadoLibre Inc.,BUY,46.007334,1284.13,USD,0.90131,1157.3992,53248.85,Position open · mandate inception DCA,yfinance
+txn-gro-0295,2023-05-24 00:00:00,Growth,US7223041028,PDD Holdings Inc.,BUY,507.933247,60.94,USD,0.90131,54.9258,27898.66,Position open · mandate inception DCA,yfinance
+txn-gro-0094,2023-05-25 00:00:00,Growth,US30303M1027,Meta Platforms Inc.,BUY,157.703887,252.69,USD,0.904,228.4318,36024.58,Position open · mandate inception DCA,yfinance
+txn-gro-0221,2023-05-25 00:00:00,Growth,FR0000121014,LVMH Moët Hennessy,BUY,190.017764,823.4,EUR,0.97262,800.8553,152176.74,Position open · mandate inception DCA,yfinance
+txn-gro-0255,2023-05-25 00:00:00,Growth,US0382221051,Applied Materials Inc.,BUY,170.192765,130.47,USD,0.904,117.9449,20073.37,Position open · mandate inception DCA,yfinance
+txn-gro-0070,2023-05-26 00:00:00,Growth,US0378331005,Apple Inc.,BUY,433.157852,175.43,USD,0.90505,158.7729,68773.73,Position open · mandate inception DCA,yfinance
+txn-gro-0308,2023-05-26 00:00:00,Growth,US836205BB97,Republic of South Africa,BUY,160.63535,100,USD,0.90505,90.505,14538.3,Bond purchase at par · mandate inception,issuance_par
+txn-gro-0075,2023-05-27 00:00:00,Growth,US02079K3059,Alphabet Inc.,BUY,334.386475,124.61,USD,0.90505,112.7783,37711.53,Position open · mandate inception DCA,yfinance
+txn-gro-0132,2023-05-27 00:00:00,Growth,US81762P1021,ServiceNow Inc.,BUY,1050.416904,107.492,USD,0.90505,97.2856,102190.47,Position open · mandate inception DCA,yfinance
+txn-gro-0301,2023-05-27 00:00:00,Growth,CH0009755197,Swiss Confederation,BUY,1500,100,CHF,1,100,150000,Bond purchase at par · mandate inception,issuance_par
+txn-gro-0309,2023-05-27 00:00:00,Growth,CH0014420878,UBS (CH) Property Fund,BUY,155.160785,133.1606,CHF,1,133.1606,20661.31,Position open · mandate inception DCA,synth_estimated
+txn-gro-0046,2023-05-28 00:00:00,Growth,CH0311864901,Vat Group AG,BUY,38.48777,372,CHF,1,372,14317.45,Position open · mandate inception DCA,yfinance
+txn-gro-0139,2023-05-28 00:00:00,Growth,US09857L1089,Booking Holdings Inc.,BUY,529.550783,103.6452,USD,0.90505,93.8041,49674.03,Position open · mandate inception DCA,yfinance
+txn-gro-0203,2023-05-28 00:00:00,Growth,NL0010273215,ASML Holding N.V.,BUY,63.050956,682.1,EUR,0.97059,662.0394,41742.22,Position open · mandate inception DCA,yfinance
+txn-gro-0250,2023-05-28 00:00:00,Growth,DE000A1EWWW0,Adidas AG,BUY,268.03869,155.44,EUR,0.97059,150.8685,40438.6,Position open · mandate inception DCA,yfinance
+txn-gro-0007,2023-05-29 00:00:00,Growth,CH0012221716,ABB Ltd.,BUY,907.508497,33.7,CHF,1,33.7,30583.04,Position open · mandate inception DCA,yfinance
+txn-gro-0156,2023-05-29 00:00:00,Growth,US4612021034,Intuit Inc.,BUY,108.45761,418.43,USD,0.90569,378.9679,41101.95,Position open · mandate inception DCA,yfinance
+txn-gro-0233,2023-05-29 00:00:00,Growth,FR0000121972,Schneider Electric SE,BUY,232.130159,164.1,EUR,0.9711,159.3575,36991.68,Position open · mandate inception DCA,yfinance
+txn-gro-0038,2023-05-30 00:00:00,Growth,CH1175448666,Straumann Holding AG,BUY,460.16025,136,CHF,1,136,62581.79,Position open · mandate inception DCA,yfinance
+txn-gro-0146,2023-05-30 00:00:00,Growth,US7475251036,Qualcomm Inc.,BUY,298.347156,116,USD,0.90446,104.9174,31301.8,Position open · mandate inception DCA,yfinance
+txn-gro-0262,2023-05-30 00:00:00,Growth,US0126531013,Albemarle Corp.,BUY,301.622924,201.86,USD,0.90446,182.5743,55068.59,Position open · mandate inception DCA,yfinance
+txn-gro-0150,2023-06-01 00:00:00,Growth,US4581401001,Intel Corp.,BUY,440.193168,31.13,USD,0.90989,28.3249,12468.42,Position open · mandate inception DCA,yfinance
+txn-gro-0215,2023-06-01 00:00:00,Growth,DK0062498333,Novo Nordisk A/S,BUY,1736.085069,549.3,DKK,0.130664,71.7737,124605.31,Position open · mandate inception DCA,yfinance
+txn-gro-0112,2023-06-02 00:00:00,Growth,US64110L1061,Netflix Inc.,BUY,803.059615,40.047,USD,0.90559,36.2662,29123.89,Position open · mandate inception DCA,yfinance
+txn-gro-0245,2023-06-02 00:00:00,Growth,NL0012969182,Adyen N.V.,BUY,44.094501,1582,EUR,0.97438,1541.4692,67970.31,Position open · mandate inception DCA,yfinance
+txn-gro-0052,2023-06-03 00:00:00,Growth,US67066G1040,NVIDIA Corp.,BUY,711.657513,39.327,USD,0.90559,35.6141,25345.07,Position open · mandate inception DCA,yfinance
+txn-gro-0087,2023-06-03 00:00:00,Growth,US5324571083,Eli Lilly & Co.,BUY,125.985497,442.33,USD,0.90559,400.5696,50465.96,Position open · mandate inception DCA,yfinance
+txn-gro-0300,2023-06-09 00:00:00,Growth,CH0127181193,Swiss Confederation,BUY,1500,100,CHF,1,100,150000,Bond purchase at par · mandate inception,issuance_par
+txn-gro-0307,2023-06-22 00:00:00,Growth,USY20721BB49,Republic of Indonesia,BUY,160.63535,100,USD,0.8923,89.23,14333.49,Bond purchase at par · mandate inception,issuance_par
+txn-gro-0303,2023-06-28 00:00:00,Growth,US912810TV08,US Treasury,BUY,2570.165598,100,USD,0.89375,89.375,229708.55,Bond purchase at par · mandate inception,issuance_par
+txn-gro-0306,2023-06-29 00:00:00,Growth,US105756BY51,Federative Republic of Brazil,BUY,160.63535,100,USD,0.89666,89.666,14403.53,Bond purchase at par · mandate inception,issuance_par
+txn-gro-0304,2023-07-02 00:00:00,Growth,IE00BK7Y2R57,iShares USD Treas. ETF,BUY,2182.04827,100,EUR,0.97716,97.716,213221.02,Bond purchase at par · mandate inception,issuance_par
+txn-gro-0310,2023-07-18 00:00:00,Growth,CH0014420878,UBS (CH) Property Fund,BUY,52.874792,136.0119,CHF,1,136.0119,7191.6,DCA into existing position,synth_estimated
+txn-gro-0219,2023-07-21 00:00:00,Growth,DK0062498333,Novo Nordisk A/S,BUY,421.475257,554.6,DKK,0.129439,71.7869,30256.39,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0160,2023-07-24 00:00:00,Growth,US4612021034,Intuit Inc.,BUY,32.687342,488.5,USD,0.86624,423.1583,13831.92,DCA into existing position,yfinance
+txn-gro-0266,2023-07-24 00:00:00,Growth,US0126531013,Albemarle Corp.,BUY,113.756084,210.8,USD,0.86624,182.6034,20772.25,Add on dip · technical entry,yfinance
+txn-gro-0267,2023-08-06 00:00:00,Growth,US0126531013,Albemarle Corp.,BUY,130.69047,200.09,USD,0.87422,174.9227,22860.73,DCA into existing position,yfinance
+txn-gro-0047,2023-08-11 00:00:00,Growth,CH0311864901,Vat Group AG,BUY,18.49295,355,CHF,1,355,6565,Quarterly rebalance · drift below target,yfinance
+txn-gro-0311,2023-08-11 00:00:00,Growth,CH0014420878,UBS (CH) Property Fund,BUY,85.327502,134.2715,CHF,1,134.2715,11457.05,Top-up after deposit,synth_estimated
+txn-gro-0115,2023-08-13 00:00:00,Growth,US64110L1061,Netflix Inc.,BUY,299.696518,42.166,USD,0.87679,36.9707,11080,Add on dip · technical entry,yfinance
+txn-gro-0165,2023-09-02 00:00:00,Growth,US90353T1007,Uber Technologies Inc.,BUY,224.176403,47.04,USD,0.8832,41.5457,9313.57,Add on dip · technical entry,yfinance
+txn-gro-0171,2023-09-02 00:00:00,Growth,US78409V1044,S&P Global Inc.,BUY,26.08843,394.24,USD,0.8832,348.1928,9083.8,Add on dip · technical entry,yfinance
+txn-gro-0258,2023-09-08 00:00:00,Growth,US0382221051,Applied Materials Inc.,BUY,60.621306,147.53,USD,0.89267,131.6956,7983.56,Top-up after deposit,yfinance
+txn-gro-0012,2023-09-11 00:00:00,Growth,CH0012221716,ABB Ltd.,BUY,258.917021,33,CHF,1,33,8544.26,Quarterly rebalance · drift below target,yfinance
+txn-gro-0333,2023-09-12 00:00:00,Growth,IE00B1TXHL60,iShares Listed Private Eq,BUY,333.288793,99.0068,EUR,0.95785,94.8337,31607,Tactical add · CIO conviction maintained,synth_estimated
+txn-gro-0180,2023-09-14 00:00:00,Growth,US22788C1053,CrowdStrike Holdings,BUY,30.115846,170.73,USD,0.8932,152.496,4592.55,Add on dip · technical entry,yfinance
+txn-gro-0252,2023-09-16 00:00:00,Growth,DE000A1EWWW0,Adidas AG,BUY,89.472494,174.08,EUR,0.9531,165.9157,14844.89,Top-up after deposit,yfinance
+txn-gro-0157,2023-09-18 00:00:00,Growth,US4612021034,Intuit Inc.,BUY,27.568287,535.01,USD,0.89688,479.8398,13228.36,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0316,2023-09-21 00:00:00,Growth,US29444U7000,Equinix Inc.,BUY,250.161561,138.7677,USD,0.8992,124.7799,31215.13,Top-up after deposit,synth_estimated
+txn-gro-0242,2023-09-24 00:00:00,Growth,NL0011585146,Ferrari N.V.,BUY,42.095192,273,EUR,0.96431,263.2566,11081.84,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0088,2023-09-27 00:00:00,Growth,US5324571083,Eli Lilly & Co.,BUY,34.636679,549.76,USD,0.91576,503.4482,17437.77,Add on dip · technical entry,yfinance
+txn-gro-0263,2023-10-10 00:00:00,Growth,US0126531013,Albemarle Corp.,BUY,120.797011,162.08,USD,0.90484,146.6565,17715.66,Top-up after deposit,yfinance
+txn-gro-0123,2023-10-11 00:00:00,Growth,US00724F1012,Adobe Inc.,BUY,130.544835,549.91,USD,0.90455,497.4211,64935.75,DCA into existing position,yfinance
+txn-gro-0345,2023-10-19 00:00:00,Growth,CH0454664001,21Shares Bitcoin ETP,BUY,99.795309,97.6466,CHF,1,97.6466,9744.68,Add on dip · technical entry,synth_estimated
+txn-gro-0136,2023-10-24 00:00:00,Growth,US81762P1021,ServiceNow Inc.,BUY,293.381928,110.878,USD,0.8906,98.7479,28970.86,Add on dip · technical entry,yfinance
+txn-gro-0297,2023-10-25 00:00:00,Growth,US7223041028,PDD Holdings Inc.,BUY,186.385153,107.49,USD,0.89306,95.995,17892.05,Top-up after deposit,yfinance
+txn-gro-0135,2023-10-26 00:00:00,Growth,US81762P1021,ServiceNow Inc.,BUY,181.506326,110.19,USD,0.8967,98.8074,17934.16,Top-up after deposit,yfinance
+txn-gro-0153,2023-10-28 00:00:00,Growth,US4581401001,Intel Corp.,BUY,157.490547,35.54,USD,0.89883,31.9444,5030.94,Top-up after deposit,yfinance
+txn-gro-0161,2023-10-29 00:00:00,Growth,US4612021034,Intuit Inc.,BUY,58.930393,479.52,USD,0.89883,431.007,25399.41,DCA into existing position,yfinance
+txn-gro-0016,2023-10-30 00:00:00,Growth,CH0418792922,Sika AG,BUY,189.611901,214.1,CHF,1,214.1,40595.91,Quarterly rebalance · drift below target,yfinance
+txn-gro-0179,2023-10-31 00:00:00,Growth,US22788C1053,CrowdStrike Holdings,BUY,36.543517,176.77,USD,0.90206,159.4571,5827.12,Add on dip · technical entry,yfinance
+txn-gro-0039,2023-11-17 00:00:00,Growth,CH1175448666,Straumann Holding AG,BUY,99.553078,119.95,CHF,1,119.95,11941.39,Add on dip · technical entry,yfinance
+txn-gro-0137,2023-11-17 00:00:00,Growth,US81762P1021,ServiceNow Inc.,SELL,115.632648,130.872,USD,0.88848,116.2772,13445.43,Trim on rally · realising gains,yfinance
+txn-gro-0285,2023-11-20 00:00:00,Growth,US58733R1023,MercadoLibre Inc.,BUY,19.740133,1481.99,USD,0.88593,1312.9394,25917.6,Add on dip · technical entry,yfinance
+txn-gro-0292,2023-11-21 00:00:00,Growth,US7960502018,Samsung Electronics,BUY,89.12521,133.4071,USD,0.88436,117.9799,10514.99,Quarterly rebalance · drift below target,synth_estimated
+txn-gro-0017,2023-11-25 00:00:00,Growth,CH0418792922,Sika AG,BUY,107.770256,237.3,CHF,1,237.3,25573.88,Top-up after deposit,yfinance
+txn-gro-0323,2023-12-01 00:00:00,Growth,US2538681030,Digital Realty Trust,BUY,242.640082,120.767,USD,0.87466,105.63,25630.08,Add on dip · technical entry,synth_estimated
+txn-gro-0049,2023-12-13 00:00:00,Growth,CH0311864901,Vat Group AG,BUY,11.024948,404.1,CHF,1,404.1,4455.18,Top-up after deposit,yfinance
+txn-gro-0026,2023-12-14 00:00:00,Growth,CH0013841017,Lonza Group AG,BUY,55.407388,332,CHF,1,332,18395.25,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0125,2023-12-14 00:00:00,Growth,US00724F1012,Adobe Inc.,BUY,93.075464,584.64,USD,0.87097,509.2039,47394.39,Top-up after deposit,yfinance
+txn-gro-0021,2023-12-15 00:00:00,Growth,CH0025751329,Logitech International,BUY,192.403628,82.36,CHF,1,82.36,15846.36,Top-up after deposit,yfinance
+txn-gro-0034,2023-12-17 00:00:00,Growth,CH0024608827,Partners Group Holding,BUY,14.65626,1211,CHF,1,1211,17748.73,DCA into existing position,yfinance
+txn-gro-0147,2023-12-17 00:00:00,Growth,US7475251036,Qualcomm Inc.,BUY,81.566582,143.13,USD,0.86713,124.1123,10123.42,Quarterly rebalance · drift below target,yfinance
+txn-gro-0278,2023-12-17 00:00:00,Growth,US8740391003,TSMC,BUY,104.671503,102.54,USD,0.86713,88.9155,9306.92,Quarterly rebalance · drift below target,yfinance
+txn-gro-0193,2023-12-30 00:00:00,Growth,US8334451098,Snowflake Inc.,BUY,92.885574,199,USD,0.84336,167.8286,15588.86,Add on dip · technical entry,yfinance
+txn-gro-0253,2023-12-30 00:00:00,Growth,DE000A1EWWW0,Adidas AG,SELL,47.134671,184.16,EUR,0.93346,171.906,8102.73,Trim on rally · realising gains,yfinance
+txn-gro-0158,2024-01-02 00:00:00,Growth,US4612021034,Intuit Inc.,BUY,43.375933,603.76,USD,0.84189,508.2995,22047.97,Top-up after deposit,yfinance
+txn-gro-0177,2024-01-05 00:00:00,Growth,US22788C1053,CrowdStrike Holdings,BUY,38.752285,247.46,USD,0.85,210.341,8151.19,Quarterly rebalance · drift below target,yfinance
+txn-gro-0241,2024-01-05 00:00:00,Growth,NL0011585146,Ferrari N.V.,BUY,62.318528,305.6,EUR,0.9306,284.3914,17722.85,Add on dip · technical entry,yfinance
+txn-gro-0142,2024-01-11 00:00:00,Growth,US09857L1089,Booking Holdings Inc.,BUY,155.5553,142.0912,USD,0.8505,120.8486,18798.63,DCA into existing position,yfinance
+txn-gro-0227,2024-01-16 00:00:00,Growth,LU1778762911,Spotify Technology S.A.,BUY,76.234151,203.35,USD,0.85598,174.0635,13269.59,DCA into existing position,yfinance
+txn-gro-0148,2024-01-28 00:00:00,Growth,US7475251036,Qualcomm Inc.,BUY,131.805056,150.72,USD,0.8669,130.6592,17221.54,DCA into existing position,yfinance
+txn-gro-0247,2024-02-01 00:00:00,Growth,NL0012969182,Adyen N.V.,BUY,21.45389,1197.6,EUR,0.93162,1115.7081,23936.28,Top-up after deposit,yfinance
+txn-gro-0154,2024-02-09 00:00:00,Growth,US4581401001,Intel Corp.,SELL,58.320994,43.31,USD,0.87345,37.8291,2206.23,Trim on rally · realising gains,yfinance
+txn-gro-0243,2024-02-15 00:00:00,Growth,NL0011585146,Ferrari N.V.,BUY,37.503277,359.6,EUR,0.9499,341.584,12810.52,Top-up after deposit,yfinance
+txn-gro-0229,2024-02-20 00:00:00,Growth,LU1778762911,Spotify Technology S.A.,BUY,47.202505,243.4,USD,0.882747,214.8606,10141.96,Top-up after deposit,yfinance
+txn-gro-0338,2024-02-29 00:00:00,Growth,CH0047533523,ZKB Gold ETF,BUY,104.807889,172.1754,CHF,1,172.1754,18045.34,Tactical add · CIO conviction maintained,synth_estimated
+txn-gro-0120,2024-03-02 00:00:00,Growth,US79466L3024,Salesforce Inc.,BUY,134.164485,316.88,USD,0.8844,280.2487,37599.42,Add on dip · technical entry,yfinance
+txn-gro-0270,2024-03-02 00:00:00,Growth,US29362U1043,Entegris Inc.,BUY,93.820585,138.56,USD,0.8844,122.5425,11497.01,DCA into existing position,yfinance
+txn-gro-0028,2024-03-03 00:00:00,Growth,CH0013841017,Lonza Group AG,SELL,28.826302,465.6,CHF,1,465.6,13421.53,Trim on rally · realising gains,yfinance
+txn-gro-0327,2024-03-03 00:00:00,Growth,LU0196152788,Partners Group Listed Investments - Listed PE,BUY,167.098574,148.5093,EUR,0.95571,141.9318,23716.61,Add on dip · technical entry,synth_estimated
+txn-gro-0328,2024-03-07 00:00:00,Growth,LU0196152788,Partners Group Listed Investments - Listed PE,BUY,301.548941,149.3107,EUR,0.96144,143.5533,43288.35,Tactical add · CIO conviction maintained,synth_estimated
+txn-gro-0085,2024-03-08 00:00:00,Growth,US0231351067,Amazon.com Inc.,BUY,111.5625,175.35,USD,0.8771,153.7995,17158.26,Top-up after deposit,yfinance
+txn-gro-0010,2024-03-16 00:00:00,Growth,CH0012221716,ABB Ltd.,BUY,287.891557,42.4,CHF,1,42.4,12206.6,Quarterly rebalance · drift below target,yfinance
+txn-gro-0279,2024-03-26 00:00:00,Growth,US8740391003,TSMC,BUY,89.405369,138.84,USD,0.89947,124.8824,11165.16,DCA into existing position,yfinance
+txn-gro-0198,2024-04-04 00:00:00,Growth,US23804L1035,Datadog Inc.,BUY,45.64357,120.72,USD,0.90289,108.9969,4975.01,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0315,2024-04-08 00:00:00,Growth,US29444U7000,Equinix Inc.,BUY,243.196594,142.3611,USD,0.90317,128.5762,31269.3,Quarterly rebalance · drift below target,synth_estimated
+txn-gro-0230,2024-04-10 00:00:00,Growth,LU1778762911,Spotify Technology S.A.,BUY,40.835129,299.99,USD,0.90298,270.885,11061.62,Top-up after deposit,yfinance
+txn-gro-0293,2024-04-10 00:00:00,Growth,US7960502018,Samsung Electronics,SELL,58.105251,138.0315,USD,0.90298,124.6397,7242.22,Trim on rally · realising gains,synth_estimated
+txn-gro-0098,2024-04-18 00:00:00,Growth,US30303M1027,Meta Platforms Inc.,BUY,65.427157,501.8,USD,0.9104,456.8387,29889.66,Top-up after deposit,yfinance
+txn-gro-0197,2024-04-24 00:00:00,Growth,US23804L1035,Datadog Inc.,BUY,41.525545,127.07,USD,0.9114,115.8116,4809.14,Add on dip · technical entry,yfinance
+txn-gro-0011,2024-05-02 00:00:00,Growth,CH0012221716,ABB Ltd.,BUY,189.094561,45.06,CHF,1,45.06,8520.6,Quarterly rebalance · drift below target,yfinance
+txn-gro-0077,2024-05-04 00:00:00,Growth,US02079K3059,Alphabet Inc.,BUY,80.348427,167.24,USD,0.90977,152.1499,12225.01,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0084,2024-05-05 00:00:00,Growth,US0231351067,Amazon.com Inc.,BUY,178.333676,186.21,USD,0.90977,169.4083,30211.2,Top-up after deposit,yfinance
+txn-gro-0265,2024-05-09 00:00:00,Growth,US0126531013,Albemarle Corp.,BUY,64.749648,133.55,USD,0.90799,121.2621,7851.68,Quarterly rebalance · drift below target,yfinance
+txn-gro-0188,2024-05-13 00:00:00,Growth,US0404131064,Arista Networks Inc.,BUY,123.119384,77.4675,USD,0.90645,70.2204,8645.49,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0042,2024-05-16 00:00:00,Growth,CH1175448666,Straumann Holding AG,BUY,162.668284,123.55,CHF,1,123.55,20097.67,DCA into existing position,yfinance
+txn-gro-0201,2024-05-17 00:00:00,Growth,US23804L1035,Datadog Inc.,SELL,32.803197,120.07,USD,0.90599,108.7822,3568.4,Trim on rally · realising gains,yfinance
+txn-gro-0068,2024-05-18 00:00:00,Growth,US5949181045,Microsoft Corp.,SELL,66.460333,420.21,USD,0.90599,380.7061,25301.85,Trim on rally · realising gains,yfinance
+txn-gro-0143,2024-05-25 00:00:00,Growth,US09857L1089,Booking Holdings Inc.,BUY,156.481739,151.814,USD,0.91433,138.8081,21720.93,DCA into existing position,yfinance
+txn-gro-0031,2024-05-28 00:00:00,Growth,CH0024608827,Partners Group Holding,BUY,21.138025,1206.5,CHF,1,1206.5,25503.03,Quarterly rebalance · drift below target,yfinance
+txn-gro-0032,2024-06-14 00:00:00,Growth,CH0024608827,Partners Group Holding,BUY,19.112815,1154.5,CHF,1,1154.5,22065.74,Top-up after deposit,yfinance
+txn-gro-0231,2024-06-19 00:00:00,Growth,LU1778762911,Spotify Technology S.A.,BUY,69.000159,309.9,USD,0.88418,274.0074,18906.55,DCA into existing position,yfinance
+txn-gro-0350,2024-06-26 00:00:00,Growth,CH0454664027,21Shares Ethereum ETP,BUY,62.572735,73.8927,CHF,1,73.8927,4623.67,DCA into existing position,synth_estimated
+txn-gro-0002,2024-06-28 00:00:00,Growth,CH0244767585,UBS Group AG,BUY,713.67761,26.45,CHF,1,26.45,18876.77,Quarterly rebalance · drift below target,yfinance
+txn-gro-0043,2024-06-29 00:00:00,Growth,CH1175448666,Straumann Holding AG,BUY,212.466655,111.3,CHF,1,111.3,23647.54,DCA into existing position,yfinance
+txn-gro-0054,2024-07-05 00:00:00,Growth,US67066G1040,NVIDIA Corp.,BUY,213.466645,125.83,USD,0.90025,113.2785,24181.17,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0114,2024-07-29 00:00:00,Growth,US64110L1061,Netflix Inc.,BUY,363.867154,62.696,USD,0.8843,55.4421,20173.55,Top-up after deposit,yfinance
+txn-gro-0050,2024-07-31 00:00:00,Growth,CH0311864901,Vat Group AG,BUY,10.327513,440.3,CHF,1,440.3,4547.2,Top-up after deposit,yfinance
+txn-gro-0090,2024-07-31 00:00:00,Growth,US5324571083,Eli Lilly & Co.,BUY,34.772006,804.27,USD,0.88203,709.3903,24666.92,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0003,2024-08-02 00:00:00,Growth,CH0244767585,UBS Group AG,BUY,874.712958,24.13,CHF,1,24.13,21106.82,DCA into existing position,yfinance
+txn-gro-0060,2024-08-07 00:00:00,Growth,US69608A1088,Palantir Technologies,BUY,397.617251,26.32,USD,0.85255,22.4391,8922.18,Add on dip · technical entry,yfinance
+txn-gro-0076,2024-08-07 00:00:00,Growth,US02079K3059,Alphabet Inc.,BUY,70.122754,158.94,USD,0.85255,135.5043,9501.93,Top-up after deposit,yfinance
+txn-gro-0317,2024-08-09 00:00:00,Growth,US29444U7000,Equinix Inc.,BUY,142.646197,141.4753,USD,0.86685,122.6379,17493.83,Top-up after deposit,synth_estimated
+txn-gro-0129,2024-08-12 00:00:00,Growth,US9024941034,"Tyson Foods, Inc.",BUY,364.247952,60.33,USD,0.86504,52.1879,19009.32,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0027,2024-08-17 00:00:00,Growth,CH0013841017,Lonza Group AG,BUY,48.282908,549.8,CHF,1,549.8,26545.94,Quarterly rebalance · drift below target,yfinance
+txn-gro-0204,2024-08-24 00:00:00,Growth,NL0010273215,ASML Holding N.V.,BUY,20.662834,818.8,EUR,0.94685,775.2808,16019.5,Top-up after deposit,yfinance
+txn-gro-0061,2024-08-27 00:00:00,Growth,US69608A1088,Palantir Technologies,BUY,288.405251,30.84,USD,0.8471,26.1246,7534.46,Quarterly rebalance · drift below target,yfinance
+txn-gro-0079,2024-08-29 00:00:00,Growth,US02079K3059,Alphabet Inc.,SELL,48.842634,161.78,USD,0.84182,136.1896,6651.86,Trim on rally · realising gains,yfinance
+txn-gro-0184,2024-08-29 00:00:00,Growth,US6974351057,Palo Alto Networks Inc,BUY,85.126683,179.105,USD,0.84182,150.7742,12834.9,Top-up after deposit,yfinance
+txn-gro-0217,2024-09-03 00:00:00,Growth,DK0062498333,Novo Nordisk A/S,BUY,686.954807,927.4,DKK,0.126317,117.1464,80474.27,Quarterly rebalance · drift below target,yfinance
+txn-gro-0271,2024-09-05 00:00:00,Growth,US29362U1043,Entegris Inc.,BUY,126.840858,110.17,USD,0.84604,93.2082,11822.61,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0216,2024-09-08 00:00:00,Growth,DK0062498333,Novo Nordisk A/S,BUY,908.590021,881.5,DKK,0.125666,110.7746,100648.68,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0022,2024-09-21 00:00:00,Growth,CH0025751329,Logitech International,BUY,234.663028,73.4,CHF,1,73.4,17224.27,DCA into existing position,yfinance
+txn-gro-0048,2024-10-02 00:00:00,Growth,CH0311864901,Vat Group AG,BUY,12.699806,427.9,CHF,1,427.9,5434.25,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0283,2024-10-06 00:00:00,Growth,US58733R1023,MercadoLibre Inc.,BUY,10.180743,1960,USD,0.85181,1669.5476,16997.24,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0298,2024-10-07 00:00:00,Growth,US7223041028,PDD Holdings Inc.,BUY,179.994907,153.09,USD,0.85869,131.4569,23661.56,Add on dip · technical entry,yfinance
+txn-gro-0102,2024-10-11 00:00:00,Growth,US11135F1012,Broadcom Inc.,BUY,98.551743,181.48,USD,0.85655,155.4467,15319.54,Top-up after deposit,yfinance
+txn-gro-0036,2024-10-18 00:00:00,Growth,CH0024608827,Partners Group Holding,SELL,14.797114,1289.5,CHF,1,1289.5,19080.88,Trim on rally · realising gains,yfinance
+txn-gro-0218,2024-10-19 00:00:00,Growth,DK0062498333,Novo Nordisk A/S,BUY,893.334975,807.2,DKK,0.125731,101.4901,90664.63,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0144,2024-11-01 00:00:00,Growth,US09857L1089,Booking Holdings Inc.,BUY,128.506879,189.9644,USD,0.86354,164.0419,21080.51,Quarterly rebalance · drift below target,yfinance
+txn-gro-0164,2024-11-02 00:00:00,Growth,US90353T1007,Uber Technologies Inc.,BUY,182.56515,73.25,USD,0.86354,63.2543,11548.03,Top-up after deposit,yfinance
+txn-gro-0344,2024-11-09 00:00:00,Growth,CH0454664001,21Shares Bitcoin ETP,BUY,100.79153,86.3534,CHF,1,86.3534,8703.69,Add on dip · technical entry,synth_estimated
+txn-gro-0095,2024-11-10 00:00:00,Growth,US30303M1027,Meta Platforms Inc.,BUY,48.297681,589.34,USD,0.87278,514.3642,24842.6,Quarterly rebalance · drift below target,yfinance
+txn-gro-0078,2024-11-14 00:00:00,Growth,US02079K3059,Alphabet Inc.,BUY,73.516374,175.58,USD,0.88577,155.5235,11433.52,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0141,2024-11-28 00:00:00,Growth,US09857L1089,Booking Holdings Inc.,BUY,101.44921,208.926,USD,0.882,184.2727,18694.32,Add on dip · technical entry,yfinance
+txn-gro-0092,2024-11-30 00:00:00,Growth,US5324571083,Eli Lilly & Co.,SELL,14.325305,795.35,USD,0.88234,701.7691,10053.06,Trim on rally · realising gains,yfinance
+txn-gro-0023,2024-12-05 00:00:00,Growth,CH0025751329,Logitech International,BUY,193.28706,74.42,CHF,1,74.42,14384.42,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0109,2024-12-08 00:00:00,Growth,US88160R1014,Tesla Inc.,BUY,81.942812,389.22,USD,0.87842,341.8986,28016.14,Top-up after deposit,yfinance
+txn-gro-0276,2024-12-08 00:00:00,Growth,US8740391003,TSMC,BUY,78.733323,203.02,USD,0.87842,178.3368,14041.05,Quarterly rebalance · drift below target,yfinance
+txn-gro-0151,2024-12-10 00:00:00,Growth,US4581401001,Intel Corp.,BUY,134.583742,20.16,USD,0.87859,17.7124,2383.8,DCA into existing position,yfinance
+txn-gro-0033,2024-12-18 00:00:00,Growth,CH0024608827,Partners Group Holding,BUY,25.970488,1271.5,CHF,1,1271.5,33021.48,DCA into existing position,yfinance
+txn-gro-0296,2024-12-18 00:00:00,Growth,US7223041028,PDD Holdings Inc.,BUY,220.74979,101.35,USD,0.89248,90.4528,19967.45,Top-up after deposit,yfinance
+txn-gro-0101,2024-12-19 00:00:00,Growth,US11135F1012,Broadcom Inc.,BUY,54.608983,218.32,USD,0.9017,196.8592,10750.28,DCA into existing position,yfinance
+txn-gro-0339,2024-12-26 00:00:00,Growth,CH0047533523,ZKB Gold ETF,BUY,67.393076,185.3852,CHF,1,185.3852,12493.68,Top-up after deposit,synth_estimated
+txn-gro-0236,2024-12-31 00:00:00,Growth,FR0000121972,Schneider Electric SE,BUY,94.194861,240.9,EUR,0.9399,226.4219,21327.78,Add on dip · technical entry,yfinance
+txn-gro-0259,2025-01-08 00:00:00,Growth,US0382221051,Applied Materials Inc.,BUY,67.576671,176.99,USD,0.90945,160.9636,10877.38,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0169,2025-01-09 00:00:00,Growth,US78409V1044,S&P Global Inc.,BUY,51.391647,495.86,USD,0.91095,451.7037,23213.79,Add on dip · technical entry,yfinance
+txn-gro-0277,2025-01-17 00:00:00,Growth,US8740391003,TSMC,BUY,66.302609,211.5,USD,0.91117,192.7125,12777.34,DCA into existing position,yfinance
+txn-gro-0246,2025-01-24 00:00:00,Growth,NL0012969182,Adyen N.V.,BUY,20.622701,1520.4,EUR,0.94518,1437.0517,29635.89,Quarterly rebalance · drift below target,yfinance
+txn-gro-0159,2025-01-27 00:00:00,Growth,US4612021034,Intuit Inc.,BUY,50.126113,606.62,USD,0.90684,550.1073,27574.74,DCA into existing position,yfinance
+txn-gro-0067,2025-01-29 00:00:00,Growth,US5949181045,Microsoft Corp.,BUY,77.886335,442.33,USD,0.90413,399.9238,31148.6,Top-up after deposit,yfinance
+txn-gro-0009,2025-01-30 00:00:00,Growth,CH0012221716,ABB Ltd.,BUY,390.865581,50.14,CHF,1,50.14,19598,Quarterly rebalance · drift below target,yfinance
+txn-gro-0110,2025-01-31 00:00:00,Growth,US88160R1014,Tesla Inc.,BUY,72.007023,404.6,USD,0.909369,367.9307,26493.59,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0005,2025-02-02 00:00:00,Growth,CH0244767585,UBS Group AG,BUY,704.833435,32.34,CHF,1,32.34,22794.31,Top-up after deposit,yfinance
+txn-gro-0289,2025-02-05 00:00:00,Growth,US7960502018,Samsung Electronics,BUY,85.479438,158.8438,USD,0.90524,143.7917,12291.24,Tactical add · CIO conviction maintained,synth_estimated
+txn-gro-0223,2025-02-19 00:00:00,Growth,FR0000121014,LVMH Moët Hennessy,BUY,68.757307,690.9,EUR,0.94406,652.2511,44847.03,Quarterly rebalance · drift below target,yfinance
+txn-gro-0124,2025-02-22 00:00:00,Growth,US00724F1012,Adobe Inc.,BUY,121.346342,444.32,USD,0.89806,399.026,48420.35,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0272,2025-03-06 00:00:00,Growth,US29362U1043,Entegris Inc.,BUY,109.209244,100.27,USD,0.89069,89.3095,9753.42,Top-up after deposit,yfinance
+txn-gro-0286,2025-03-09 00:00:00,Growth,US58733R1023,MercadoLibre Inc.,BUY,14.216645,2009.34,USD,0.88332,1774.8901,25232.98,Quarterly rebalance · drift below target,yfinance
+txn-gro-0340,2025-03-11 00:00:00,Growth,CH0047533523,ZKB Gold ETF,SELL,26.156374,205.2503,CHF,1,205.2503,5368.6,Trim on rally · realising gains,synth_estimated
+txn-gro-0104,2025-03-14 00:00:00,Growth,US11135F1012,Broadcom Inc.,BUY,59.076473,195.54,USD,0.88262,172.5875,10195.86,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0063,2025-03-17 00:00:00,Growth,US69608A1088,Palantir Technologies,BUY,213.840724,87.35,USD,0.88409,77.2253,16513.91,Top-up after deposit,yfinance
+txn-gro-0166,2025-03-17 00:00:00,Growth,US90353T1007,Uber Technologies Inc.,BUY,230.001292,72.73,USD,0.88409,64.2999,14789.05,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0213,2025-03-19 00:00:00,Growth,DE0007164600,SAP SE,SELL,185.466536,248.35,EUR,0.95898,238.1627,44171.21,Trim on rally · realising gains,yfinance
+txn-gro-0326,2025-03-31 00:00:00,Growth,LU0196152788,Partners Group Listed Investments - Listed PE,BUY,327.294753,177.8451,EUR,0.9534,169.5575,55495.29,Tactical add · CIO conviction maintained,synth_estimated
+txn-gro-0035,2025-04-03 00:00:00,Growth,CH0024608827,Partners Group Holding,BUY,21.558366,1164,CHF,1,1164,25093.94,Quarterly rebalance · drift below target,yfinance
+txn-gro-0173,2025-04-06 00:00:00,Growth,US78409V1044,S&P Global Inc.,BUY,30.903121,451.5,USD,0.85921,387.9333,11988.35,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0290,2025-04-11 00:00:00,Growth,US7960502018,Samsung Electronics,BUY,95.692818,142.1864,USD,0.82076,116.7009,11167.44,Quarterly rebalance · drift below target,synth_estimated
+txn-gro-0119,2025-04-15 00:00:00,Growth,US79466L3024,Salesforce Inc.,BUY,115.853486,254.93,USD,0.81596,208.0127,24098.99,Quarterly rebalance · drift below target,yfinance
+txn-gro-0176,2025-04-19 00:00:00,Growth,US22788C1053,CrowdStrike Holdings,BUY,41.924764,375.62,USD,0.81375,305.6608,12814.76,DCA into existing position,yfinance
+txn-gro-0183,2025-05-04 00:00:00,Growth,US6974351057,Palo Alto Networks Inc,BUY,91.913737,187.7,USD,0.82898,155.5995,14301.74,Quarterly rebalance · drift below target,yfinance
+txn-gro-0134,2025-05-08 00:00:00,Growth,US81762P1021,ServiceNow Inc.,BUY,371.153276,194.898,USD,0.82395,160.5862,59602.09,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0105,2025-05-21 00:00:00,Growth,US11135F1012,Broadcom Inc.,SELL,68.986277,229.73,USD,0.826712,189.9205,13101.91,Trim on rally · realising gains,yfinance
+txn-gro-0251,2025-05-28 00:00:00,Growth,DE000A1EWWW0,Adidas AG,BUY,119.750893,218.5,EUR,0.93781,204.9115,24538.33,Top-up after deposit,yfinance
+txn-gro-0103,2025-06-12 00:00:00,Growth,US11135F1012,Broadcom Inc.,BUY,85.628961,256.07,USD,0.8184,209.5677,17945.06,Quarterly rebalance · drift below target,yfinance
+txn-gro-0334,2025-06-12 00:00:00,Growth,IE00B1TXHL60,iShares Listed Private Eq,BUY,310.767674,91.9476,EUR,0.94198,86.6128,26916.46,Tactical add · CIO conviction maintained,synth_estimated
+txn-gro-0015,2025-06-14 00:00:00,Growth,CH0418792922,Sika AG,BUY,121.754921,209,CHF,1,209,25446.78,Quarterly rebalance · drift below target,yfinance
+txn-gro-0273,2025-06-17 00:00:00,Growth,US29362U1043,Entegris Inc.,SELL,100.578302,76.55,USD,0.81371,62.2895,6264.97,Trim on rally · realising gains,yfinance
+txn-gro-0351,2025-06-18 00:00:00,Growth,CH0454664027,21Shares Ethereum ETP,BUY,100.680125,73.6624,CHF,1,73.6624,7416.34,Add on dip · technical entry,synth_estimated
+txn-gro-0062,2025-06-23 00:00:00,Growth,US69608A1088,Palantir Technologies,BUY,387.200083,139.92,USD,0.81775,114.4196,44303.27,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0055,2025-06-27 00:00:00,Growth,US67066G1040,NVIDIA Corp.,BUY,189.338105,157.75,USD,0.80089,126.3404,23921.05,Add on dip · technical entry,yfinance
+txn-gro-0097,2025-06-28 00:00:00,Growth,US30303M1027,Meta Platforms Inc.,BUY,51.341346,733.63,USD,0.80089,587.557,30165.96,DCA into existing position,yfinance
+txn-gro-0291,2025-07-08 00:00:00,Growth,US7960502018,Samsung Electronics,BUY,79.494926,137.3991,USD,0.79716,109.5291,8707.01,DCA into existing position,synth_estimated
+txn-gro-0280,2025-07-12 00:00:00,Growth,US8740391003,TSMC,SELL,43.986688,230.4,USD,0.79672,183.5643,8074.39,Trim on rally · realising gains,yfinance
+txn-gro-0199,2025-07-19 00:00:00,Growth,US23804L1035,Datadog Inc.,BUY,57.22411,145.02,USD,0.80288,116.4337,6662.81,DCA into existing position,yfinance
+txn-gro-0189,2025-07-20 00:00:00,Growth,US0404131064,Arista Networks Inc.,BUY,105.05759,111.78,USD,0.80288,89.7459,9428.49,Top-up after deposit,yfinance
+txn-gro-0209,2025-07-20 00:00:00,Growth,DE0007164600,SAP SE,BUY,267.831916,264.05,EUR,0.93255,246.2398,65950.88,Add on dip · technical entry,yfinance
+txn-gro-0192,2025-07-26 00:00:00,Growth,US8334451098,Snowflake Inc.,BUY,81.285782,219.51,USD,0.79487,174.4819,14182.9,Top-up after deposit,yfinance
+txn-gro-0133,2025-08-01 00:00:00,Growth,US81762P1021,ServiceNow Inc.,BUY,293.3542,182.874,USD,0.8139,148.8411,43663.17,DCA into existing position,yfinance
+txn-gro-0071,2025-08-03 00:00:00,Growth,US0378331005,Apple Inc.,BUY,145.589294,202.38,USD,0.8139,164.7171,23981.04,Quarterly rebalance · drift below target,yfinance
+txn-gro-0089,2025-08-04 00:00:00,Growth,US5324571083,Eli Lilly & Co.,BUY,44.812217,769,USD,0.80401,618.2837,27706.66,Top-up after deposit,yfinance
+txn-gro-0228,2025-08-05 00:00:00,Growth,LU1778762911,Spotify Technology S.A.,BUY,40.982034,647,USD,0.80709,522.1872,21400.29,DCA into existing position,yfinance
+txn-gro-0091,2025-08-09 00:00:00,Growth,US5324571083,Eli Lilly & Co.,BUY,32.682403,625.65,USD,0.80569,504.08,16474.54,DCA into existing position,yfinance
+txn-gro-0349,2025-08-09 00:00:00,Growth,CH0454664027,21Shares Ethereum ETP,BUY,57.648903,73.5128,CHF,1,73.5128,4237.93,Quarterly rebalance · drift below target,synth_estimated
+txn-gro-0312,2025-08-11 00:00:00,Growth,CH0014420878,UBS (CH) Property Fund,BUY,52.101899,203.9955,CHF,1,203.9955,10628.55,Top-up after deposit,synth_estimated
+txn-gro-0118,2025-08-12 00:00:00,Growth,US79466L3024,Salesforce Inc.,BUY,148.896997,231.66,USD,0.8118,188.0616,28001.81,Add on dip · technical entry,yfinance
+txn-gro-0224,2025-08-12 00:00:00,Growth,FR0000121014,LVMH Moët Hennessy,SELL,39.708302,457.15,EUR,0.94322,431.193,17121.94,Trim on rally · realising gains,yfinance
+txn-gro-0040,2025-08-17 00:00:00,Growth,CH1175448666,Straumann Holding AG,BUY,180.021901,94.08,CHF,1,94.08,16936.46,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0187,2025-08-25 00:00:00,Growth,US0404131064,Arista Networks Inc.,BUY,116.722529,133.04,USD,0.80226,106.7327,12458.11,DCA into existing position,yfinance
+txn-gro-0205,2025-08-29 00:00:00,Growth,NL0010273215,ASML Holding N.V.,BUY,20.106323,636.6,EUR,0.93631,596.0549,11984.47,Top-up after deposit,yfinance
+txn-gro-0211,2025-09-04 00:00:00,Growth,DE0007164600,SAP SE,BUY,285.66586,233.2,EUR,0.93725,218.5667,62437.04,Add on dip · technical entry,yfinance
+txn-gro-0004,2025-09-09 00:00:00,Growth,CH0244767585,UBS Group AG,BUY,687.431483,31.95,CHF,1,31.95,21963.44,Quarterly rebalance · drift below target,yfinance
+txn-gro-0008,2025-09-09 00:00:00,Growth,CH0012221716,ABB Ltd.,BUY,367.512015,55.7,CHF,1,55.7,20470.42,Add on dip · technical entry,yfinance
+txn-gro-0073,2025-09-13 00:00:00,Growth,US0378331005,Apple Inc.,SELL,74.820313,234.07,USD,0.79595,186.308,13939.62,Trim on rally · realising gains,yfinance
+txn-gro-0284,2025-09-15 00:00:00,Growth,US58733R1023,MercadoLibre Inc.,BUY,14.45714,2335.8201,USD,0.7967,1860.9479,26903.98,Top-up after deposit,yfinance
+txn-gro-0152,2025-09-17 00:00:00,Growth,US4581401001,Intel Corp.,BUY,167.456004,24.9,USD,0.78591,19.5692,3276.97,Top-up after deposit,yfinance
+txn-gro-0072,2025-09-19 00:00:00,Growth,US0378331005,Apple Inc.,BUY,132.964055,245.5,USD,0.79251,194.5612,25869.65,Top-up after deposit,yfinance
+txn-gro-0108,2025-09-19 00:00:00,Growth,US88160R1014,Tesla Inc.,BUY,66.027795,426.07,USD,0.79251,337.6647,22295.26,Top-up after deposit,yfinance
+txn-gro-0044,2025-09-24 00:00:00,Growth,CH1175448666,Straumann Holding AG,SELL,129.793117,89.98,CHF,1,89.98,11678.79,Trim on rally · realising gains,yfinance
+txn-gro-0206,2025-09-26 00:00:00,Growth,NL0010273215,ASML Holding N.V.,BUY,33.103749,812.8,EUR,0.93303,758.3668,25104.78,Add on dip · technical entry,yfinance
+txn-gro-0352,2025-10-07 00:00:00,Growth,CH0454664027,21Shares Ethereum ETP,BUY,65.718453,72.2463,CHF,1,72.2463,4747.92,Top-up after deposit,synth_estimated
+txn-gro-0234,2025-10-12 00:00:00,Growth,FR0000121972,Schneider Electric SE,BUY,59.647578,245.25,EUR,0.93239,228.6686,13639.53,DCA into existing position,yfinance
+txn-gro-0041,2025-10-18 00:00:00,Growth,CH1175448666,Straumann Holding AG,BUY,210.099551,86.92,CHF,1,86.92,18261.85,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0348,2025-10-20 00:00:00,Growth,CH0454664027,21Shares Ethereum ETP,BUY,76.815043,71.6316,CHF,1,71.6316,5502.38,Tactical add · CIO conviction maintained,synth_estimated
+txn-gro-0172,2025-10-23 00:00:00,Growth,US78409V1044,S&P Global Inc.,BUY,39.376174,482.7,USD,0.79609,384.2727,15131.19,Top-up after deposit,yfinance
+txn-gro-0260,2025-10-24 00:00:00,Growth,US0382221051,Applied Materials Inc.,SELL,41.129737,228.75,USD,0.79508,181.8746,7480.45,Trim on rally · realising gains,yfinance
+txn-gro-0056,2025-10-25 00:00:00,Growth,US67066G1040,NVIDIA Corp.,BUY,256.693075,186.26,USD,0.79508,148.0916,38014.09,Top-up after deposit,yfinance
+txn-gro-0329,2025-10-27 00:00:00,Growth,LU0196152788,Partners Group Listed Investments - Listed PE,BUY,269.665361,199.0576,EUR,0.92588,184.3035,49700.27,Quarterly rebalance · drift below target,synth_estimated
+txn-gro-0053,2025-11-06 00:00:00,Growth,US67066G1040,NVIDIA Corp.,BUY,211.998323,188.08,USD,0.80973,152.294,32286.08,Quarterly rebalance · drift below target,yfinance
+txn-gro-0256,2025-11-06 00:00:00,Growth,US0382221051,Applied Materials Inc.,BUY,51.040077,233.53,USD,0.80973,189.0962,9651.49,DCA into existing position,yfinance
+txn-gro-0335,2025-11-08 00:00:00,Growth,IE00B1TXHL60,iShares Listed Private Eq,BUY,300.545614,98.6363,EUR,0.93091,91.8215,27596.54,Tactical add · CIO conviction maintained,synth_estimated
+txn-gro-0128,2025-11-18 00:00:00,Growth,US9024941034,"Tyson Foods, Inc.",BUY,462.992564,53.66,USD,0.79624,42.7262,19781.93,DCA into existing position,yfinance
+txn-gro-0264,2025-11-24 00:00:00,Growth,US0126531013,Albemarle Corp.,BUY,66.13632,115.88,USD,0.80867,93.7087,6197.55,DCA into existing position,yfinance
+txn-gro-0353,2025-12-01 00:00:00,Growth,CH0454664027,21Shares Ethereum ETP,SELL,37.423845,65.799,CHF,1,65.799,2462.45,Trim on rally · realising gains,synth_estimated
+txn-gro-0322,2025-12-04 00:00:00,Growth,US2538681030,Digital Realty Trust,BUY,215.104054,122.1232,USD,0.79976,97.6693,21009.06,Tactical add · CIO conviction maintained,synth_estimated
+txn-gro-0066,2025-12-05 00:00:00,Growth,US5949181045,Microsoft Corp.,BUY,107.830398,483.16,USD,0.80378,388.3544,41876.4,Add on dip · technical entry,yfinance
+txn-gro-0248,2025-12-06 00:00:00,Growth,NL0012969182,Adyen N.V.,SELL,4.61992,1349.4,EUR,0.93576,1262.7146,5833.64,Trim on rally · realising gains,yfinance
+txn-gro-0083,2025-12-07 00:00:00,Growth,US0231351067,Amazon.com Inc.,BUY,88.15728,229.53,USD,0.80378,184.4916,16264.28,Quarterly rebalance · drift below target,yfinance
+txn-gro-0321,2025-12-11 00:00:00,Growth,US2538681030,Digital Realty Trust,BUY,305.462468,119.7499,USD,0.79938,95.7257,29240.6,Quarterly rebalance · drift below target,synth_estimated
+txn-gro-0222,2025-12-28 00:00:00,Growth,FR0000121014,LVMH Moët Hennessy,BUY,62.407269,632.1,EUR,0.92868,587.0186,36634.23,Quarterly rebalance · drift below target,yfinance
+txn-gro-0257,2026-01-01 00:00:00,Growth,US0382221051,Applied Materials Inc.,BUY,63.099486,256.99,USD,0.7917,203.459,12838.16,Add on dip · technical entry,yfinance
+txn-gro-0113,2026-01-06 00:00:00,Growth,US64110L1061,Netflix Inc.,BUY,342.282575,90.65,USD,0.7921,71.8039,24577.21,Add on dip · technical entry,yfinance
+txn-gro-0194,2026-01-13 00:00:00,Growth,US8334451098,Snowflake Inc.,SELL,35.143049,209.39,USD,0.79736,166.9592,5867.46,Trim on rally · realising gains,yfinance
+txn-gro-0130,2026-01-15 00:00:00,Growth,US9024941034,"Tyson Foods, Inc.",BUY,453.788873,60.43,USD,0.79972,48.3271,21930.29,Quarterly rebalance · drift below target,yfinance
+txn-gro-0343,2026-01-19 00:00:00,Growth,CH0454664001,21Shares Bitcoin ETP,BUY,116.61325,97.332,CHF,1,97.332,11350.2,Quarterly rebalance · drift below target,synth_estimated
+txn-gro-0059,2026-01-27 00:00:00,Growth,US69608A1088,Palantir Technologies,BUY,361.091348,165.7,USD,0.77724,128.7887,46504.47,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0140,2026-02-02 00:00:00,Growth,US09857L1089,Booking Holdings Inc.,BUY,180.380685,204.89,USD,0.77356,158.4947,28589.38,Top-up after deposit,yfinance
+txn-gro-0240,2026-02-10 00:00:00,Growth,NL0011585146,Ferrari N.V.,BUY,64.035909,310.3,EUR,0.91318,283.3597,18145.2,DCA into existing position,yfinance
+txn-gro-0330,2026-02-11 00:00:00,Growth,LU0196152788,Partners Group Listed Investments - Listed PE,BUY,355.233128,210.7015,EUR,0.91373,192.5243,68391,Tactical add · CIO conviction maintained,synth_estimated
+txn-gro-0170,2026-02-18 00:00:00,Growth,US78409V1044,S&P Global Inc.,BUY,25.727606,419.38,USD,0.7702,323.0065,8310.18,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0235,2026-02-21 00:00:00,Growth,FR0000121972,Schneider Electric SE,BUY,85.55553,261.9,EUR,0.91249,238.9811,20446.16,Add on dip · technical entry,yfinance
+txn-gro-0237,2026-02-23 00:00:00,Growth,FR0000121972,Schneider Electric SE,BUY,45.655845,259.75,EUR,0.91323,237.2115,10830.09,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0318,2026-03-01 00:00:00,Growth,US29444U7000,Equinix Inc.,SELL,103.315277,191.5928,USD,0.77323,148.1453,15305.68,Trim on rally · realising gains,synth_estimated
+txn-gro-0200,2026-03-04 00:00:00,Growth,US23804L1035,Datadog Inc.,BUY,58.120331,118.33,USD,0.78192,92.5246,5377.56,Top-up after deposit,yfinance
+txn-gro-0082,2026-03-18 00:00:00,Growth,US0231351067,Amazon.com Inc.,BUY,148.54206,209.87,USD,0.78477,164.6997,24464.83,Top-up after deposit,yfinance
+txn-gro-0096,2026-03-22 00:00:00,Growth,US30303M1027,Meta Platforms Inc.,BUY,64.251245,593.66,USD,0.7887,468.2196,30083.69,DCA into existing position,yfinance
+txn-gro-0212,2026-03-27 00:00:00,Growth,DE0007164600,SAP SE,BUY,276.343695,142.56,EUR,0.91664,130.6762,36111.54,Top-up after deposit,yfinance
+txn-gro-0018,2026-03-30 00:00:00,Growth,CH0418792922,Sika AG,BUY,201.919736,130.05,CHF,1,130.05,26259.66,Top-up after deposit,yfinance
+txn-gro-0178,2026-03-30 00:00:00,Growth,US22788C1053,CrowdStrike Holdings,BUY,22.270641,380.06,USD,0.7998,303.972,6769.65,Add on dip · technical entry,yfinance
+txn-gro-0210,2026-03-31 00:00:00,Growth,DE0007164600,SAP SE,BUY,229.354002,146.9,EUR,0.91639,134.6177,30875.1,Tactical add · CIO conviction maintained,yfinance
+txn-gro-0069,2026-04-18 00:00:00,Growth,US5949181045,Microsoft Corp.,BUY,228.958698,422.79,USD,0.7832,331.1291,75814.9,"Final precision rebalance · land on target (220,000 CHF)",yfinance
+txn-gro-0121,2026-04-18 00:00:00,Growth,US79466L3024,Salesforce Inc.,BUY,373.161293,182.14,USD,0.7832,142.6521,53232.22,"Final precision rebalance · land on target (150,000 CHF)",yfinance
+txn-gro-0287,2026-04-18 00:00:00,Growth,US58733R1023,MercadoLibre Inc.,BUY,17.493811,1855.83,USD,0.7832,1453.4861,25427.01,"Final precision rebalance · land on target (150,000 CHF)",yfinance
+txn-gro-0336,2026-04-18 00:00:00,Growth,IE00B1TXHL60,iShares Listed Private Eq,BUY,101.234747,106.1378,EUR,0.9226,97.9227,9913.18,"Final precision rebalance · land on target (200,000 CHF)",synth_estimated
+txn-gro-0057,2026-04-19 00:00:00,Growth,US67066G1040,NVIDIA Corp.,BUY,46.627957,201.68,USD,0.7832,157.9558,7365.16,"Final precision rebalance · land on target (280,000 CHF)",yfinance
+txn-gro-0162,2026-04-19 00:00:00,Growth,US4612021034,Intuit Inc.,BUY,10.283329,393.25,USD,0.7832,307.9934,3167.2,"Final precision rebalance · land on target (100,000 CHF)",yfinance
+txn-gro-0111,2026-04-20 00:00:00,Growth,US88160R1014,Tesla Inc.,BUY,117.235156,392.5,USD,0.78366,307.5865,36059.96,"Final precision rebalance · land on target (180,000 CHF)",yfinance
+txn-gro-0126,2026-04-20 00:00:00,Growth,US00724F1012,Adobe Inc.,BUY,142.51911,248.63,USD,0.78366,194.8414,27768.62,"Final precision rebalance · land on target (150,000 CHF)",yfinance
+txn-gro-0195,2026-04-20 00:00:00,Growth,US8334451098,Snowflake Inc.,BUY,197.759995,150.44,USD,0.78366,117.8938,23314.68,"Final precision rebalance · land on target (70,000 CHF)",yfinance
+txn-gro-0249,2026-04-20 00:00:00,Growth,NL0012969182,Adyen N.V.,BUY,38.513108,970.8,EUR,0.92,893.136,34397.44,"Final precision rebalance · land on target (100,000 CHF)",yfinance
+txn-gro-0319,2026-04-20 00:00:00,Growth,US29444U7000,Equinix Inc.,BUY,685.272256,179.6376,USD,0.78366,140.7748,96469.06,"Final precision rebalance · land on target (250,000 CHF)",synth_estimated
+txn-gro-0190,2026-04-21 00:00:00,Growth,US0404131064,Arista Networks Inc.,BUY,158.202492,172.86,USD,0.77851,134.5732,21289.82,"Final precision rebalance · land on target (80,000 CHF)",yfinance
+txn-gro-0268,2026-04-21 00:00:00,Growth,US0126531013,Albemarle Corp.,SELL,47.412186,198.42,USD,0.77851,154.4719,7323.85,"Final precision rebalance · land on target (120,000 CHF)",yfinance
+txn-gro-0006,2026-04-22 00:00:00,Growth,CH0244767585,UBS Group AG,BUY,490.232282,33.54,CHF,1,33.54,16442.39,"Final precision rebalance · land on target (200,000 CHF)",yfinance
+txn-gro-0181,2026-04-22 00:00:00,Growth,US22788C1053,CrowdStrike Holdings,SELL,11.843633,466.68,USD,0.78055,364.2671,4314.25,"Final precision rebalance · land on target (100,000 CHF)",yfinance
+txn-gro-0313,2026-04-22 00:00:00,Growth,CH0014420878,UBS (CH) Property Fund,BUY,144.546639,199.3167,CHF,1,199.3167,28810.56,"Final precision rebalance · land on target (100,000 CHF)",synth_estimated
+txn-gro-0080,2026-04-23 00:00:00,Growth,US02079K3059,Alphabet Inc.,BUY,220.346521,338.89,USD,0.78482,265.9677,58605.05,"Final precision rebalance · land on target (220,000 CHF)",yfinance
+txn-gro-0207,2026-04-23 00:00:00,Growth,NL0010273215,ASML Holding N.V.,BUY,52.699539,1223.8,EUR,0.91865,1124.2439,59247.13,"Final precision rebalance · land on target (220,000 CHF)",yfinance
+txn-gro-0074,2026-04-24 00:00:00,Growth,US0378331005,Apple Inc.,BUY,322.126166,271.06,USD,0.78624,213.1182,68650.95,"Final precision rebalance · land on target (220,000 CHF)",yfinance
+txn-gro-0214,2026-04-24 00:00:00,Growth,DE0007164600,SAP SE,BUY,200.456406,147.28,EUR,0.9186,135.2914,27120.03,"Final precision rebalance · land on target (220,000 CHF)",yfinance
+txn-gro-0086,2026-04-25 00:00:00,Growth,US0231351067,Amazon.com Inc.,BUY,214.04305,263.99,USD,0.78624,207.5595,44426.67,"Final precision rebalance · land on target (220,000 CHF)",yfinance
+txn-gro-0093,2026-04-25 00:00:00,Growth,US5324571083,Eli Lilly & Co.,BUY,27.047963,883.96,USD,0.78624,695.0047,18798.46,"Final precision rebalance · land on target (220,000 CHF)",yfinance
+txn-gro-0116,2026-04-25 00:00:00,Growth,US64110L1061,Netflix Inc.,BUY,536.670675,92.44,USD,0.78624,72.68,39005.24,"Final precision rebalance · land on target (160,000 CHF)",yfinance
+txn-gro-0167,2026-04-25 00:00:00,Growth,US90353T1007,Uber Technologies Inc.,BUY,418.825523,74.64,USD,0.78624,58.685,24578.76,"Final precision rebalance · land on target (100,000 CHF)",yfinance
+txn-gro-0202,2026-04-25 00:00:00,Growth,US23804L1035,Datadog Inc.,BUY,89.332714,129.48,USD,0.78624,101.8023,9094.28,"Final precision rebalance · land on target (60,000 CHF)",yfinance
+txn-gro-0299,2026-04-25 00:00:00,Growth,US7223041028,PDD Holdings Inc.,BUY,247.340281,98.03,USD,0.78624,77.0751,19063.78,"Final precision rebalance · land on target (100,000 CHF)",yfinance
+txn-gro-0324,2026-04-25 00:00:00,Growth,US2538681030,Digital Realty Trust,BUY,487.624151,109.9117,USD,0.78624,86.417,42139.01,"Final precision rebalance · land on target (150,000 CHF)",synth_estimated
+txn-gro-0341,2026-04-25 00:00:00,Growth,CH0047533523,ZKB Gold ETF,BUY,283.212432,186.2675,CHF,1,186.2675,52753.26,"Final precision rebalance · land on target (150,000 CHF)",synth_estimated
+txn-gro-0346,2026-04-25 00:00:00,Growth,CH0454664001,21Shares Bitcoin ETP,BUY,151.491988,107.133,CHF,1,107.133,16229.79,"Final precision rebalance · land on target (100,000 CHF)",synth_estimated
+txn-gro-0045,2026-04-26 00:00:00,Growth,CH1175448666,Straumann Holding AG,BUY,1.854747,84.52,CHF,1,84.52,156.76,"Final precision rebalance · land on target (100,000 CHF)",yfinance
+txn-gro-0051,2026-04-26 00:00:00,Growth,CH0311864901,Vat Group AG,BUY,29.366045,585,CHF,1,585,17179.14,"Final precision rebalance · land on target (70,000 CHF)",yfinance
+txn-gro-0099,2026-04-26 00:00:00,Growth,US30303M1027,Meta Platforms Inc.,SELL,3.41451,675.03,USD,0.78624,530.7356,1812.2,"Final precision rebalance · land on target (180,000 CHF)",yfinance
+txn-gro-0244,2026-04-26 00:00:00,Growth,NL0011585146,Ferrari N.V.,BUY,5.304366,299.55,EUR,0.9186,275.1666,1459.58,"Final precision rebalance · land on target (100,000 CHF)",yfinance
+txn-gro-0261,2026-04-26 00:00:00,Growth,US0382221051,Applied Materials Inc.,BUY,75.636571,417.04,USD,0.78624,327.8935,24800.74,"Final precision rebalance · land on target (150,000 CHF)",yfinance
+txn-gro-0331,2026-04-26 00:00:00,Growth,LU0196152788,Partners Group Listed Investments - Listed PE,SELL,370.590801,194.2541,EUR,0.9186,178.4418,66128.9,"Final precision rebalance · land on target (350,000 CHF)",synth_estimated
+txn-gro-0013,2026-04-27 00:00:00,Growth,CH0012221716,ABB Ltd.,SELL,183.948031,77.62,CHF,1,77.62,14278.05,"Final precision rebalance · land on target (180,000 CHF)",yfinance
+txn-gro-0037,2026-04-27 00:00:00,Growth,CH0024608827,Partners Group Holding,BUY,1.489893,902.2,CHF,1,902.2,1344.18,"Final precision rebalance · land on target (150,000 CHF)",yfinance
+txn-gro-0145,2026-04-27 00:00:00,Growth,US09857L1089,Booking Holdings Inc.,SELL,131.398969,177.52,USD,0.7863,139.584,18341.19,"Final precision rebalance · land on target (140,000 CHF)",yfinance
+txn-gro-0185,2026-04-27 00:00:00,Growth,US6974351057,Palo Alto Networks Inc,BUY,98.372959,182.9,USD,0.7863,143.8143,14147.43,"Final precision rebalance · land on target (90,000 CHF)",yfinance
+txn-gro-0294,2026-04-27 00:00:00,Growth,US7960502018,Samsung Electronics,BUY,108.217952,176.2531,USD,0.7863,138.5878,14997.69,"Final precision rebalance · land on target (100,000 CHF)",synth_estimated
+txn-gro-0029,2026-04-28 00:00:00,Growth,CH0013841017,Lonza Group AG,BUY,110.781989,482.7,CHF,1,482.7,53474.47,"Final precision rebalance · land on target (150,000 CHF)",yfinance
+txn-gro-0220,2026-04-28 00:00:00,Growth,DK0062498333,Novo Nordisk A/S,BUY,577.067432,265.15,DKK,0.123189,32.6636,18849.08,"Final precision rebalance · land on target (190,000 CHF)",yfinance
+txn-gro-0225,2026-04-28 00:00:00,Growth,FR0000121014,LVMH Moët Hennessy,BUY,103.834131,454.75,EUR,0.92058,418.6338,43468.47,"Final precision rebalance · land on target (160,000 CHF)",yfinance
+txn-gro-0232,2026-04-28 00:00:00,Growth,LU1778762911,Spotify Technology S.A.,BUY,35.610773,434.2,USD,0.78529,340.9729,12142.31,"Final precision rebalance · land on target (160,000 CHF)",yfinance
+txn-gro-0238,2026-04-28 00:00:00,Growth,FR0000121972,Schneider Electric SE,BUY,17.430217,270.8,EUR,0.92058,249.2931,4345.23,"Final precision rebalance · land on target (130,000 CHF)",yfinance
+txn-gro-0274,2026-04-28 00:00:00,Growth,US29362U1043,Entegris Inc.,BUY,489.502263,144.72,USD,0.78529,113.6472,55630.55,"Final precision rebalance · land on target (120,000 CHF)",yfinance
+txn-gro-0024,2026-04-29 00:00:00,Growth,CH0025751329,Logitech International,BUY,663.944613,77.02,CHF,1,77.02,51137.01,"Final precision rebalance · land on target (170,000 CHF)",yfinance
+txn-gro-0149,2026-04-29 00:00:00,Growth,US7475251036,Qualcomm Inc.,BUY,221.531825,156,USD,0.78899,123.0824,27266.68,"Final precision rebalance · land on target (120,000 CHF)",yfinance
+txn-gro-0254,2026-04-29 00:00:00,Growth,DE000A1EWWW0,Adidas AG,BUY,261.366763,149.3,EUR,0.92448,138.0249,36075.11,"Final precision rebalance · land on target (90,000 CHF)",yfinance
+txn-gro-0019,2026-04-30 00:00:00,Growth,CH0418792922,Sika AG,BUY,40.713469,143.7,CHF,1,143.7,5850.53,"Final precision rebalance · land on target (180,000 CHF)",yfinance
+txn-gro-0155,2026-04-30 00:00:00,Growth,US4581401001,Intel Corp.,BUY,224.083639,94.48,USD,0.79056,74.6921,16737.28,"Final precision rebalance · land on target (100,000 CHF)",yfinance
+txn-gro-0174,2026-04-30 00:00:00,Growth,US78409V1044,S&P Global Inc.,BUY,5.752484,431.23,USD,0.79056,340.9132,1961.1,"Final precision rebalance · land on target (100,000 CHF)",yfinance
+txn-gro-0138,2026-05-01 00:00:00,Growth,US81762P1021,ServiceNow Inc.,BUY,91.6899,91.16,USD,0.7814,71.2324,6531.29,"Final precision rebalance · land on target (150,000 CHF)",yfinance
+txn-gro-0064,2026-05-02 00:00:00,Growth,US69608A1088,Palantir Technologies,SELL,30.683121,144.07,USD,0.7814,112.5763,3454.19,"Final precision rebalance · land on target (250,000 CHF)",yfinance
+txn-gro-0106,2026-05-02 00:00:00,Growth,US11135F1012,Broadcom Inc.,BUY,100.91434,421.28,USD,0.7814,329.1882,33219.81,"Final precision rebalance · land on target (180,000 CHF)",yfinance
+txn-gro-0131,2026-05-02 00:00:00,Growth,US9024941034,"Tyson Foods, Inc.",BUY,593.863817,63.68,USD,0.7814,49.7596,29550.4,"Final precision rebalance · land on target (150,000 CHF)",yfinance
+txn-gro-0281,2026-05-02 00:00:00,Growth,US8740391003,TSMC,BUY,117.222228,397.67,USD,0.7814,310.7394,36425.56,"Final precision rebalance · land on target (200,000 CHF)",yfinance
+txn-gro-0354,2026-05-02 00:00:00,Growth,CH0454664027,21Shares Ethereum ETP,BUY,38.812341,69.7941,CHF,1,69.7941,2708.87,"Final precision rebalance · land on target (50,000 CHF)",synth_estimated
