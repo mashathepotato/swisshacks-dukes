@@ -82,13 +82,16 @@
   .alert.client-signal { border-left-color:var(--client); } .badge.client-signal { background:var(--client); }
 
   /* Glass thread */
-  svg#thread { width:100%; height:300px; background:
-      linear-gradient(var(--line) 1px,transparent 1px) 0 0/100% 60px,
+  svg#thread { width:100%; height:480px; cursor:grab; touch-action:none; background:
+      linear-gradient(var(--line) 1px,transparent 1px) 0 0/100% 40px,
+      linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/40px 100%,
       #fbfcfe; border:1px solid var(--line); border-radius:10px; }
-  .node rect { fill:#fff; stroke:var(--slate); stroke-width:1.4; }
-  .node .ntag { font:700 8px var(--sans); fill:var(--faint); text-transform:uppercase; letter-spacing:.4px; }
-  .node .nlabel { font:600 10.5px var(--sans); fill:var(--ink); }
-  .node .nsub { font:10px var(--mono); fill:var(--muted); }
+  svg#thread:active { cursor:grabbing; }
+  .node rect { fill:#fff; stroke:var(--slate); stroke-width:1.6; }
+  .node .ntag { font:700 9.5px var(--sans); fill:var(--faint); text-transform:uppercase; letter-spacing:.5px; }
+  .node .nlabel { font:600 13px var(--sans); fill:var(--ink); }
+  .node .nsub { font:11px var(--mono); fill:var(--muted); }
+  .view-hint { font-size:12px; color:var(--faint); }
   .node.crm rect { stroke:var(--client); } .node.trait rect { stroke:var(--accent); }
   .node.holding rect { stroke:var(--slate); } .node.news rect { stroke:var(--watch); } .node.swap rect { stroke:var(--tension); }
   .node.inactive { opacity:.38; } .node.inactive rect { stroke-dasharray:4 3; }
@@ -169,9 +172,11 @@
     </section>
 
     <section class="panel">
-      <div class="row-head"><h2>Reasoning thread</h2><button id="cutBtn">Challenge this evidence</button></div>
-      <p class="sublabel">How the AI got from a CRM note to a proposed action. Challenge a fact to watch the case revise — live.</p>
-      <svg id="thread" viewBox="0 0 720 300" role="img" aria-label="Reasoning thread"></svg>
+      <div class="row-head"><h2>Reasoning thread</h2>
+        <span style="display:flex;gap:8px"><button id="resetView">Reset view</button><button id="cutBtn">Challenge this evidence</button></span>
+      </div>
+      <p class="sublabel">How the AI got from a CRM note to a proposed action. <span class="view-hint">Drag to move · scroll to zoom.</span> Challenge a fact to watch the case revise — live.</p>
+      <svg id="thread" viewBox="0 0 980 460" role="img" aria-label="Reasoning thread"></svg>
       <div class="thread-legend">
         <span class="tk"><i style="background:var(--client)"></i>CRM note</span>
         <span class="tk"><i style="background:var(--accent)"></i>DNA trait</span>
@@ -211,9 +216,9 @@
       <ul class="log" id="ledger"></ul>
 
       <h2 style="margin-top:18px">Client channel · 24/7</h2>
-      <p class="sublabel">The client can write anytime. The AI <b>logs and flags</b> the message for you — it never replies or advises the client.</p>
-      <textarea id="clientMsg" style="min-height:58px" placeholder="Type as the client… e.g. “I want to dump all my Nvidia”"></textarea>
-      <div style="margin-top:7px"><button id="send">Send as client</button> &nbsp;<small class="src" id="sendNote"></small></div>
+      <p class="sublabel">When the client writes in via their app, the AI <b>logs and flags</b> the message and raises their inbox priority — it never replies or advises the client. Use the box below to simulate an incoming client message.</p>
+      <textarea id="clientMsg" style="min-height:58px" placeholder="Simulate the client writing in… e.g. “I want to dump all my Nvidia”"></textarea>
+      <div style="margin-top:7px"><button id="send">Simulate incoming message</button> &nbsp;<small class="src" id="sendNote"></small></div>
       <ul class="log" id="signals"></ul>
     </section>
   </main>
@@ -279,26 +284,58 @@ function renderDrift(drift) {
       <div class="claim">${esc(d.subAssetClass)} is ${d.deltaPct>0?'over':'under'} target by <b class="mono">${Math.abs(d.deltaPct).toFixed(1)}pp</b></div></div>`).join("")
     : "<p class='quiet'>All sub-asset classes within ±2.0pp.</p>";
 }
-const NODE_TAG = { crm:"CRM note", trait:"DNA trait", holding:"Holding", news:"Event", swap:"Action" };
+const NODE_TAG = { crm:"CRM note", trait:"DNA trait", holding:"Holding", news:"Event", swap:"Proposed action" };
+function wrap2(s, max) {
+  s = s || "";
+  if (s.length <= max) return [s, ""];
+  const words = s.split(" "); let l1 = "", l2 = "";
+  for (const w of words) {
+    if (!l2 && (l1 + " " + w).trim().length <= max) l1 = (l1 + " " + w).trim();
+    else l2 = (l2 + " " + w).trim();
+  }
+  if (l2.length > max) l2 = l2.slice(0, max - 1) + "…";
+  return [l1, l2];
+}
+const view = { tx:0, ty:0, k:1, dragging:false, sx:0, sy:0 };
+function applyView() { const g = document.getElementById("threadCanvas"); if (g) g.setAttribute("transform", `translate(${view.tx} ${view.ty}) scale(${view.k})`); }
 function renderThread() {
   const st = thread.states[threadState];
-  const cols = { crm:48, trait:236, holding:430, news:430, swap:586 };
-  const yByKind = {}; const place = (n)=>{ const x=cols[n.kind]??300; yByKind[n.kind]=(yByKind[n.kind]||0)+1; return {x, y: 34 + (yByKind[n.kind]-1)*64 + (n.kind==='news'?168:0)}; };
+  const cols = { crm:16, trait:336, holding:580, news:580, swap:788 };
+  const yByKind = {}; const place = (n)=>{ const x=cols[n.kind]??300; yByKind[n.kind]=(yByKind[n.kind]||0)+1; return {x, y: 28 + (yByKind[n.kind]-1)*92 + (n.kind==='news'?252:0)}; };
   const pos = {}; st.nodes.forEach((n)=> pos[n.id]=place(n));
-  const W=128, H=44;
-  const edge = (a,b)=>`<line x1="${pos[a].x+W}" y1="${pos[a].y+H/2}" x2="${pos[b].x}" y2="${pos[b].y+H/2}" stroke="#b9c4ce" stroke-width="1.4"/>`;
-  const node = (n)=>`<g class="node ${esc(n.kind)} ${n.active===false?'inactive':''}" transform="translate(${pos[n.id].x},${pos[n.id].y})">
-      <rect width="${W}" height="${H}" rx="7"></rect>
-      <text class="ntag" x="8" y="13">${esc(NODE_TAG[n.kind]||n.kind)}</text>
-      <text class="nlabel" x="8" y="27">${esc((n.label||'').slice(0,24))}</text>
-      <text class="nsub" x="8" y="39">${esc(n.date||(n.confidence!=null?Math.round(n.confidence*100)+'%':''))}</text></g>`;
-  el("thread").innerHTML = st.edges.map(([a,b])=>edge(a,b)).join("") + st.nodes.map(node).join("");
+  const W=192, H=64;
+  const edge = (a,b)=>`<line x1="${pos[a].x+W}" y1="${pos[a].y+H/2}" x2="${pos[b].x}" y2="${pos[b].y+H/2}" stroke="#aab6c2" stroke-width="1.6"/>`;
+  const node = (n)=>{
+    const [l1,l2] = wrap2(n.label, 26);
+    const sub = n.date || (n.confidence!=null ? Math.round(n.confidence*100)+"% confidence" : "");
+    return `<g class="node ${esc(n.kind)} ${n.active===false?'inactive':''}" transform="translate(${pos[n.id].x},${pos[n.id].y})">
+      <rect width="${W}" height="${H}" rx="9"></rect>
+      <text class="ntag" x="11" y="17">${esc(NODE_TAG[n.kind]||n.kind)}</text>
+      <text class="nlabel" x="11" y="35">${esc(l1)}</text>
+      ${l2?`<text class="nlabel" x="11" y="49">${esc(l2)}</text>`:""}
+      <text class="nsub" x="11" y="${l2?59:49}">${esc(sub)}</text></g>`;
+  };
+  const inner = st.edges.map(([a,b])=>edge(a,b)).join("") + st.nodes.map(node).join("");
+  el("thread").innerHTML = `<g id="threadCanvas" transform="translate(${view.tx} ${view.ty}) scale(${view.k})">${inner}</g>`;
   const sevColor = { act:"var(--conflict)", watch:"var(--watch)", info:"var(--opportunity)" }[st.alert.severity] || "var(--slate)";
   el("alertLine").innerHTML = `<span class="badge" style="background:${sevColor}">${esc(st.alert.severity)}</span> ${esc(st.alert.claim)} <span class="quiet mono">· confidence ${Math.round(st.alert.confidence*100)}%</span>`;
 }
+// Pan + zoom for the reasoning thread.
+(function initThreadView(){
+  const svg = el("thread");
+  const factor = () => 980 / (svg.getBoundingClientRect().width || 980);
+  svg.addEventListener("pointerdown", (e)=>{ view.dragging=true; view.sx=e.clientX; view.sy=e.clientY; svg.setPointerCapture(e.pointerId); });
+  svg.addEventListener("pointermove", (e)=>{ if(!view.dragging) return; const f=factor(); view.tx += (e.clientX-view.sx)*f; view.ty += (e.clientY-view.sy)*f; view.sx=e.clientX; view.sy=e.clientY; applyView(); });
+  const end = ()=>{ view.dragging=false; };
+  svg.addEventListener("pointerup", end); svg.addEventListener("pointercancel", end);
+  svg.addEventListener("wheel", (e)=>{ e.preventDefault(); view.k = Math.min(2.4, Math.max(0.5, view.k*Math.exp(-e.deltaY*0.0016))); applyView(); }, { passive:false });
+})();
+el("resetView").onclick = () => { view.tx=0; view.ty=0; view.k=1; applyView(); };
 
 async function loadClient(id) {
   CLIENT = id; threadState = "full_case";
+  view.tx = 0; view.ty = 0; view.k = 1;
+  el("cutBtn").textContent = "Challenge this evidence";
   try {
     const c = await api("/clients/"+id);
     thread = c.thread;
