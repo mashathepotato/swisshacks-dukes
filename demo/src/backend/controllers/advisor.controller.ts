@@ -37,8 +37,11 @@ export class AdvisorController {
 
   getSwap(req: Request, res: Response) {
     const s = getStore();
+    const id = req.params.id;
+    const dna = s.getDna(id);
+    if (!dna) return res.status(404).json({ success: false, error: "unknown or unwired client" });
     const isin = String(req.query.isin || "");
-    const holdings = s.getHoldings(req.params.id);
+    const holdings = s.getHoldings(id);
     res.json({ success: true, data: proposeSwap(isin, holdings, s.getCio()) });
   }
 
@@ -48,12 +51,14 @@ export class AdvisorController {
     const live = req.body.live !== false && req.query.live !== "false";
     const dna = s.getDna(clientId);
     if (!dna) return res.status(404).json({ success: false, error: "unknown client" });
+    const holdings = s.getHoldings(clientId);
+    const drift = computeDrift(holdings, s.getStrategies(), dna.mandate);
     const alerts = buildAlerts({
-      dna, holdings: s.getHoldings(clientId), news: s.getNews(clientId),
-      cio: s.getCio(), drift: [],
+      dna, holdings, news: s.getNews(clientId),
+      cio: s.getCio(), drift,
     });
     const alert = alerts[0];
-    const swap = alert ? proposeSwap(alert.id.split(":")[1] || "", s.getHoldings(clientId), s.getCio()) : null;
+    const swap = alert ? proposeSwap(alert.id.split(":")[1] || "", holdings, s.getCio()) : null;
     const result = await draftMessage(
       { dna, alert, swap, voice, cacheKey: `${clientId}:${eventId}:${voice}` },
       {
