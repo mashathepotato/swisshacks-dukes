@@ -9,7 +9,7 @@ const alert: Trace = {
   id: "dna-conflict:CH0012032048", claim: "Roche conflicts with neuroscience mission",
   type: "dna-conflict", confidence: 0.9, severity: "act", evidence: [],
 };
-const swap: SwapResult = { sell: { isin: "CH0012032048", issuer: "Roche Holding AG" }, chosen: { isin: "US00287Y1091", issuer: "AbbVie Inc.", cioView: "neuro pipeline" }, rejected: [] };
+const swap: SwapResult = { sell: { isin: "CH0012032048", issuer: "Roche Holding AG" }, chosen: { isin: "US00287Y1091", issuer: "AbbVie Inc.", cioView: "neuro pipeline" }, alternatives: [], rejected: [] };
 
 test("buildMessagePrompt includes client name, claim, and voice instruction", () => {
   const p = buildMessagePrompt({ dna, alert, swap, voice: "values-led" });

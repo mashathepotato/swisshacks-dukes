@@ -79,6 +79,7 @@ export interface SwapCandidate {
   isin: string;
   issuer: string;
   cioView: string;
+  reason?: string;   // why this candidate ranks where it does
 }
 
 export interface RejectedCandidate {
@@ -89,8 +90,9 @@ export interface RejectedCandidate {
 
 export interface SwapResult {
   sell: { isin: string; issuer: string };
-  chosen: SwapCandidate | null; // null => no compliant swap
-  rejected: RejectedCandidate[];
+  chosen: SwapCandidate | null;   // the top-ranked eligible BUY, or null if none
+  alternatives: SwapCandidate[];  // other eligible BUYs, ranked, each with a reason
+  rejected: RejectedCandidate[];  // same-sector names that don't qualify, with why
 }
 
 export interface Trace {

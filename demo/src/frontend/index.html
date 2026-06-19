@@ -212,8 +212,8 @@
       <div class="sim-controls">
         <label>Sell<select id="simSell"></select></label>
         <label>Buy<select id="simBuy"></select></label>
-        <button class="primary" id="simRun">Simulate</button>
       </div>
+      <div id="simWhy" class="quiet" style="margin:-2px 0 12px"></div>
       <div id="simResult"></div>
     </section>
 
@@ -415,14 +415,22 @@ async function setupSim(alerts) {
   el("simResult").innerHTML = "";
   if (defaultSell) { await loadSimCandidates(defaultSell); await runSim(); }
 }
+let simOptions = [];
 async function loadSimCandidates(sell) {
   const d = await api(`/clients/${CLIENT}/candidates?sell=${encodeURIComponent(sell)}`);
-  el("simBuy").innerHTML = d.options.length
-    ? d.options.map(o => `<option value="${esc(o.isin)}">${esc(o.issuer)} — ${esc(o.tag)}</option>`).join("")
+  simOptions = d.options || [];
+  el("simBuy").innerHTML = simOptions.length
+    ? simOptions.map(o => `<option value="${esc(o.isin)}">${esc(o.issuer)} — ${esc(o.tag)}</option>`).join("")
     : `<option value="">(no candidates)</option>`;
+  showSimWhy();
+}
+function showSimWhy() {
+  const o = simOptions.find(x => x.isin === el("simBuy").value);
+  el("simWhy").textContent = o && o.reason ? o.reason : "";
 }
 async function runSim() {
   const sellIsin = el("simSell").value, buyIsin = el("simBuy").value;
+  showSimWhy();
   if (!sellIsin || !buyIsin) { el("simResult").innerHTML = "<p class='quiet'>Pick a name to buy.</p>"; return; }
   try { renderSim(await api(`/clients/${CLIENT}/simulate`, { method:"POST", headers:{"content-type":"application/json"}, body: JSON.stringify({ sellIsin, buyIsin }) })); }
   catch (err) { el("simResult").innerHTML = "<p class='quiet'>Couldn't simulate — is the server running?</p>"; }
@@ -439,7 +447,6 @@ function renderSim(r) {
     <div class="dna-verdict ${esc(r.dna.verdict)}"><b>Client values: ${esc(r.dna.verdict)}</b> — ${esc(r.dna.reason)}</div>
   </div>`;
 }
-el("simRun").onclick = () => runSim();
 el("simSell").onchange = async () => { await loadSimCandidates(el("simSell").value); runSim(); };
 el("simBuy").onchange = () => runSim();
 async function loadSignals(id) {

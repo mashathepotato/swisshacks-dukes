@@ -119,8 +119,9 @@ export class AdvisorController {
     const sell = String(req.query.sell || "");
     const cio = s.getCio();
     const swap = proposeSwap(sell, s.getHoldings(id), cio);
-    const options: { isin: string; issuer: string; tag: string }[] = [];
-    if (swap.chosen) options.push({ isin: swap.chosen.isin, issuer: swap.chosen.issuer, tag: "recommended" });
+    const options: { isin: string; issuer: string; tag: string; reason?: string }[] = [];
+    if (swap.chosen) options.push({ isin: swap.chosen.isin, issuer: swap.chosen.issuer, tag: "recommended", reason: swap.chosen.reason });
+    swap.alternatives.forEach((a) => options.push({ isin: a.isin, issuer: a.issuer, tag: "CIO-BUY alternative", reason: a.reason }));
     swap.rejected.forEach((r) => options.push({ isin: r.isin, issuer: r.issuer, tag: r.reason }));
     s.getNews(id)
       .filter((n) => n.kind === "cio-directive")
