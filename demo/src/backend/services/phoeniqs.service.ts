@@ -113,6 +113,20 @@ export class PhoeniqsService {
     };
   }
 
+  /** Minimal chat helper for free-form drafting. Throws on transport error. */
+  async chat(system: string, user: string): Promise<string> {
+    const { data } = await this.client.post("/chat/completions", {
+      model: this.model,
+      messages: [
+        { role: "system", content: system },
+        { role: "user", content: user },
+      ],
+      temperature: 0.5,
+      max_tokens: 400,
+    });
+    return data?.choices?.[0]?.message?.content || "";
+  }
+
   /** Liveness check that captures the full request/response for the status UI. */
   async ping(): Promise<IntegrationProbe> {
     const started = Date.now();

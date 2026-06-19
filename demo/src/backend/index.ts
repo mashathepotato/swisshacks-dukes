@@ -7,6 +7,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import analysisRoutes from "./routes/analysis.routes";
+import advisorRoutes from "./routes/advisor.routes";
 
 const app = express();
 const port = parseInt(process.env.PORT || "3000", 10);
@@ -19,6 +20,7 @@ app.use(morgan("dev"));
 app.use(express.json());
 
 app.use("/api/analysis", analysisRoutes);
+app.use("/api/advisor", advisorRoutes);
 
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
