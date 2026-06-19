@@ -50,7 +50,7 @@ export class AdvisorController {
     const { clientId, eventId, voice } = req.body as { clientId: string; eventId: string; voice: Voice };
     const live = req.body.live !== false && req.query.live !== "false";
     const dna = s.getDna(clientId);
-    if (!dna) return res.status(404).json({ success: false, error: "unknown client" });
+    if (!dna) return res.status(404).json({ success: false, error: "unknown or unwired client" });
     const holdings = s.getHoldings(clientId);
     const drift = computeDrift(holdings, s.getStrategies(), dna.mandate);
     const alerts = buildAlerts({

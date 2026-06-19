@@ -44,7 +44,7 @@ export function getStore(): Store {
   };
 
   singleton = {
-    listClients: () => REGISTRY.map(({ id, name, mandate }) => ({ id, name, mandate })),
+    listClients: () => REGISTRY.filter(({ id }) => id in dnaById).map(({ id, name, mandate }) => ({ id, name, mandate })),
     getDna: (id) => dnaById[id],
     getHoldings: (id) => {
       const reg = REGISTRY.find((r) => r.id === id);
