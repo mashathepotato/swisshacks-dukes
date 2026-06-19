@@ -31,6 +31,12 @@ test("a live client-signal outranks even a high-value ACT alert", () => {
   expect(sigRow.score).toBeGreaterThan(richAct.score);
 });
 
+test("a client-signal is picked as top even if not first in the list", () => {
+  const signal: Trace = { id: "s", claim: "client msg", type: "client-signal", confidence: 1, severity: "act", evidence: [] };
+  const row = summarizeClient("x", "X", "Balanced", [trace("act", 999999), signal]);
+  expect(row.top!.type).toBe("client-signal");
+});
+
 test("rankInbox orders by score descending: act > watch > info", () => {
   const rows = [
     summarizeClient("info", "I", "Defensive", [trace("info", 80000)]),

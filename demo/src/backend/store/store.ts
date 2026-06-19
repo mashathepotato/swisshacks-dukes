@@ -77,7 +77,7 @@ export function getStore(): Store {
     addSignal: (signal) => {
       (signalsById[signal.clientId] ??= []).push(signal);
     },
-    getSignals: (id) => signalsById[id] ?? [],
+    getSignals: (id) => (signalsById[id] ?? []).slice(),
   };
   return singleton;
 }

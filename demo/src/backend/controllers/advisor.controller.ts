@@ -12,8 +12,10 @@ import { ClientSignal, Trace, Voice } from "../../shared/domain";
 const phoeniqs = new PhoeniqsService();
 
 // Shared alert computation for a single client; returns [] for unknown/unwired ids.
-// Flagged inbound client messages surface as top-priority ACT traces.
-function clientAlerts(s: Store, id: string): Trace[] {
+// Flagged inbound client messages surface as top-priority ACT traces. NOTE: the
+// prepend order below is load-bearing — signal traces must lead so the inbox
+// treats a live client message as most urgent.
+export function clientAlerts(s: Store, id: string): Trace[] {
   const dna = s.getDna(id);
   if (!dna) return [];
   const holdings = s.getHoldings(id);
@@ -109,6 +111,9 @@ export class AdvisorController {
     const holdings = s.getHoldings(clientId);
     const alerts = clientAlerts(s, clientId);
     const alert = alerts[0];
+    // Swap only applies to holding-keyed alerts (dna-conflict / dna-opportunity, id = "type:ISIN").
+    // For cio-dna-conflict / client-signal the second segment isn't an ISIN, so proposeSwap
+    // returns chosen:null and the draft recommends flagging for RM review instead.
     const swap = alert ? proposeSwap(alert.id.split(":")[1] || "", holdings, s.getCio()) : null;
     const result = await draftMessage(
       { dna, alert, swap, voice, cacheKey: `${clientId}:${eventId}:${voice}` },

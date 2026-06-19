@@ -8,7 +8,9 @@ const sevWeight: Record<Severity, number> = { act: 3, watch: 2, info: 1 };
 const CLIENT_SIGNAL_BOOST = 10_000_000;
 
 export function summarizeClient(id: string, name: string, mandate: Mandate, traces: Trace[]): InboxRow {
-  const top = traces[0] ?? null; // buildAlerts already sorts act -> watch -> info
+  // A flagged client message is always the most urgent item — pick it explicitly
+  // rather than trusting position [0], so a future re-sort can't silently demote it.
+  const top = traces.find((t) => t.type === "client-signal") ?? traces[0] ?? null;
   const boost = top?.type === "client-signal" ? CLIENT_SIGNAL_BOOST : 0;
   const score = top ? boost + sevWeight[top.severity] * 1_000_000 + (top.valueAtStakeCHF ?? 0) : 0;
   return {
