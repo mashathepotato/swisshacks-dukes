@@ -100,6 +100,34 @@ export interface Client {
   draftEmail?: DraftEmail;       // authored client message draft (personas)
 }
 
+/**
+ * A market / news event in the live feed. Authored with an intrinsic severity
+ * and a value-theme "footprint"; which clients it actually touches is computed
+ * live against the book (see `newsImpacts`).
+ */
+export interface NewsItem {
+  id: string;
+  headline: string;
+  source: string;
+  publishedAt: string;
+  summary: string;
+  type: SignalType;
+  severity: number;          // 0..100 intrinsic significance of the story
+  themes: ThemeId[];         // value dimensions this story touches (its footprint)
+  matchedHoldings: string[]; // instrument names that may appear in client.topHoldings
+  whyItMatters: string;      // one-paragraph reasoning: why this surfaced
+  drivers: string[];         // short bullets behind the priority score
+}
+
+/** A client surfaced as affected by a news item, with computed impact. */
+export interface NewsImpact {
+  client: Client;
+  impact: number;   // 0..100 estimated effect on this client
+  theme: ThemeId;   // the value dimension through which the news reaches them
+  via: string;      // human-readable reason (holding match / value alignment)
+  holdings: string[]; // matched holdings, if any
+}
+
 export interface ChatMessage {
   role: "rm" | "copilot";
   text: string;
