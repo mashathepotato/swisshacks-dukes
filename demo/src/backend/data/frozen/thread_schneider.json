@@ -1,0 +1,41 @@
+{
+  "clientId": "schneider",
+  "cuttableNodeId": "crm-2026-03-05",
+  "states": {
+    "full_case": {
+      "alert": { "severity": "act", "claim": "Roche now conflicts with the client's explicit neuroscience-divestment mandate", "confidence": 0.9 },
+      "nodes": [
+        { "id": "crm-2024-05-14", "kind": "crm", "label": "Email: asks about pharma neuroscience R&D footprint", "date": "2024-05-14", "quote": "asking about their global neurological research footprints", "active": true },
+        { "id": "crm-2026-03-05", "kind": "crm", "label": "Email: flag for divestment if Parkinson's research abandoned", "date": "2026-03-05", "quote": "If a company we own ever abandons or defunds Parkinson's research ... Flag them immediately for divestment.", "active": true },
+        { "id": "trait-neuro", "kind": "trait", "label": "Neuroscience research mission", "confidence": 0.9 },
+        { "id": "holding-roche", "kind": "holding", "label": "Roche Holding AG", "ref": "CH0012032048", "valueCHF": 112461.84 },
+        { "id": "news", "kind": "news", "label": "Roche winds down Parkinson's research", "date": "2026-06-12" },
+        { "id": "swap", "kind": "swap", "label": "Propose: SELL Roche → BUY a CIO-BUY Health Care name committed to neuro research" }
+      ],
+      "edges": [
+        ["crm-2024-05-14", "trait-neuro"],
+        ["crm-2026-03-05", "trait-neuro"],
+        ["trait-neuro", "holding-roche"],
+        ["news", "holding-roche"],
+        ["holding-roche", "swap"]
+      ]
+    },
+    "cut_neuroscience": {
+      "alert": { "severity": "watch", "claim": "Possible values conflict on Roche — weaker evidence after RM challenge", "confidence": 0.4 },
+      "nodes": [
+        { "id": "crm-2024-05-14", "kind": "crm", "label": "Email: asks about pharma neuroscience R&D footprint", "date": "2024-05-14", "quote": "asking about their global neurological research footprints", "active": true },
+        { "id": "crm-2026-03-05", "kind": "crm", "label": "(challenged by RM — excluded)", "date": "2026-03-05", "quote": "If a company we own ever abandons or defunds Parkinson's research ... Flag them immediately for divestment.", "active": false },
+        { "id": "trait-neuro", "kind": "trait", "label": "Neuroscience research mission", "confidence": 0.4 },
+        { "id": "holding-roche", "kind": "holding", "label": "Roche Holding AG", "ref": "CH0012032048", "valueCHF": 112461.84 },
+        { "id": "news", "kind": "news", "label": "Roche winds down Parkinson's research", "date": "2026-06-12" },
+        { "id": "swap", "kind": "swap", "label": "Hold & monitor — flag for RM review, no divestment recommended" }
+      ],
+      "edges": [
+        ["crm-2024-05-14", "trait-neuro"],
+        ["trait-neuro", "holding-roche"],
+        ["news", "holding-roche"],
+        ["holding-roche", "swap"]
+      ]
+    }
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "clientId": "schneider",
+  "name": "Hubertus Schneider",
+  "mandate": "Balanced",
+  "style": "values-led",
+  "traits": [
+    {
+      "id": "neuro-mission",
+      "label": "Neuroscience research mission",
+      "detail": "After his daughter Chloe's early-onset Parkinson's diagnosis, the family wants core healthcare/pharma holdings to actively fund neurodegenerative research; explicitly asks to divest any holding that abandons Parkinson's research.",
+      "confidence": 0.9,
+      "evidence": [
+        { "kind": "crm", "sourceId": "crm_schneider.csv:2024-05-14", "date": "2024-05-14", "quote": "requested a breakdown of our core large-cap pharmaceutical holdings, specifically asking about their global neurological research footprints" },
+        { "kind": "crm", "sourceId": "crm_schneider.csv:2026-01-22", "date": "2026-01-22", "quote": "I want our core healthcare and pharma holdings to actively support the entities pushing the boundaries of brain disease research" },
+        { "kind": "crm", "sourceId": "crm_schneider.csv:2026-03-05", "date": "2026-03-05", "quote": "If a company we own ever abandons or defunds Parkinson's research to chase cheap lifestyle profits, it would feel like a personal betrayal of my daughter. Flag them immediately for divestment." }
+      ]
+    },
+    {
+      "id": "stability-anchor",
+      "label": "Values institutional stability",
+      "detail": "Automotive entrepreneur; views large-cap blue-chip holdings as stable operational anchors and expects rigorous, data-driven execution of the Balanced mandate.",
+      "confidence": 0.75,
+      "evidence": [
+        { "kind": "crm", "sourceId": "crm_schneider.csv:2024-09-17", "date": "2024-09-17", "quote": "He values large-cap equities because they represent stable, operational businesses with heavy research budgets" },
+        { "kind": "crm", "sourceId": "crm_schneider.csv:2025-09-25", "date": "2025-09-25", "quote": "he expects rigorous, data-driven execution of his balanced mandate" }
+      ]
+    }
+  ]
+}
