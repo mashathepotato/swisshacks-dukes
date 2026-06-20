@@ -13,6 +13,8 @@ import { useCommPrefs } from "../lib/commPrefStore";
 import { useRmProfile } from "../lib/rmProfileStore";
 import { ValueRadar } from "./ValueRadar";
 import { ComplianceDesk } from "./ComplianceDesk";
+import { ConversationCapture } from "./ConversationCapture";
+import { useConversation } from "../lib/conversationStore";
 
 interface Props {
   client: Client;
@@ -28,54 +30,56 @@ const DECISION_META: Record<FeedbackDecision, { label: string; color: string }> 
 
 export function ClientPage({ client, onBack, onSimulate }: Props) {
   const { isDone, markDone, reopen } = useDone();
-  const dealt = isDone(client.id);
+  const { withDeltas } = useConversation();
+  const mergedClient = withDeltas(client);
+  const dealt = isDone(mergedClient.id);
 
   return (
     <div className="clientpage">
       <div className="clientpage-bar">
         <button className="cp-back" onClick={onBack}>← Back</button>
-        <div className="cp-bar-title">{client.name}</div>
+        <div className="cp-bar-title">{mergedClient.name}</div>
       </div>
 
       <div className="clientpage-inner">
         <div className="cp-head">
           <div>
-            <h1>{client.name}</h1>
-            <div className="archetype">{client.archetype}</div>
+            <h1>{mergedClient.name}</h1>
+            <div className="archetype">{mergedClient.archetype}</div>
           </div>
-          {client.signals[0] && (() => {
-            const m = SIGNAL_META[client.signals[0].type];
-            return <span className="cause-pill" style={{ background: m.color + "22", color: m.color }}>{m.label} · severity {client.signals[0].severity}</span>;
+          {mergedClient.signals[0] && (() => {
+            const m = SIGNAL_META[mergedClient.signals[0].type];
+            return <span className="cause-pill" style={{ background: m.color + "22", color: m.color }}>{m.label} · severity {mergedClient.signals[0].severity}</span>;
           })()}
         </div>
 
-        <p className="why-priority"><b>Why prioritised:</b> {client.topReason}</p>
+        <p className="why-priority"><b>Why prioritised:</b> {mergedClient.topReason}</p>
 
-        {client.amountAtStake != null && (
+        {mergedClient.amountAtStake != null && (
           <div className="stake-line">
-            <b>{formatMoney(client.amountAtStake)}</b> at stake
-            {client.lastMessageAt
-              ? <> · <span className="ago">messaged {relativeTime(client.lastMessageAt)}</span></>
-              : client.signals[0]
-              ? <> · <span className="ago">news {relativeTime(client.signals[0].publishedAt)}</span></>
+            <b>{formatMoney(mergedClient.amountAtStake)}</b> at stake
+            {mergedClient.lastMessageAt
+              ? <> · <span className="ago">messaged {relativeTime(mergedClient.lastMessageAt)}</span></>
+              : mergedClient.signals[0]
+              ? <> · <span className="ago">news {relativeTime(mergedClient.signals[0].publishedAt)}</span></>
               : null}
           </div>
         )}
 
         <div>
-          <button className={"markdone" + (dealt ? " on" : "")} onClick={() => (dealt ? reopen(client.id) : markDone(client.id))}>
+          <button className={"markdone" + (dealt ? " on" : "")} onClick={() => (dealt ? reopen(mergedClient.id) : markDone(mergedClient.id))}>
             {dealt ? "✓ Completed — reopen" : "✓ Mark as complete"}
           </button>
         </div>
 
         <div className="cp-grid">
           <div className="cp-col">
-            <ReasoningChain key={"reason-" + client.id} client={client} />
+            <ReasoningChain key={"reason-" + mergedClient.id} client={mergedClient} />
 
             <div className="section-title">Value vector</div>
-            <ValueRadar client={client} />
+            <ValueRadar client={mergedClient} />
             <div className="chips" style={{ marginTop: 4 }}>
-              {client.affinities
+              {mergedClient.affinities
                 .filter((a) => a.weight > 0)
                 .sort((a, b) => b.weight - a.weight)
                 .map((a) => {
@@ -88,25 +92,25 @@ export function ClientPage({ client, onBack, onSimulate }: Props) {
                 })}
             </div>
 
-            <div className="kv"><span className="k">Mandate</span><span>{client.mandate}</span></div>
-            <div className="kv"><span className="k">Risk</span><span>{client.riskProfile}</span></div>
-            <div className="kv"><span className="k">Tenure</span><span>{client.tenureYears} yrs</span></div>
-            <div className="kv"><span className="k">Style</span><span>{client.commStyle}</span></div>
+            <div className="kv"><span className="k">Mandate</span><span>{mergedClient.mandate}</span></div>
+            <div className="kv"><span className="k">Risk</span><span>{mergedClient.riskProfile}</span></div>
+            <div className="kv"><span className="k">Tenure</span><span>{mergedClient.tenureYears} yrs</span></div>
+            <div className="kv"><span className="k">Style</span><span>{mergedClient.commStyle}</span></div>
 
-            {client.values.length > 0 && (
+            {mergedClient.values.length > 0 && (
               <>
                 <div className="section-title">Client DNA</div>
                 <div className="chips">
-                  {client.values.map((v) => <span key={v} className="chip">✓ {v}</span>)}
-                  {client.dislikes.map((v) => <span key={v} className="chip" style={{ color: "var(--red)" }}>✕ {v}</span>)}
+                  {mergedClient.values.map((v) => <span key={v} className="chip">✓ {v}</span>)}
+                  {mergedClient.dislikes.map((v) => <span key={v} className="chip" style={{ color: "var(--red)" }}>✕ {v}</span>)}
                 </div>
               </>
             )}
 
-            {client.signals.length > 0 && (
+            {mergedClient.signals.length > 0 && (
               <>
                 <div className="section-title">Why now — signals</div>
-                {client.signals.map((s) => {
+                {mergedClient.signals.map((s) => {
                   const meta = SIGNAL_META[s.type];
                   return (
                     <div className="card" key={s.id}>
@@ -127,23 +131,25 @@ export function ClientPage({ client, onBack, onSimulate }: Props) {
           </div>
 
           <div className="cp-col">
-            <LearningPanel client={client} />
+            <LearningPanel client={mergedClient} />
 
-            <Recommendations key={"rec-" + client.id} client={client} />
+            <Recommendations key={"rec-" + mergedClient.id} client={mergedClient} />
 
-            {PERSONA_PLAY[client.id] && <ComplianceDesk key={"cdesk-" + client.id} client={client} />}
+            {PERSONA_PLAY[mergedClient.id] && <ComplianceDesk key={"cdesk-" + mergedClient.id} client={mergedClient} />}
 
-            <DraftMessage key={"draft-" + client.id} client={client} />
+            <ConversationCapture client={mergedClient} />
+
+            <DraftMessage key={"draft-" + mergedClient.id} client={mergedClient} />
 
             {onSimulate && (
               <button
-                onClick={() => onSimulate(client)}
+                onClick={() => onSimulate(mergedClient)}
                 style={{
                   marginTop: 12, width: "100%", background: "transparent", color: "var(--text-dim)",
                   border: "1px solid var(--border)", borderRadius: 9, padding: "11px", fontWeight: 600, fontSize: 13,
                 }}
               >
-                Rehearse this proposal with {client.name} →
+                Rehearse this proposal with {mergedClient.name} →
               </button>
             )}
           </div>

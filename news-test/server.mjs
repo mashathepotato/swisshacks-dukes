@@ -13,6 +13,8 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { investmentRelevance, orgsOf, centralOrgsOf, THEME_KEYS } from "./classify.mjs";
 import { assessBatch, assessorInfo } from "./assessor.mjs";
+import { distill, distillInfo } from "./distill.mjs";
+import { digest, digestInfo } from "./digest.mjs";
 import { buildBody, batchKey } from "./query.mjs";
 import { matchArticle, holdingsInfo } from "./holdings.mjs";
 import { scoreValues } from "./values.mjs";
@@ -151,9 +153,57 @@ async function handleNews(url, res) {
   );
 }
 
+function readJson(req) {
+  return new Promise((resolve, reject) => {
+    let buf = "";
+    req.on("data", (c) => { buf += c; if (buf.length > 1e6) { reject(new Error("body too large")); req.destroy(); } });
+    req.on("end", () => { try { resolve(buf ? JSON.parse(buf) : {}); } catch (e) { reject(e); } });
+    req.on("error", reject);
+  });
+}
+
+async function handleDistill(req, res) {
+  const body = await readJson(req);
+  const { clientId, transcript, rmName, clientContact, date } = body;
+  if (!clientId || !transcript) {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: "clientId and transcript are required" }));
+  }
+  const result = await distill({
+    clientId,
+    transcript,
+    rmName: rmName || "RM",
+    clientContact: clientContact || "Client",
+    date: date || new Date().toISOString().slice(0, 10),
+  });
+  res.writeHead(200, { "Content-Type": "application/json" });
+  res.end(JSON.stringify({ engine: distillInfo(), ...result }));
+}
+
+async function handleDigest(req, res) {
+  const body = await readJson(req);
+  const { clientId, transcript, mode, dnaContext } = body;
+  if (!transcript) {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: "transcript is required" }));
+  }
+  const result = await digest({
+    clientId: clientId || "",
+    transcript,
+    mode: mode === "final" ? "final" : "live",
+    dnaContext: dnaContext || "",
+  });
+  res.writeHead(200, { "Content-Type": "application/json" });
+  res.end(JSON.stringify(result));
+}
+
 const server = createServer(async (req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
   try {
+    if (url.pathname === "/api/transcript/distill" && req.method === "POST")
+      return await handleDistill(req, res);
+    if (url.pathname === "/api/transcript/digest" && req.method === "POST")
+      return await handleDigest(req, res);
     if (url.pathname === "/api/news") return await handleNews(url, res);
     if (url.pathname === "/" || url.pathname === "/index.html") {
       const html = await readFile(join(__dirname, "public", "index.html"));
@@ -174,5 +224,6 @@ server.listen(PORT, () => {
   console.log(`   Source:   ${OFFLINE ? "OFFLINE fixture (no API spend)" : "live Event Registry"}`);
   console.log(`   News key: ${API_KEY ? API_KEY.slice(0, 8) + "…" : "(none)"}`);
   console.log(`   Assessor: ${info.engine} (${info.model})`);
+  console.log(`   Digest:   ${digestInfo().ready ? `anthropic (${digestInfo().small} / ${digestInfo().large})` : "heuristic (no ANTHROPIC_API_KEY)"}`);
   console.log(`   Holdings: ${holdingsInfo().count} instruments indexed for ISIN matching`);
 });
