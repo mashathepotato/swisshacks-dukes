@@ -834,3 +834,13 @@ button { font-family: inherit; cursor: pointer; }
 .cnews-cbreak { display: flex; flex-direction: column; gap: 3px; font-size: 11.5px; color: var(--text-dim); flex: 1; }
 .cnews-cbreak > div { display: flex; justify-content: space-between; gap: 12px; }
 .cnews-cbreak b { color: var(--text); font-family: var(--font-mono, monospace); }
+
+/* ---- Priority queue: transparent score ---- */
+.qscore { flex: none; align-self: flex-start; min-width: 34px; text-align: center; font-family: var(--font-mono); font-size: 15px; font-weight: 800; color: var(--accent); background: var(--accent-soft); border: 1px solid var(--accent-line); border-radius: 2px; padding: 4px 0; margin-right: 4px; }
+.qrow.done .qscore { color: var(--text-faint); background: var(--panel-2); border-color: var(--border); }
+.pscore { display: flex; align-items: center; gap: 14px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 3px; padding: 11px 13px; }
+.pscore-big { font-size: 28px; font-weight: 800; color: var(--accent); font-family: var(--font-mono); line-height: 1; flex: none; }
+.pscore-break { display: flex; flex-direction: column; gap: 3px; font-size: 11.5px; color: var(--text-dim); flex: 1; }
+.pscore-break > div { display: flex; justify-content: space-between; gap: 12px; }
+.pscore-break b { color: var(--text); font-family: var(--font-mono); }
+.pscore-cap { font-size: 11px; color: var(--text-faint); margin: 6px 0 4px; line-height: 1.4; }
