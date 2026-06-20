@@ -23,24 +23,25 @@ export interface ValueMatch {
   polarity: 1 | -1;       // -1 = the client guards against this axis
   contribution: number;   // articleScore × clientWeight
 }
-export interface HoldingMatch { isin: string; issuer: string; }
+export interface HoldingMatch { issuer: string; isins: string[]; }
+export type ReasonKind = "holding" | "value" | "mandate";
+export interface Reason { kind: ReasonKind; icon: string; text: string; }
 
 export interface Relevance {
-  score: number;          // 0..100 roll-up (the breakdown below is the real explanation)
-  valueScore: number;     // Σ contributions
-  valueMatches: ValueMatch[];
-  holdingMatches: HoldingMatch[];
+  holdings: HoldingMatch[];      // unique issuers the story affects that the client holds
+  valueMatches: ValueMatch[];    // value-axes overlapping the client's convictions
   mandateMatch: boolean;
-  summary: string;
+  valueScore: number;            // Σ contributions (labelled sum of the shown overlaps)
+  reasons: Reason[];             // the explainable "why" — no opaque number
 }
 
-/** Relevance of one funnel article to one client — fully traceable. */
+/** Relevance of one funnel article to one client — expressed as concrete reasons. */
 export function relevance(article: FeedArticle, client: Client): Relevance {
   // 1. value overlap: article's implicated axes ∩ the client's convictions
   const valueMatches: ValueMatch[] = [];
   for (const v of article.values) {
     if (v.score <= 0) continue;
-    const aff = client.affinities.find((a) => a.theme === (v.key as ThemeId));
+    const aff = client.affinities.find((a) => a.theme === v.key);
     if (!aff) continue;
     const t = THEME_BY_ID[v.key as ThemeId];
     valueMatches.push({
@@ -57,37 +58,55 @@ export function relevance(article: FeedArticle, client: Client): Relevance {
   valueMatches.sort((a, b) => b.contribution - a.contribution);
   const valueScore = valueMatches.reduce((s, m) => s + m.contribution, 0);
 
-  // 2. direct holding match
+  // 2. direct holding match — deduped by issuer (one Nestlé, not one per ISIN)
   const held = new Set(client.topHoldings.map(norm));
-  const holdingMatches: HoldingMatch[] = article.affectedHoldings
-    .filter((h) => held.has(norm(h.issuer)))
-    .map((h) => ({ isin: h.isin, issuer: h.issuer }));
-
-  // 3. mandate exposure (only when not already a named top holding)
-  const mandateKey = client.mandate.toLowerCase();
-  const mandateMatch = holdingMatches.length === 0 &&
-    article.affectedHoldings.some((h) => h.mandates.includes(mandateKey));
-
-  const score = Math.min(100, Math.round(valueScore * 55 + holdingMatches.length * 38 + (mandateMatch ? 14 : 0)));
-
-  const bits: string[] = [];
-  if (holdingMatches.length) bits.push(`holds ${holdingMatches.map((h) => h.issuer).join(", ")}`);
-  else if (mandateMatch) bits.push(`their ${client.mandate} mandate holds an affected instrument`);
-  if (valueMatches.length) {
-    const top = valueMatches[0];
-    bits.push(`${top.polarity === -1 ? "guards against" : "values"} ${top.label.toLowerCase()}`);
+  const byIssuer = new Map<string, HoldingMatch>();
+  for (const h of article.affectedHoldings) {
+    const k = norm(h.issuer);
+    if (!held.has(k)) continue;
+    if (!byIssuer.has(k)) byIssuer.set(k, { issuer: h.issuer, isins: [] });
+    byIssuer.get(k)!.isins.push(h.isin);
   }
-  const summary = bits.length ? `Relevant — ${bits.join("; ")}.` : "Limited direct relevance.";
+  const holdings = [...byIssuer.values()];
 
-  return { score, valueScore, valueMatches, holdingMatches, mandateMatch, summary };
+  // 3. mandate exposure (only when not already a named holding)
+  const mandateMatch = holdings.length === 0 &&
+    article.affectedHoldings.some((h) => h.mandates.includes(client.mandate.toLowerCase()));
+
+  // 4. the reasons — concrete, ordered holdings → values → mandate
+  const reasons: Reason[] = [];
+  for (const h of holdings) {
+    reasons.push({ kind: "holding", icon: "📌", text: `Holds ${h.issuer}${h.isins.length > 1 ? ` (${h.isins.length} instruments)` : ""}` });
+  }
+  for (const m of valueMatches) {
+    reasons.push({
+      kind: "value",
+      icon: m.emoji,
+      text: `${m.polarity === -1 ? "Guards against" : "Values"} ${m.label} — story ${Math.round(m.articleScore * 100)}% × their ${Math.round(m.clientWeight * 100)}% conviction`,
+    });
+  }
+  if (mandateMatch) reasons.push({ kind: "mandate", icon: "🗂", text: `Their ${client.mandate} mandate holds an affected instrument` });
+
+  return { holdings, valueMatches, mandateMatch, valueScore, reasons };
 }
 
-/** Funnel articles ranked by relevance to one client. */
+export function hasRelevance(r: Relevance): boolean {
+  return r.holdings.length > 0 || r.valueMatches.length > 0 || r.mandateMatch;
+}
+
+// Ordering key (internal — never shown). Value overlap leads; a held instrument
+// is a meaningful boost; mandate a small one. So a story that touches a core
+// value outranks an incidental dividend on a name the client merely holds.
+function order(r: Relevance): number {
+  return r.valueScore + (r.holdings.length ? 0.8 : 0) + (r.mandateMatch ? 0.2 : 0);
+}
+
+/** Funnel articles relevant to one client, ordered value-first. */
 export function articlesForClient(articles: FeedArticle[], client: Client, limit = 14) {
   return articles
     .filter((a) => a.selected)
     .map((a) => ({ article: a, rel: relevance(a, client) }))
-    .filter((x) => x.rel.score > 0)
-    .sort((a, b) => b.rel.score - a.rel.score)
+    .filter((x) => hasRelevance(x.rel))
+    .sort((a, b) => order(b.rel) - order(a.rel))
     .slice(0, limit);
 }

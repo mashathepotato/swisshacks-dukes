@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { CLIENTS } from "../data/clients";
 import { NEWS_FEED } from "../data/newsFeed";
 import { THEME_BY_ID } from "../data/themes";
-import { scoreColor } from "../lib/format";
 import { articlesForClient } from "../lib/newsRelevance";
 import type { Relevance } from "../lib/newsRelevance";
 import type { Client } from "../types";
@@ -23,24 +22,23 @@ export function ClientNewsFeed() {
   const client = useMemo(() => CLIENTS.find((c) => c.id === clientId) ?? PERSONAS[0], [clientId]);
 
   const items = useMemo(() => articlesForClient(NEWS_FEED.articles, client), [client]);
-  const peopleTops = useMemo(
-    () => PERSONAS.map((c) => ({ c, top: articlesForClient(NEWS_FEED.articles, c, 1)[0] })),
+  const peopleCounts = useMemo(
+    () => PERSONAS.map((c) => ({ c, count: articlesForClient(NEWS_FEED.articles, c).length })),
     [],
   );
 
-  // selected story (falls back to the top one when the client changes)
   const selected = items.find((x) => x.article.id === pickedId) ?? items[0] ?? null;
 
   return (
     <div className="cnews">
       <h1>News by client</h1>
-      <p className="lead">Real headlines from the relevance funnel, scored against each client's own value-axes. Click a story to see exactly which of their values it touches.</p>
+      <p className="lead">Real headlines from the relevance funnel, matched to each client. Click a story for the concrete reasons it's relevant to them — a held instrument, or an overlap with their values.</p>
 
       <div className="cnews-people">
-        {peopleTops.map(({ c, top }) => (
+        {peopleCounts.map(({ c, count }) => (
           <button key={c.id} className={"cnews-person" + (c.id === clientId ? " on" : "")} onClick={() => { setClientId(c.id); setPickedId(null); }}>
             <span className="nm">{c.name}</span>
-            <span className="md">{c.mandate}{top ? ` · top ${top.rel.score}` : ""}</span>
+            <span className="md">{c.mandate}{count ? ` · ${count} relevant` : ""}</span>
           </button>
         ))}
       </div>
@@ -65,11 +63,17 @@ export function ClientNewsFeed() {
               className={"cnews-row" + (selected?.article.id === article.id ? " on" : "")}
               onClick={() => setPickedId(article.id)}
             >
-              <span className="cnews-score" style={{ background: scoreColor(rel.score) + "22", color: scoreColor(rel.score) }}>{rel.score}</span>
-              <span className="cnews-rowwrap">
-                <span className="cnews-rowtitle">{article.title}</span>
-                <span className="cnews-src">{article.source}{article.date ? ` · ${fmtDate(article.date)}` : ""}</span>
+              <span className="cnews-rowtitle">{article.title}</span>
+              <span className="cnews-rowtags">
+                {rel.holdings[0] && <span className="cnews-tag hold">📌 {rel.holdings[0].issuer}</span>}
+                {rel.valueMatches[0] && (
+                  <span className="cnews-tag val" style={{ borderColor: rel.valueMatches[0].color }}>
+                    {rel.valueMatches[0].emoji} {rel.valueMatches[0].label}
+                  </span>
+                )}
+                {!rel.holdings.length && !rel.valueMatches.length && rel.mandateMatch && <span className="cnews-tag">🗂 Mandate</span>}
               </span>
+              <span className="cnews-src">{article.source}{article.date ? ` · ${fmtDate(article.date)}` : ""}</span>
             </button>
           )) : (
             <p className="nf-empty">No funnel stories are relevant to {client.name} right now.</p>
@@ -88,70 +92,54 @@ export function ClientNewsFeed() {
 
 function OverlapDetail({ article, rel, client }: { article: FeedArticle; rel: Relevance; client: Client }) {
   const v = article.stage2;
-  // the client's value-axes, annotated with this article's overlap
   const axes = client.affinities.map((a) => {
     const m = rel.valueMatches.find((x) => x.axis === a.theme);
-    const t = THEME_BY_ID[a.theme];
-    return { a, t, match: m };
+    return { a, t: THEME_BY_ID[a.theme], match: m };
   });
 
   return (
     <div className="cnews-detail-card">
-      <div className="cnews-detail-top">
-        <span className="cnews-score lg" style={{ background: scoreColor(rel.score) + "22", color: scoreColor(rel.score) }}>{rel.score}</span>
-        <div className="cnews-headwrap">
-          <a className="cnews-title" href={article.url} target="_blank" rel="noopener">{article.title}</a>
-          <div className="cnews-src">{article.source}{article.date ? ` · ${fmtDate(article.date)}` : ""}</div>
-        </div>
-      </div>
-
+      <a className="cnews-title" href={article.url} target="_blank" rel="noopener">{article.title}</a>
+      <div className="cnews-src">{article.source}{article.date ? ` · ${fmtDate(article.date)}` : ""}</div>
       <div className="nf-chips" style={{ marginTop: 8 }}>
         {v?.marketMovement && <span className="nf-theme mkt">market-movement</span>}
         {(v?.themes ?? []).filter((t) => t !== "market-movement").map((t) => <span key={t} className="nf-theme">{t}</span>)}
       </div>
 
+      <div className="cnews-sec">Why it's relevant to {client.name}</div>
+      <div className="cnews-reasons">
+        {rel.reasons.map((r, i) => (
+          <div className={"cnews-reason " + r.kind} key={i}><span className="ic">{r.icon}</span> {r.text}</div>
+        ))}
+        {!rel.reasons.length && <div className="cnews-reason">Broad / market-level signal — no direct holding or value link.</div>}
+      </div>
+
+      <div className="cnews-sec">Value-axis overlap</div>
       <div className="cnews-overlap">
-        <ValueSpider values={article.values} overlay={article.values.map((v) => client.affinities.find((a) => a.theme === v.key)?.weight ?? 0)} size={230} />
+        <ValueSpider values={article.values} overlay={article.values.map((vv) => client.affinities.find((a) => a.theme === vv.key)?.weight ?? 0)} size={220} />
         <p className="cnews-overlap-cap">
           <span className="cnews-leg story">▬ this story</span>
           <span className="cnews-leg client">▬ {client.name}'s values</span>
-          <br />Where both reach the same axis, the story touches a value the client holds.
         </p>
       </div>
-
-      <div className="cnews-sec">Overlap with {client.name}'s values</div>
       <div className="cnews-axes">
         {axes.map(({ a, t, match }) => (
           <div className={"cnews-axis" + (match ? " hit" : "")} key={a.theme}>
             <span className="cnews-axis-name"><span className="dot" style={{ background: t.color }} />{t.emoji} {t.label}{a.polarity === -1 ? " ⊘" : ""}</span>
             {match ? (
-              <span className="cnews-axis-math">
-                story {Math.round(match.articleScore * 100)}% × value {Math.round(a.weight * 100)}% → <b>{match.contribution.toFixed(2)}</b>
-              </span>
+              <span className="cnews-axis-math">story {Math.round(match.articleScore * 100)}% × {Math.round(a.weight * 100)}% → <b>{match.contribution.toFixed(2)}</b></span>
             ) : (
-              <span className="cnews-axis-math none">not touched by this story</span>
+              <span className="cnews-axis-math none">not touched</span>
             )}
           </div>
         ))}
         {rel.valueScore > 0 && (
           <div className="cnews-axis total">
-            <span className="cnews-axis-name">Value overlap</span>
+            <span className="cnews-axis-name">Total value overlap</span>
             <span className="cnews-axis-math"><b>{rel.valueScore.toFixed(2)}</b></span>
           </div>
         )}
       </div>
-
-      {(rel.holdingMatches.length > 0 || rel.mandateMatch) && (
-        <>
-          <div className="cnews-sec">Portfolio</div>
-          {rel.holdingMatches.map((h) => (
-            <div className="cnews-bit hold" key={h.isin}>📌 Holds {h.issuer} ({h.isin})</div>
-          ))}
-          {rel.mandateMatch && <div className="cnews-bit">🗂 {client.mandate} mandate holds an affected instrument</div>}
-        </>
-      )}
-
-      <p className="cnews-summary">{rel.summary}</p>
     </div>
   );
 }

@@ -765,3 +765,16 @@ button { font-family: inherit; cursor: pointer; }
 .cnews-leg { font-size: 10.5px; font-weight: 700; margin: 0 7px; }
 .cnews-leg.story { color: #4f8ff7; }
 .cnews-leg.client { color: #d69e2e; }
+
+/* ---- By-client: reasons replace the opaque score ---- */
+.cnews-row { flex-direction: column; align-items: flex-start; gap: 5px; }
+.cnews-rowtags { display: flex; gap: 6px; flex-wrap: wrap; }
+.cnews-tag { font-size: 10.5px; font-weight: 600; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-dim); background: var(--panel-2); }
+.cnews-tag.hold { color: #8fd6cb; border-color: #2e5a52; }
+.cnews-tag.val { color: var(--text); }
+.cnews-reasons { display: flex; flex-direction: column; gap: 6px; }
+.cnews-reason { display: flex; gap: 8px; align-items: baseline; font-size: 12.5px; color: var(--text-dim); line-height: 1.42; background: var(--panel-2); border: 1px solid var(--border-soft); border-radius: 8px; padding: 7px 10px; }
+.cnews-reason .ic { flex: none; }
+.cnews-reason.holding { border-left: 2px solid var(--green); }
+.cnews-reason.value { border-left: 2px solid var(--accent); }
+.cnews-reason.mandate { border-left: 2px solid var(--purple); }
