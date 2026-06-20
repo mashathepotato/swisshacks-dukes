@@ -453,3 +453,15 @@ button { font-family: inherit; cursor: pointer; }
 .ro-block p { font-size: 12.5px; color: var(--text-dim); margin: 4px 0; line-height: 1.5; }
 .ro-block p.strong { color: var(--text); }
 .ro-traj { max-width: 520px; }
+
+/* ---- monetary impact breakdown ---- */
+.impact-net { font-size: 30px; font-weight: 800; line-height: 1; margin: 2px 0 2px; }
+.impact-comp { padding: 9px 0; border-bottom: 1px solid var(--border-soft); }
+.impact-comp:last-of-type { border-bottom: none; }
+.ic-top { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; color: var(--text); }
+.ic-top .amt { font-weight: 700; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.ic-top .amt.pos { color: var(--green); }
+.ic-top .amt.neg { color: var(--red); }
+.ic-bar { height: 6px; border-radius: 3px; margin: 6px 0 6px; min-width: 4px; opacity: .85; }
+.ic-note { font-size: 11px; color: var(--text-faint); line-height: 1.45; }
+.impact-assump { font-size: 10.5px; color: var(--text-faint); margin-top: 12px; line-height: 1.5; font-style: italic; }

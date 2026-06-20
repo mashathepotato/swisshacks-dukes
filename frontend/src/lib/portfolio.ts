@@ -195,6 +195,71 @@ export function simulateSwap(input: SimInput): SimResult {
   };
 }
 
+// ---- monetary impact (explainable, component-based) -----------------------
+// Estimates the CHF benefit/cost to a client of following a piece of advice over
+// a 12-month horizon. Every figure traces to the real position value × a stated
+// assumption — surfaced in each component's `note`, never a black-box forecast.
+
+export interface ImpactComponent {
+  label: string;
+  amountCHF: number; // signed: + benefit, − cost
+  note: string;      // the formula / assumption behind the figure
+}
+export interface MonetaryImpact {
+  netCHF: number;
+  horizonMonths: number;
+  exposureCHF: number;
+  components: ImpactComponent[];
+}
+
+const TX_COST_RATE = 0.002;     // 0.20% round-trip transaction cost
+const CIO_PREMIUM = 0.015;      // 1.5% expected 12-month relative outperformance for a CIO-BUY
+const MAX_DRAWDOWN = 0.25;      // a maximum-severity event ≈ 25% drawdown on the affected position
+
+const k = (n: number) => Math.round(n).toLocaleString("en-CH");
+
+export function estimateImpact(args: {
+  exposureCHF: number;
+  mode: "protect" | "risk-on" | "neutral";
+  severity: number; // 0..100 event severity (or conviction)
+  hasTrade: boolean;
+}): MonetaryImpact {
+  const { exposureCHF, mode, severity, hasTrade } = args;
+  const drawdown = Math.max(0, Math.min(1, severity / 100)) * MAX_DRAWDOWN;
+  const comps: ImpactComponent[] = [];
+
+  if (mode === "protect" && exposureCHF > 0) {
+    comps.push({
+      label: "Downside avoided",
+      amountCHF: exposureCHF * drawdown,
+      note: `Exiting removes the flagged event risk: severity ${Math.round(severity)} ≈ ${Math.round(drawdown * 100)}% expected drawdown on the CHF ${k(exposureCHF)} position.`,
+    });
+  } else if (mode === "risk-on" && exposureCHF > 0) {
+    comps.push({
+      label: "Downside risk added",
+      amountCHF: -exposureCHF * drawdown * 0.6,
+      note: `Raises exposure to a higher-volatility sleeve the client distrusts: ≈ ${Math.round(drawdown * 60)}% potential drawdown added on CHF ${k(exposureCHF)}.`,
+    });
+  }
+
+  if (hasTrade && exposureCHF > 0) {
+    comps.push({
+      label: "Transaction cost",
+      amountCHF: -exposureCHF * TX_COST_RATE,
+      note: `${(TX_COST_RATE * 100).toFixed(2)}% round-trip cost on the CHF ${k(exposureCHF)} traded.`,
+    });
+    if (mode !== "risk-on") {
+      comps.push({
+        label: "CIO conviction premium",
+        amountCHF: exposureCHF * CIO_PREMIUM,
+        note: `Rotating into a CIO-BUY ≈ ${(CIO_PREMIUM * 100).toFixed(1)}% expected 12-month relative outperformance.`,
+      });
+    }
+  }
+
+  return { netCHF: comps.reduce((s, c) => s + c.amountCHF, 0), horizonMonths: 12, exposureCHF, components: comps };
+}
+
 // ---- persona ↔ real-data play --------------------------------------------
 // Maps each challenge persona to its real flagged holding + scenario, so the
 // compliance desk operates on the actual portfolio rather than the authored

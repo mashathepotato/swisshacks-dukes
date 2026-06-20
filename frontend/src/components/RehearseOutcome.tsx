@@ -4,9 +4,8 @@ import type { Client } from "../types";
 import { ADVICE, adviceFit } from "../data/bookSim";
 import { simulateProposal } from "../data/simulate";
 import { PORTFOLIOS, CIO, STRATEGIES } from "../data/portfolio";
-import { PERSONA_PLAY, proposeSwap, simulateSwap } from "../lib/portfolio";
+import { PERSONA_PLAY, proposeSwap, simulateSwap, estimateImpact } from "../lib/portfolio";
 import { formatMoney } from "../lib/format";
-import { TrajectoryChart } from "./TrajectoryChart";
 import { BookSimulator } from "./BookSimulator";
 
 type AdviceKind = "swap" | "rec" | "preset";
@@ -33,6 +32,21 @@ function adviceFor(client: Client): RAdvice[] {
         label: `Swap ${rec.sell.issuer} → ${rec.chosen.issuer}`,
         detail: `Exit ${rec.sell.issuer} and rotate into ${rec.chosen.issuer}, a CIO-BUY in the same sector.`,
         trade: { sellIsin: play.sellIsin, buyIsin: rec.chosen.isin },
+      });
+  }
+  // For aversion personas, "follow the CIO's cross-sector rotation" is a real,
+  // checkable trade — usually a poor fit, which the impact + compliance reveal.
+  if (play?.aversionTerms?.length) {
+    const held = new Set(PORTFOLIOS[play.mandate].map((h) => h.isin));
+    const pushed = CIO.find((c) => c.rating === "BUY" && play.aversionTerms!.some((t) => c.industryGroup.toLowerCase().includes(t)) && !held.has(c.isin));
+    const sell = PORTFOLIOS[play.mandate].find((h) => h.isin === play.sellIsin);
+    if (pushed && sell)
+      list.push({
+        key: "cio-rotation",
+        kind: "swap",
+        label: `Follow CIO: ${sell.issuer} → ${pushed.issuer}`,
+        detail: `Trim ${sell.issuer} and rotate into ${pushed.issuer} per the CIO tactical-allocation signal.`,
+        trade: { sellIsin: play.sellIsin, buyIsin: pushed.isin },
       });
   }
   client.recommendations.forEach((r) => list.push({ key: `rec:${r.id}`, kind: "rec", label: r.action, detail: r.rationale }));
@@ -63,6 +77,25 @@ export function RehearseOutcome() {
         : null,
     [sel, play]
   );
+
+  const impact = useMemo(() => {
+    const severity = client.signals[0]?.severity ?? 55;
+    let exposure = 0;
+    let mode: "protect" | "risk-on" | "neutral" = "neutral";
+    let hasTrade = false;
+    if (compliance) {
+      exposure = compliance.amountCHF;
+      hasTrade = true;
+      mode = compliance.dna.verdict === "conflicts" ? "risk-on" : "protect";
+    } else if (sel.kind === "rec") {
+      exposure = client.amountAtStake ?? 0;
+      mode = "protect";
+    } else {
+      exposure = client.amountAtStake ?? 0;
+      mode = (sel.fit ?? 0) > 0.15 ? "protect" : (sel.fit ?? 0) < -0.15 ? "risk-on" : "neutral";
+    }
+    return estimateImpact({ exposureCHF: exposure, mode, severity, hasTrade });
+  }, [client, sel, compliance]);
 
   function pickClient(id: string) {
     setClientId(id);
@@ -95,7 +128,7 @@ export function RehearseOutcome() {
         <div className="head-row">
           <div>
             <h1>Rehearse the outcome — simulate a client following a piece of advice</h1>
-            <p className="lead">Pick a client and an action, then see how they'd likely react, how the relationship would trend, and whether the trade keeps their mandate.</p>
+            <p className="lead">Pick a client and an action, then see how they'd likely react, the estimated CHF benefit or cost to them, and whether the trade keeps their mandate.</p>
           </div>
           <button className="bs-toggle" onClick={() => setMode("book")}>Whole-book view →</button>
         </div>
@@ -128,13 +161,37 @@ export function RehearseOutcome() {
           </div>
           <p className="ro-react">{reaction.predictedReaction}</p>
 
-          <div className="ro-block ro-traj">
-            <div className="lbl">Relationship trajectory if they follow it</div>
-            <TrajectoryChart points={reaction.trajectory} />
-            <div style={{ fontSize: 11, color: "var(--text-faint)", display: "flex", gap: 12, marginTop: 2 }}>
-              <span style={{ color: "#4f8ff7" }}>— Trust</span>
-              <span style={{ color: "#805ad5" }}>-- Values alignment</span>
-            </div>
+          <div className="ro-block">
+            <div className="lbl">Estimated monetary impact · next {impact.horizonMonths} months</div>
+            {impact.components.length ? (
+              <>
+                <div className="impact-net" style={{ color: impact.netCHF >= 0 ? "var(--green)" : "var(--red)" }}>
+                  {impact.netCHF >= 0 ? "+" : "−"}{formatMoney(Math.abs(impact.netCHF))}
+                </div>
+                <p style={{ fontSize: 12, color: "var(--text-dim)", margin: "0 0 12px" }}>
+                  net {impact.netCHF >= 0 ? "benefit" : "cost"} to {client.name} from following this advice.
+                </p>
+                {impact.components.map((c, i) => {
+                  const pos = c.amountCHF >= 0;
+                  const mag = Math.max(...impact.components.map((x) => Math.abs(x.amountCHF)));
+                  return (
+                    <div className="impact-comp" key={i}>
+                      <div className="ic-top">
+                        <span>{c.label}</span>
+                        <span className={"amt " + (pos ? "pos" : "neg")}>{pos ? "+" : "−"}{formatMoney(Math.abs(c.amountCHF))}</span>
+                      </div>
+                      <div className="ic-bar" style={{ width: `${mag ? Math.max(6, (Math.abs(c.amountCHF) / mag) * 100) : 0}%`, background: pos ? "var(--green)" : "var(--red)" }} />
+                      <div className="ic-note">{c.note}</div>
+                    </div>
+                  );
+                })}
+                <p className="impact-assump">
+                  An estimate, not a guarantee — each figure is the real position value × a stated assumption (severity→drawdown, 0.20% transaction cost, 1.5% CIO-BUY premium), so it's fully traceable rather than a black-box forecast.
+                </p>
+              </>
+            ) : (
+              <p style={{ fontSize: 12.5, color: "var(--text-faint)" }}>No quantified monetary exposure to model for this advice on {client.name}.</p>
+            )}
           </div>
 
           <div className="ro-block">
@@ -185,3 +242,4 @@ export function RehearseOutcome() {
     </div>
   );
 }
+
