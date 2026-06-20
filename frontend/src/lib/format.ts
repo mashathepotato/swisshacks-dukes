@@ -43,4 +43,5 @@ export const SIGNAL_META: Record<string, { label: string; color: string }> = {
   mandate_drift: { label: "Mandate drift", color: "#94680a" },
   opportunity: { label: "Opportunity", color: "#1f7a4d" },
   exposure: { label: "Exposure", color: "#3a5a8c" },
+  market_anomaly: { label: "Market move", color: "#6b3fa0" },
 };

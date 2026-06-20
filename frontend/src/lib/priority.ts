@@ -1,37 +1,65 @@
-import type { Client, SignalType } from "../types";
+import type { Client, Mandate, NewsSignal, SignalType } from "../types";
 
-// Transparent priority score for the queue: a weighted blend of four signals,
-// each normalised to [0,1]. Weights sum to 1 → score stays in [0,1] (shown /100).
+// Transparent priority score for the queue: a weighted blend of signals, each
+// normalised to [0,1]. Each mandate's weights sum to 1 → score stays in [0,1]
+// (shown /100). `anomaly` is a dedicated, always-on market-move term, weighted
+// BY STRATEGY: a Defensive (capital-preservation) client feels a price shock far
+// more than a risk-tolerant Growth client who expects volatility.
 // Justification: docs/priority-metric.md
-export const PRIORITY_WEIGHTS = { severity: 0.35, exposure: 0.25, conflict: 0.2, recency: 0.2 } as const;
+interface Weights { severity: number; exposure: number; conflict: number; recency: number; anomaly: number }
+export const PRIORITY_WEIGHTS: Record<Mandate, Weights> = {
+  Defensive: { severity: 0.28, exposure: 0.20, conflict: 0.15, recency: 0.13, anomaly: 0.24 },
+  Balanced:  { severity: 0.30, exposure: 0.22, conflict: 0.16, recency: 0.16, anomaly: 0.16 },
+  Growth:    { severity: 0.32, exposure: 0.24, conflict: 0.17, recency: 0.17, anomaly: 0.10 },
+};
 const HALF_LIFE_DAYS = 7;
 const DAY_MS = 86_400_000;
 const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
 
 // How adversarial each event type is — a risk demands proactive contact more
 // than a positive opportunity (which is "nice to mention", not "must defuse").
-const CONFLICT_WEIGHT: Record<SignalType, number> = {
+export const CONFLICT_WEIGHT: Record<SignalType, number> = {
   reputational: 1.0,
   value_conflict: 1.0,
+  // A sharp, vol-scaled price move is a risk that demands proactive contact —
+  // urgent, but a values conflict or reputational hit still outranks it.
+  market_anomaly: 0.85,
   mandate_drift: 0.7,
   exposure: 0.7,
   opportunity: 0.3,
 };
+
+/** The signal that drives a client's priority: the most severe, not array order. */
+function activeSignal(c: Client): NewsSignal | undefined {
+  return c.signals.reduce<NewsSignal | undefined>(
+    (best, s) => (best && best.severity >= s.severity ? best : s),
+    undefined,
+  );
+}
+
+/** The client's strongest SIX market-move signal, normalised to [0,1]. */
+function anomalyMagnitude(c: Client): number {
+  const sev = c.signals
+    .filter((s) => s.type === "market_anomaly")
+    .reduce((m, s) => Math.max(m, s.severity), 0);
+  return clamp01(sev / 100);
+}
 
 export interface PriorityBreakdown {
   severity: number;   // 0..1 magnitude of the active event
   exposure: number;   // 0..1 CHF at stake, vs the book's largest
   conflict: number;   // 0..1 how adversarial the event is (risk vs opportunity)
   recency: number;    // 0..1 freshness of the trigger
+  anomaly: number;    // 0..1 strongest SIX market-move touching this client
   combined: number;   // 0..1 weighted blend — the ranking score
 }
 
 function triggerDate(c: Client): string | null {
-  return c.lastMessageAt ?? c.signals[0]?.publishedAt ?? null;
+  return c.lastMessageAt ?? activeSignal(c)?.publishedAt ?? null;
 }
 
 function priorityOf(client: Client, bookMax: number, nowMs: number): PriorityBreakdown {
-  const sig = client.signals[0];
+  const sig = activeSignal(client);
   const severity = sig ? clamp01(sig.severity / 100) : 0;
   const exposure = bookMax > 0 ? clamp01((client.amountAtStake ?? 0) / bookMax) : 0;
   const conflict = sig ? CONFLICT_WEIGHT[sig.type] ?? 0 : 0;
@@ -43,13 +71,17 @@ function priorityOf(client: Client, bookMax: number, nowMs: number): PriorityBre
     if (!Number.isNaN(t)) recency = clamp01(Math.pow(0.5, Math.max(0, (nowMs - t) / DAY_MS) / HALF_LIFE_DAYS));
   }
 
-  const combined =
-    PRIORITY_WEIGHTS.severity * severity +
-    PRIORITY_WEIGHTS.exposure * exposure +
-    PRIORITY_WEIGHTS.conflict * conflict +
-    PRIORITY_WEIGHTS.recency * recency;
+  const anomaly = anomalyMagnitude(client);
 
-  return { severity, exposure, conflict, recency, combined };
+  const w = PRIORITY_WEIGHTS[client.mandate];
+  const combined =
+    w.severity * severity +
+    w.exposure * exposure +
+    w.conflict * conflict +
+    w.recency * recency +
+    w.anomaly * anomaly;
+
+  return { severity, exposure, conflict, recency, anomaly, combined };
 }
 
 function contextOf(book: Client[]): { bookMax: number; nowMs: number } {

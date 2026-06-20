@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "six": {
+      "type": "http",
+      "url": "https://ca-mcpwebapi-tools.nicepebble-599ed11f.westeurope.azurecontainerapps.io/mcp",
+      "headers": { "Authorization": "Bearer ${SIX_MCP_TOKEN}" }
+    }
+  }
+}

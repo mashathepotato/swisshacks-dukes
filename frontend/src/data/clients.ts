@@ -1,7 +1,12 @@
 import type { Client } from "../types";
+import { PORTFOLIOS } from "./portfolio";
+import { PERSONA_PLAY } from "../lib/portfolio";
+import { SIX_SERIES } from "./sixPrices";
+import { attachAnomalies } from "../lib/attachAnomalies";
+import type { AnomalyEvent } from "../lib/anomaly";
 
 // 4 challenge personas (rich) + synthetic twins (to show scale & clustering).
-export const CLIENTS: Client[] = [
+const BASE_CLIENTS: Client[] = [
   {
     id: "ammann",
     name: "Ammann",
@@ -352,7 +357,7 @@ export const CLIENTS: Client[] = [
     priorityScore: 58,
     amountAtStake: 2_100_000,
     topReason: "CIO suggests rebalancing from Swiss blue chips into US AI stocks — directly conflicts with their stated aversion.",
-    topHoldings: ["Nestlé S.A.", "Procter & Gamble", "Zurich Insurance", "Swiss Govt Bond 2031"],
+    topHoldings: ["Nestlé S.A.", "Procter & Gamble", "Abbott Laboratories", "Zurich Insurance", "Swiss Govt Bond 2031"],
     signals: [
       {
         id: "rae-news-1",
@@ -584,6 +589,23 @@ export const CLIENTS: Client[] = [
     { theme: "personal-cause", weight: 0.3 },
   ], 28, "No active signal."),
 ];
+
+// Associate a market anomaly with a client only where they actually hold the
+// moved name — their persona-flagged position or a top-holding match — so a move
+// stays personalised (and re-ranks the queue) instead of flooding the mandate.
+const firstWord = (s: string) => s.toLowerCase().replace(/[^a-z0-9 ]/g, "").trim().split(/\s+/)[0];
+
+function exposureOf(client: Client, event: AnomalyEvent): number | null {
+  const holding = PORTFOLIOS[client.mandate].find((h) => h.isin === event.isin);
+  const holdsByName = client.topHoldings.some(
+    (n) => firstWord(n).length > 2 && firstWord(n) === firstWord(event.issuer),
+  );
+  const isFlagged = PERSONA_PLAY[client.id]?.sellIsin === event.isin;
+  if (!isFlagged && !holdsByName) return null;
+  return holding?.currentCHF ?? client.amountAtStake ?? 100_000;
+}
+
+export const CLIENTS: Client[] = attachAnomalies(BASE_CLIENTS, SIX_SERIES, exposureOf);
 
 function syn(
   id: string,

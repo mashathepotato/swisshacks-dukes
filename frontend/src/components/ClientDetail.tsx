@@ -29,7 +29,7 @@ export function ClientDetail({ client, onOpenFull }: Props) {
   return (
     <div className="drawer">
       <h2>{client.name}</h2>
-      <div className="archetype">{client.archetype}</div>
+      <div className="archetype">{client.archetype} · <b>{client.mandate}</b> strategy</div>
 
       {sig && (() => {
         const m = SIGNAL_META[sig.type];
