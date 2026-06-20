@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import { CLIENTS } from "../data/clients";
 import type { Client } from "../types";
 import { SIGNAL_META, formatMoney } from "../lib/format";
@@ -6,18 +7,35 @@ interface Props {
   onOpen: (client: Client) => void;
 }
 
-/** All clients in a grid (no priority ranking) — click a card for the full profile. */
+/** All clients in a grid (no priority ranking) — search + click a card for the full profile. */
 export function ClientGrid({ onOpen }: Props) {
+  const [query, setQuery] = useState("");
+
   // personas first, then synthetic twins; alphabetical within each group
-  const clients = [...CLIENTS].sort(
-    (a, b) => Number(b.isPersona) - Number(a.isPersona) || a.name.localeCompare(b.name)
+  const sorted = useMemo(
+    () => [...CLIENTS].sort((a, b) => Number(b.isPersona) - Number(a.isPersona) || a.name.localeCompare(b.name)),
+    []
   );
+  const q = query.trim().toLowerCase();
+  const clients = q
+    ? sorted.filter((c) => `${c.name} ${c.archetype} ${c.mandate}`.toLowerCase().includes(q))
+    : sorted;
 
   return (
     <div className="clients">
       <h1>All clients</h1>
-      <p className="lead">{clients.length} clients across the book. Click any card to open the full profile.</p>
+      <p className="lead">{clients.length} of {sorted.length} clients. Click any card to open the full profile.</p>
 
+      <input
+        className="clients-search"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search by name, archetype or mandate…"
+      />
+
+      {clients.length === 0 ? (
+        <p className="empty" style={{ padding: "32px 0" }}>No clients match “{query}”.</p>
+      ) : (
       <div className="client-grid">
         {clients.map((c) => {
           const sig = c.signals[0];
@@ -52,6 +70,7 @@ export function ClientGrid({ onOpen }: Props) {
           );
         })}
       </div>
+      )}
     </div>
   );
 }
