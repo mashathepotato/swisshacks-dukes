@@ -9,7 +9,7 @@ export function PriorityScore({ client }: { client: Client }) {
   const w = PRIORITY_WEIGHTS[client.mandate];
   return (
     <>
-      <div className="section-title">Priority score</div>
+      <div className="section-title">Priority score <span style={{ fontWeight: 400, color: "var(--text-faint)" }}>· {client.mandate} strategy</span></div>
       <div className="pscore">
         <span className="pscore-big" style={{ color: gradeColor(score) }}>{score}</span>
         <div className="pscore-break">
