@@ -5,7 +5,7 @@ import { useRecorder } from "../lib/useRecorder";
 import { useConversation } from "../lib/conversationStore";
 import { useRmProfile } from "../lib/rmProfileStore";
 
-type Phase = "consent" | "record" | "review";
+type Phase = "consent" | "record";
 
 export function ConversationCapture({ client }: { client: Client }) {
   const rec = useRecorder();
@@ -41,22 +41,9 @@ export function ConversationCapture({ client }: { client: Client }) {
       .catch(() => {});
   }, [rec.transcript, rec.recording, phase, client.id]);
 
-  async function handleStop() {
+  function handleStop() {
     rec.stop();
-    const transcript = rec.transcript.trim();
-    if (!transcript) return;
-    const seq = ++seqRef.current;
-    try {
-      const res = await fetch("/api/transcript/digest", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ clientId: client.id, transcript, mode: "final", dnaContext: dnaContextOf(client) }),
-      });
-      if (res.ok) {
-        const d: DigestResult = await res.json();
-        if (seq === seqRef.current) setDigest(d);
-      }
-    } catch { /* keep the last live digest */ }
+    void finalize();
   }
 
   function giveConsent(method: "verbal" | "written") {
@@ -69,29 +56,34 @@ export function ConversationCapture({ client }: { client: Client }) {
     setPhase("record");
   }
 
-  async function distill() {
+  // On Stop (or "Generate insights" for the paste path): run the finalize digest
+  // and the DNA-proposal distill together, and surface both in the combined panel.
+  async function finalize() {
+    const transcript = rec.transcript.trim();
+    if (!transcript) return;
     setBusy(true); setErr(null);
+    const seq = ++seqRef.current;
+    const digestReq = fetch("/api/transcript/digest", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ clientId: client.id, transcript, mode: "final", dnaContext: dnaContextOf(client) }),
+    }).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+    const distillReq = fetch("/api/transcript/distill", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ clientId: client.id, transcript, rmName: consent?.rmName ?? profile.name, clientContact: client.name }),
+    }).then(async (r) => { if (!r.ok) throw new Error(`distill failed (${r.status})`); return (await r.json()) as DistillResult; });
     try {
-      const res = await fetch("/api/transcript/distill", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          clientId: client.id,
-          transcript: rec.transcript,
-          rmName: consent?.rmName ?? "RM",
-          clientContact: client.name,
-        }),
-      });
-      if (!res.ok) throw new Error(`distill failed (${res.status})`);
-      const data: DistillResult = await res.json();
+      const [d, data] = await Promise.all([digestReq, distillReq]);
+      if (seq !== seqRef.current) return;
+      if (d) setDigest(d);
       setResult(data);
       setNoteText(data.note.text);
       const init: Record<string, boolean> = {};
       data.dnaDeltas.values.forEach((v) => (init[`v:${v}`] = true));
-      data.dnaDeltas.dislikes.forEach((d) => (init[`d:${d}`] = true));
+      data.dnaDeltas.dislikes.forEach((dd) => (init[`d:${dd}`] = true));
       data.dnaDeltas.affinities.forEach((a) => (init[`a:${a.theme}`] = true));
       setAccepted(init);
-      setPhase("review");
     } catch (e) {
       setErr(String((e as Error).message));
     } finally {
@@ -142,46 +134,55 @@ export function ConversationCapture({ client }: { client: Client }) {
             placeholder="Live transcript appears here… (or paste one)"
           />
           {rec.error && <p style={{ color: "var(--red, #e53e3e)" }}>{rec.error}</p>}
-          <button onClick={distill} disabled={busy || !rec.transcript.trim()}>
-            {busy ? "Distilling…" : "Distill → review"}
-          </button>
+          {!rec.recording && rec.transcript.trim() && !result && (
+            <button onClick={finalize} disabled={busy}>{busy ? "Analyzing…" : "Generate insights"}</button>
+          )}
           {err && <p style={{ color: "var(--red, #e53e3e)" }}>{err}</p>}
-          {digest && <DigestView d={digest} />}
-        </div>
-      )}
 
-      {phase === "review" && result && (
-        <div>
-          <p style={{ fontSize: 12, opacity: 0.7 }}>✓ Consent ({consent?.method}) · {consent?.timestamp}</p>
-          {digest && <DigestView d={digest} />}
-          <label><strong>CRM note</strong></label>
-          <textarea value={noteText} onChange={(e) => setNoteText(e.target.value)} rows={3} style={{ width: "100%" }} />
+          {(digest || result) && (
+            <div style={{ marginTop: 12, border: "1px solid var(--border, #2a3142)", borderRadius: 6, padding: 12 }}>
+              {digest && <DigestView d={digest} />}
+              {result && (
+                <div style={{ marginTop: digest ? 12 : 0 }}>
+                  <label><strong>CRM note</strong></label>
+                  <textarea value={noteText} onChange={(e) => setNoteText(e.target.value)} rows={3} style={{ width: "100%" }} />
 
-          <h4>Proposed DNA updates (uncheck to reject)</h4>
-          <ul style={{ listStyle: "none", padding: 0 }}>
-            {result.dnaDeltas.values.map((v) => (
-              <li key={`v:${v}`}><label><input type="checkbox" checked={!!accepted[`v:${v}`]} onChange={(e) => setAccepted((p) => ({ ...p, [`v:${v}`]: e.target.checked }))} /> Value: {v}</label></li>
-            ))}
-            {result.dnaDeltas.dislikes.map((d) => (
-              <li key={`d:${d}`}><label><input type="checkbox" checked={!!accepted[`d:${d}`]} onChange={(e) => setAccepted((p) => ({ ...p, [`d:${d}`]: e.target.checked }))} /> Dislike: {d}</label></li>
-            ))}
-            {result.dnaDeltas.affinities.map((a) => {
-              const cur = client.affinities.find((x) => x.theme === a.theme)?.weight ?? 0;
-              return (
-                <li key={`a:${a.theme}`}><label><input type="checkbox" checked={!!accepted[`a:${a.theme}`]} onChange={(e) => setAccepted((p) => ({ ...p, [`a:${a.theme}`]: e.target.checked }))} /> Affinity: {a.theme}: {cur.toFixed(2)} → {a.toWeight.toFixed(2)}</label></li>
-              );
-            })}
-          </ul>
+                  <h4 style={{ marginBottom: 4 }}>Proposed DNA changes (uncheck to reject)</h4>
+                  {result.dnaDeltas.values.length === 0 && result.dnaDeltas.dislikes.length === 0 && result.dnaDeltas.affinities.length === 0 ? (
+                    <p style={{ fontSize: 13, opacity: 0.7 }}>No DNA changes proposed for this conversation.</p>
+                  ) : (
+                    <ul style={{ listStyle: "none", padding: 0 }}>
+                      {result.dnaDeltas.values.map((v) => (
+                        <li key={`v:${v}`}><label><input type="checkbox" checked={!!accepted[`v:${v}`]} onChange={(e) => setAccepted((p) => ({ ...p, [`v:${v}`]: e.target.checked }))} /> Value: {v}</label></li>
+                      ))}
+                      {result.dnaDeltas.dislikes.map((d) => (
+                        <li key={`d:${d}`}><label><input type="checkbox" checked={!!accepted[`d:${d}`]} onChange={(e) => setAccepted((p) => ({ ...p, [`d:${d}`]: e.target.checked }))} /> Dislike: {d}</label></li>
+                      ))}
+                      {result.dnaDeltas.affinities.map((a) => {
+                        const cur = client.affinities.find((x) => x.theme === a.theme)?.weight ?? 0;
+                        return (
+                          <li key={`a:${a.theme}`}><label><input type="checkbox" checked={!!accepted[`a:${a.theme}`]} onChange={(e) => setAccepted((p) => ({ ...p, [`a:${a.theme}`]: e.target.checked }))} /> Affinity: {a.theme}: {cur.toFixed(2)} → {a.toWeight.toFixed(2)}</label></li>
+                        );
+                      })}
+                    </ul>
+                  )}
 
-          <h4>Quote receipts</h4>
-          <ul>
-            {result.receipts.map((r, i) => (
-              <li key={r.sourceId + ":" + i} style={{ fontSize: 13, opacity: 0.85 }}>"{r.quote}" <span style={{ opacity: 0.6 }}>— {r.sourceId}</span></li>
-            ))}
-          </ul>
+                  {result.receipts.length > 0 && (
+                    <>
+                      <h4 style={{ marginBottom: 4 }}>Quote receipts</h4>
+                      <ul>
+                        {result.receipts.map((r, i) => (
+                          <li key={r.sourceId + ":" + i} style={{ fontSize: 13, opacity: 0.85 }}>"{r.quote}" <span style={{ opacity: 0.6 }}>— {r.sourceId}</span></li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
 
-          <button onClick={approve}>✓ Approve &amp; merge</button>{" "}
-          <button onClick={() => setPhase("record")}>← Back</button>
+                  <button onClick={approve}>✓ Approve &amp; merge</button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
     </section>
