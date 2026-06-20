@@ -68,7 +68,7 @@ export default function App() {
   return (
     <div className="app">
       <div className="topbar">
-        <div className="brand">RM Copilot <span className="sub">SwissHacks · Dukes</span></div>
+        <div className="brand">Priori</div>
         <div className="tabs">
           <button className={"tab" + (route.name === "priority" ? " active" : "")} onClick={() => navigate({ name: "priority" })}>Priority queue</button>
           <button className={"tab" + (route.name === "clients" ? " active" : "")} onClick={() => navigate({ name: "clients" })}>Clients</button>
