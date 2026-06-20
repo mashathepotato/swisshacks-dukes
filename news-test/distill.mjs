@@ -48,7 +48,10 @@ export function distillHeuristic({ clientId, transcript, rmName, clientContact, 
     if (!hit) continue;
     affinities.push({ theme: k.theme, fromWeight: 0, toWeight: 0.7 });
     if (k.value) values.add(k.value);
-    if (k.dislike && k.dislike.split(" ").some((w) => new RegExp(w, "i").test(hit))) dislikes.add(k.dislike);
+    // Add dislike only if: whole-phrase matches (case-insensitive) AND sentence contains negation cue
+    if (k.dislike && new RegExp(k.dislike, "i").test(hit) && /\b(not|no|never|unacceptable|avoid|against|averse|don't|won't)\b/i.test(hit)) {
+      dislikes.add(k.dislike);
+    }
     receipts.push({
       kind: "crm",
       sourceId: `transcript:${clientId}:${date}`,
@@ -126,6 +129,10 @@ async function distillWithLlm(args) {
 
 export async function distill(args) {
   if (ENGINE === "heuristic") return distillHeuristic(args);
+  if (ENGINE === "phoeniqs" && !PHOENIQS_READY) {
+    console.warn("[distill] phoeniqs selected but no key; using heuristic");
+    return distillHeuristic(args);
+  }
   try {
     return await distillWithLlm(args);
   } catch (err) {
