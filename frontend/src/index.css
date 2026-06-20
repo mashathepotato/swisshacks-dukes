@@ -554,3 +554,20 @@ button { font-family: inherit; cursor: pointer; }
 .rehearse-composer button { background: var(--accent); color: #fff; border: none; border-radius: 9px; padding: 0 18px; font-weight: 700; font-size: 13.5px; }
 .rehearse-composer button:disabled { opacity: .5; cursor: default; }
 .rehearse-subject { padding: 8px 22px 0; font-size: 12.5px; color: var(--text-dim); font-style: italic; }
+
+/* ---- communication preference (channel + length) in the draft ---- */
+.pref-block { background: var(--panel-2); border: 1px solid var(--border); border-radius: 10px; padding: 11px 12px; margin-bottom: 12px; }
+.pref-row { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+.pref-row:last-of-type { margin-bottom: 0; }
+.pref-lbl { font-size: 10.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--text-faint); width: 52px; flex: none; }
+.pref-opts { display: flex; gap: 5px; flex-wrap: wrap; }
+.pref-opt {
+  background: transparent; border: 1px solid var(--border); color: var(--text-dim);
+  border-radius: 7px; padding: 5px 9px; font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer;
+}
+.pref-opt:hover { border-color: var(--text-faint); color: var(--text); }
+.pref-opt.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.pref-note { font-size: 11.5px; color: var(--text-dim); margin: 9px 0 0; line-height: 1.45; }
+.pref-history { list-style: none; margin: 7px 0 0; padding: 7px 0 0; border-top: 1px dashed var(--border); }
+.pref-history li { font-size: 11px; color: var(--text-faint); line-height: 1.6; }
+.draft-format { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--text-faint); font-weight: 700; margin-bottom: 6px; }

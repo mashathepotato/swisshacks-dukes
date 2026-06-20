@@ -4,12 +4,15 @@ import './index.css'
 import App from './App.tsx'
 import { LearningProvider } from './lib/learningStore.tsx'
 import { DoneProvider } from './lib/doneStore.tsx'
+import { CommPrefProvider } from './lib/commPrefStore.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <LearningProvider>
       <DoneProvider>
-        <App />
+        <CommPrefProvider>
+          <App />
+        </CommPrefProvider>
       </DoneProvider>
     </LearningProvider>
   </StrictMode>,
