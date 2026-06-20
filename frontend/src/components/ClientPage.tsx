@@ -13,6 +13,7 @@ import { useCommPrefs } from "../lib/commPrefStore";
 import { useRmProfile } from "../lib/rmProfileStore";
 import { ValueRadar } from "./ValueRadar";
 import { ComplianceDesk } from "./ComplianceDesk";
+import { PriorityScore } from "./PriorityScore";
 
 interface Props {
   client: Client;
@@ -67,6 +68,8 @@ export function ClientPage({ client, onBack, onSimulate }: Props) {
             {dealt ? "✓ Completed — reopen" : "✓ Mark as complete"}
           </button>
         </div>
+
+        <div className="cp-priority"><PriorityScore client={client} /></div>
 
         <div className="cp-grid">
           <div className="cp-col">
