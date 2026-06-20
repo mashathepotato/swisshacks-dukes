@@ -202,9 +202,9 @@ function OverlapDetail({
       <div className="cnews-combined">
         <span className="cnews-cbig">{Math.round(rel.combined * 100)}</span>
         <div className="cnews-cbreak">
-          <div><span>Value overlap</span><span><b>{rel.valueOverlap.toFixed(2)}</b> × {RELEVANCE_WEIGHTS.value}</span></div>
-          <div><span>Severity</span><span><b>{rel.severity.toFixed(2)}</b> × {RELEVANCE_WEIGHTS.severity}</span></div>
-          <div><span>Recency</span><span><b>{rel.recency.toFixed(2)}</b> × {RELEVANCE_WEIGHTS.recency}</span></div>
+          <div><span>Value overlap</span><span><b>{Math.round(rel.valueOverlap * 100)}</b> × {RELEVANCE_WEIGHTS.value}</span></div>
+          <div><span>Severity</span><span><b>{Math.round(rel.severity * 100)}</b> × {RELEVANCE_WEIGHTS.severity}</span></div>
+          <div><span>Recency</span><span><b>{Math.round(rel.recency * 100)}</b> × {RELEVANCE_WEIGHTS.recency}</span></div>
         </div>
       </div>
       <p className="cnews-overlap-cap" style={{ textAlign: "left", margin: "6px 0 0" }}>Weighted blend (out of 100) used to rank this client's feed. Justification: docs/relevance-metric.md.</p>
