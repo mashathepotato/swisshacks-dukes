@@ -42,11 +42,56 @@ export function heuristicAnswer(context, question) {
   return `Here's a quick overview of ${name}:\n\n${overview}\n\n(Ask about their portfolio, values, signals, recommendations, or last contact for a sharper answer.)`;
 }
 
+const SYSTEM =
+  "You are a relationship manager's copilot inside a Swiss private bank. Answer the RM's question " +
+  "about THIS client using ONLY the grounding facts provided below. Be concise and specific; prefer " +
+  "the client's own values, holdings and history over generalities. You equip the RM — you never " +
+  "address or advise the client directly, and the RM keeps the final say. If a fact isn't in the " +
+  "grounding context, say so plainly rather than inventing it. Answer in plain prose (no JSON, no preamble).";
+
+// rm → user, copilot → assistant. The Anthropic API requires the first message
+// to be a user turn and roles to alternate; history here is always RM-first.
+function historyMessages(history) {
+  return (Array.isArray(history) ? history : [])
+    .filter((t) => t && typeof t.text === "string" && t.text.trim())
+    .map((t) => ({ role: t.role === "copilot" ? "assistant" : "user", text: t.text.trim() }));
+}
+
+function textOf(data) {
+  return (data?.content || []).filter((b) => b.type === "text").map((b) => b.text).join("").trim();
+}
+
+async function anthropicAsk({ context, question, history }) {
+  const msgs = historyMessages(history).map((m) => ({ role: m.role, content: m.text }));
+  msgs.push({ role: "user", content: `GROUNDING CONTEXT\n${context || "(none provided)"}\n\nRM QUESTION\n${question}` });
+
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "x-api-key": ANTHROPIC_KEY, "anthropic-version": "2023-06-01" },
+    body: JSON.stringify({
+      model: MODEL,
+      max_tokens: 1500,
+      thinking: { type: "adaptive" },
+      output_config: { effort: EFFORT },
+      system: SYSTEM,
+      messages: msgs,
+    }),
+  });
+  if (!res.ok) throw new Error(`Anthropic ${res.status}: ${(await res.text().catch(() => "")).slice(0, 160)}`);
+  const answer = textOf(await res.json());
+  if (!answer) throw new Error("empty model output");
+  return { answer, engine: "anthropic", model: MODEL };
+}
+
 export async function ask({ client, context, question, history }) {
   const q = String(question || "").trim();
-  const heuristic = { answer: heuristicAnswer(context, q), engine: "heuristic", model: "none" };
-  if (!q) return { ...heuristic, answer: heuristicAnswer(context, "") };
-  if (!ANTHROPIC_READY) return heuristic;
-  // Anthropic path lands in Task 2.
-  return heuristic;
+  const fallback = { answer: heuristicAnswer(context, q), engine: "heuristic", model: "none" };
+  if (!q) return fallback;
+  if (!ANTHROPIC_READY) return fallback;
+  try {
+    return await anthropicAsk({ context, question: q, history });
+  } catch (err) {
+    console.warn(`[ask] ${MODEL} failed, falling back to heuristic: ${err.message}`);
+    return fallback;
+  }
 }

@@ -39,3 +39,18 @@ test("ask falls back to heuristic when no key is configured", async () => {
   assert.equal(typeof r.answer, "string");
   assert.ok(r.answer.length > 0);
 });
+
+test("ask replays history as alternating turns without crashing", async () => {
+  const r = await ask({
+    client: { name: "Räber" },
+    context: CONTEXT,
+    question: "and why?",
+    history: [
+      { role: "rm", text: "What should I lead with?" },
+      { role: "copilot", text: "Lead with capital preservation." },
+    ],
+  });
+  assert.equal(typeof r.answer, "string");
+  assert.ok(r.answer.length > 0);
+  assert.ok(["anthropic", "heuristic"].includes(r.engine));
+});
