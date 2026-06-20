@@ -10,6 +10,7 @@ import type { CommChannel, CommLength } from "../lib/commPrefs";
 import { useLearning } from "../lib/learningStore";
 import { useDone } from "../lib/doneStore";
 import { useCommPrefs } from "../lib/commPrefStore";
+import { useRmProfile } from "../lib/rmProfileStore";
 import { ValueRadar } from "./ValueRadar";
 import { ComplianceDesk } from "./ComplianceDesk";
 
@@ -376,18 +377,19 @@ function fmtPref(field: "channel" | "length", val: string): string {
 function DraftMessage({ client }: { client: Client }) {
   const { record, modelFor } = useLearning();
   const { prefFor, isCustom, setChannel, setLength, historyFor } = useCommPrefs();
+  const { profile } = useRmProfile();
   const model: PreferenceModel = modelFor(client);
   const theme = primaryTheme(client);
   const pref = prefFor(client);
 
-  // remounted per client (keyed in the parent); initial tone = learned preference
-  const [voice, setVoice] = useState<Voice>(model.preferredVoice ?? "values-led");
+  // remounted per client (keyed in the parent); initial tone = learned preference, else RM house tone
+  const [voice, setVoice] = useState<Voice>(model.preferredVoice ?? profile.defaultVoice);
   const [copied, setCopied] = useState(false);
   const [sent, setSent] = useState(false);
 
   const msg = useMemo(
-    () => buildMessage(client, pref.channel, pref.length, voice),
-    [client, pref.channel, pref.length, voice],
+    () => buildMessage(client, pref.channel, pref.length, voice, profile),
+    [client, pref.channel, pref.length, voice, profile],
   );
   const history = historyFor(client.id);
   const learnedThisVoice = model.preferredVoice === voice && model.voiceRates[voice].n > 0;

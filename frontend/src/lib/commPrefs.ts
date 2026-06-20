@@ -1,4 +1,6 @@
 import type { Client, Voice } from "../types";
+import type { RmProfile } from "./rmProfile";
+import { greetingLine, spokenOpen, applyTokens } from "./rmProfile";
 
 export type CommChannel = "email" | "call" | "meeting" | "message";
 export type CommLength = "brief" | "standard" | "detailed";
@@ -38,58 +40,58 @@ export interface BuiltMessage {
   sendLabel: string;
 }
 
-/** Build a channel- and length-appropriate proposed message in the client's tone. */
-export function buildMessage(client: Client, channel: CommChannel, length: CommLength, voice: Voice): BuiltMessage {
+/**
+ * Build a proposed message. The CLIENT owns channel + length (what they want to
+ * receive); the RM profile owns the conventions — greeting, tone, and a sign-off
+ * per method — so the same content reads in each RM's house style.
+ */
+export function buildMessage(client: Client, channel: CommChannel, length: CommLength, voice: Voice, rm: RmProfile): BuiltMessage {
   const action = client.recommendations[0]?.action ?? "review your portfolio together at your convenience";
   const reason = client.topReason;
   const rationale = client.recommendations[0]?.rationale ?? "";
   const v = voice === "values-led";
   const lowerAction = action.charAt(0).toLowerCase() + action.slice(1).replace(/\.$/, "");
   const shortReason = reason.split(/[.;]/)[0];
+  const sign = (ch: CommChannel) => applyTokens(rm.signoff[ch], rm);
 
   if (channel === "email") {
-    // Keep the authored, persona-specific email for the standard length; generate variations.
-    if (length === "standard" && client.draftEmail) {
-      const subject = client.draftEmail.subject;
-      const body = client.draftEmail.body[voice];
-      return { channel, format: "Email", subject, body, sendHref: mailto(subject, body), sendLabel: `Send email to ${client.name}` };
-    }
     const subject = v ? "A note on your portfolio" : "Action item on your portfolio";
-    const lines = [`Dear ${client.name},`];
+    const lines = [greetingLine(rm.greeting, client.name)];
     if (length !== "brief") lines.push(reason);
     lines.push(v ? `I'd like to propose we ${lowerAction}.` : `Proposed action: ${action}`);
     if (length === "detailed" && rationale) lines.push(rationale);
     lines.push(v
       ? "Nothing changes without your go-ahead — I simply want us to stay ahead of it together."
       : "This keeps your mandate allocation intact; no order is placed without your approval.");
-    lines.push(v ? "Warm regards,\nT. Keller" : "Best regards,\nT. Keller");
+    lines.push(sign("email"));
     const body = lines.join("\n\n");
     return { channel, format: "Email", subject, body, sendHref: mailto(subject, body), sendLabel: `Send email to ${client.name}` };
   }
 
   if (channel === "message") {
-    const body = v
-      ? `Hi ${client.name} — wanted to flag this personally: ${shortReason}. I'd suggest we ${lowerAction}. Happy to talk whenever. — T. Keller`
-      : `Hi ${client.name} — quick heads-up: ${shortReason}. Proposed: ${action} Nothing without your OK. — T. Keller`;
+    const open = spokenOpen(rm.greeting, client.name);
+    const core = v
+      ? `wanted to flag this personally: ${shortReason}. I'd suggest we ${lowerAction}.`
+      : `quick heads-up: ${shortReason}. Proposed: ${action} Nothing without your OK.`;
+    const body = `${open} ${core} ${sign("message")}`;
     return { channel, format: "Message", body, sendLabel: "Send message" };
   }
 
   if (channel === "call") {
     const lines = [
-      `Opening — "Hi ${client.name}, have you a couple of minutes? I wanted to reach you directly on this."`,
+      `Opening — "${spokenOpen(rm.greeting, client.name)} have you a couple of minutes? I wanted to reach you directly on this."`,
       `Key point — ${reason}`,
     ];
     if (length === "detailed" && rationale) lines.push(`Context — ${rationale}`);
     lines.push(`The ask — I'd recommend we ${lowerAction}; it's entirely your call.`);
-    lines.push(`Close — agree the next step; place no order without your go-ahead.`);
-    const body = (length === "brief" ? [lines[0], lines[1], lines[lines.length - 2], lines[lines.length - 1]] : lines).join("\n");
-    return { channel, format: "Call script", body, sendLabel: "Log the call" };
+    lines.push(sign("call"));
+    return { channel, format: "Call script", body: lines.join("\n"), sendLabel: "Log the call" };
   }
 
   // meeting
   const bullets = [`• Why now — ${reason}`, `• Proposed action — ${action}`];
   if (length === "detailed" && rationale) bullets.push(`• Rationale — ${rationale}`);
-  bullets.push(`• Decision for ${client.name} — approve, adjust or hold. You execute on their word.`);
+  bullets.push(`• ${sign("meeting")}`);
   const body = (length === "brief" ? [bullets[1], bullets[bullets.length - 1]] : bullets).join("\n");
   return { channel, format: "Meeting talking points", body, sendLabel: "Add to meeting notes" };
 }
