@@ -152,6 +152,24 @@ button { font-family: inherit; cursor: pointer; }
 }
 .rcpt-quote { margin: 0; font-family: var(--font-serif); font-style: italic; font-size: 13px; line-height: 1.6; color: var(--text); }
 .rcpt-ref { font-size: 10.5px; color: var(--accent); display: inline-block; margin-top: 5px; word-break: break-all; }
+.rcpt-lead { font-size: 11.5px; color: var(--text-dim); margin-bottom: 2px; }
+
+/* ---- holdings & allocation detail ---- */
+.holdings-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin-top: 8px; }
+.holdings-table th {
+  text-align: left; font-weight: 700; color: var(--text-faint); text-transform: uppercase;
+  letter-spacing: .04em; font-size: 9.5px; padding: 4px 6px; border-bottom: 1px solid var(--border);
+}
+.holdings-table td { padding: 5px 6px; border-bottom: 1px solid var(--border-soft); color: var(--text); }
+.holdings-table td.dim { color: var(--text-dim); }
+.holdings-table .num { text-align: right; font-family: var(--font-mono); white-space: nowrap; }
+.holdings-table td.num.pos { color: var(--green); }
+.holdings-table td.num.neg { color: var(--amber); }
+
+/* ---- invested-capital curve ---- */
+.cc-legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 11.5px; color: var(--text-dim); margin-top: 8px; }
+.cc-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+.cc-caption { font-size: 11px; color: var(--text-faint); line-height: 1.55; margin: 8px 0 0; }
 
 /* ---- draft message (next step) ---- */
 .draft {

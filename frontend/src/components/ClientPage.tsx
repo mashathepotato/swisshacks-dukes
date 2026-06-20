@@ -5,6 +5,9 @@ import { SIGNAL_META, formatMoney, relativeTime } from "../lib/format";
 import { REASON_META, EVIDENCE_META, buildReasoningChain } from "../lib/explain";
 import { adjustConfidence, primaryTheme } from "../lib/learning";
 import { PERSONA_PLAY } from "../lib/portfolio";
+import { behavioralForClient, tradeReceipts } from "../lib/behavioral";
+import { HoldingsDetail } from "./HoldingsDetail";
+import { CapitalCurve } from "./CapitalCurve";
 import { buildMessage, CHANNEL_META, LENGTH_META } from "../lib/commPrefs";
 import type { CommChannel, CommLength } from "../lib/commPrefs";
 import { useLearning } from "../lib/learningStore";
@@ -107,6 +110,8 @@ export function ClientPage({ client, onBack, onSimulate }: Props) {
               </>
             )}
 
+            <BehavioralDNA client={mergedClient} />
+
             {mergedClient.signals.length > 0 && (
               <>
                 <div className="section-title">Why now — signals</div>
@@ -128,6 +133,9 @@ export function ClientPage({ client, onBack, onSimulate }: Props) {
                 })}
               </>
             )}
+
+            <HoldingsDetail client={mergedClient} />
+            <CapitalCurve client={mergedClient} />
           </div>
 
           <div className="cp-col">
@@ -161,7 +169,18 @@ export function ClientPage({ client, onBack, onSimulate }: Props) {
 
 /** The "Glass Thread": the deterministic sequence of factors behind the priority. */
 function ReasoningChain({ client }: { client: Client }) {
-  const chain = useMemo(() => buildReasoningChain(client), [client]);
+  const chain = useMemo(() => {
+    const base = buildReasoningChain(client);
+    // For personas, enrich the portfolio step with the client's REAL past trades
+    // on the flagged holding — verbatim receipts, no change to the authored chain.
+    const play = PERSONA_PLAY[client.id];
+    if (!play) return base;
+    const receipts = tradeReceipts(play.mandate, play.sellIsin);
+    if (!receipts.length) return base;
+    return base.map((step) =>
+      step.kind === "holding" ? { ...step, evidence: [...(step.evidence ?? []), ...receipts] } : step
+    );
+  }, [client]);
   const [open, setOpen] = useState<number | null>(null);
   if (!chain.length) return null;
 
@@ -225,6 +244,38 @@ function ReasoningChain({ client }: { client: Client }) {
           );
         })}
       </div>
+    </>
+  );
+}
+
+/** Behavioral DNA inferred from the client's real trade + cash-flow history. */
+function BehavioralDNA({ client }: { client: Client }) {
+  const traits = useMemo(() => behavioralForClient(client.id), [client.id]);
+  if (!traits.length) return null; // synthetic twins have no real portfolio
+
+  return (
+    <>
+      <div className="section-title">
+        Behavioral DNA <span className="learn-tag">FROM TRADES</span>
+      </div>
+      {traits.map((t) => {
+        const em = EVIDENCE_META[t.receipt.kind];
+        return (
+          <div className="card" key={t.id}>
+            <h4>{t.label}</h4>
+            <p>{t.detail}</p>
+            <div className="receipts" style={{ marginTop: 8 }}>
+              <div className="receipt">
+                <div className="rcpt-meta">
+                  <span className="kindtag" style={{ background: em.color }}>{em.icon} {em.label}</span>
+                  <span className="rcpt-src">{t.receipt.sourceId}{t.receipt.date ? ` · ${t.receipt.date}` : ""}</span>
+                </div>
+                <blockquote className="rcpt-quote">“{t.receipt.quote}”</blockquote>
+              </div>
+            </div>
+          </div>
+        );
+      })}
     </>
   );
 }
