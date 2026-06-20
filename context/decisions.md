@@ -20,9 +20,12 @@ Append a short entry whenever we make a notable choice. Newest first.
   Thread. Detection is **frontend-centric**: a pure TS detector (`lib/anomaly.ts`)
   runs in-browser over a committed SIX-derived fixture (`data/sixPrices.ts`), like
   `newsImpacts()`. The priority score **extends the existing weighted model** in
-  `lib/priority.ts` (severity 0.35 / exposure 0.25 / conflict 0.2 / recency 0.2):
-  add `market_anomaly` to `CONFLICT_WEIGHT` (0.85) and pick the highest-severity
-  signal as the active driver. Provenance is **real US + honest synthetic**: SIX
+  `lib/priority.ts`: add a dedicated, always-on `anomaly` term to the blend
+  (rebalanced to severity 0.30 / exposure 0.22 / conflict 0.16 / recency 0.16 /
+  anomaly 0.16) so a market move counts even when it isn't the client's top
+  event; also add `market_anomaly` to `CONFLICT_WEIGHT` (0.85) and pick the
+  highest-severity signal as the active driver. Shown as its own line in the
+  score breakdown. Provenance is **real US + honest synthetic**: SIX
   EOD coverage on the hackathon token is US-listed only (Swiss/EU venues return
   empty, validated live), so US holdings carry real SIX series and non-US holdings
   carry clearly-labeled `source:"synthetic"` series — never disguised.

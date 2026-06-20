@@ -164,17 +164,22 @@ matchedHoldings: ["Meta Platforms Inc."]
 
 ## Priority score — extend the existing model
 
-`frontend/src/lib/priority.ts` already computes the ranking. Changes:
+`frontend/src/lib/priority.ts` already computes the ranking as a weighted blend.
+Changes:
 
-1. **`CONFLICT_WEIGHT.market_anomaly = 0.85`** — a sharp price move is risk-type
-   (demands proactive contact), just below `reputational`/`value_conflict` (1.0)
-   and above `mandate_drift`/`exposure` (0.7). *Justification:* a market move is
-   urgent but a values conflict or reputational hit still outranks it.
-2. **Active signal = highest-severity** signal (replacing the implicit
-   `signals[0]`), so a fresh extreme anomaly drives `severity`/`conflict` and the
-   client re-ranks up. Exposure already flows through `amountAtStake`.
-3. Weights (0.35/0.25/0.2/0.2) **unchanged** → personas keep their order. A test
-   pins the persona ranking.
+1. **Dedicated `anomaly` term in the blend.** The model previously scored only the
+   single most-severe signal, so a market move that wasn't a client's top event
+   contributed nothing. We add an always-on `anomaly` component = the strongest
+   `market_anomaly` severity touching the client, so a SIX-detected move *always*
+   counts. Weights rebalanced to sum to 1:
+   `severity 0.30 / exposure 0.22 / conflict 0.16 / recency 0.16 / anomaly 0.16`.
+   The breakdown panel (`PriorityScore.tsx`) shows the new line explicitly.
+2. **`CONFLICT_WEIGHT.market_anomaly = 0.85`** — when a move *is* the active
+   event, it's risk-type, just below `reputational`/`value_conflict` (1.0) and
+   above `mandate_drift`/`exposure` (0.7).
+3. **Active signal = highest-severity** signal (replacing the implicit
+   `signals[0]`), so a fresh extreme anomaly can also drive `severity`/`conflict`.
+4. A test pins the persona ranking so the rebalanced weights don't reorder them.
 
 Every driver is already a Glass-Thread candidate; we add a `market_anomaly`
 reason step with the SIX/synthetic receipt, e.g. `Market move +N: Meta −8.0%,

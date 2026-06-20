@@ -16,6 +16,7 @@ export function PriorityScore({ client }: { client: Client }) {
           <div><span>Portfolio exposure</span><span><b>{Math.round(pr.exposure * 100)}</b> × {PRIORITY_WEIGHTS.exposure}</span></div>
           <div><span>Conflict</span><span><b>{Math.round(pr.conflict * 100)}</b> × {PRIORITY_WEIGHTS.conflict}</span></div>
           <div><span>Recency</span><span><b>{Math.round(pr.recency * 100)}</b> × {PRIORITY_WEIGHTS.recency}</span></div>
+          <div><span>Market anomaly</span><span><b>{Math.round(pr.anomaly * 100)}</b> × {PRIORITY_WEIGHTS.anomaly}</span></div>
         </div>
       </div>
       <p className="pscore-cap">Weighted blend (out of 100). Justification: docs/priority-metric.md.</p>
