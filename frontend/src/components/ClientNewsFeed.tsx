@@ -111,8 +111,12 @@ function OverlapDetail({ article, rel, client }: { article: FeedArticle; rel: Re
       </div>
 
       <div className="cnews-overlap">
-        <ValueSpider values={article.values} size={230} />
-        <p className="cnews-overlap-cap">The story's implicated value-axes (blue). {client.name}'s own values are bordered below.</p>
+        <ValueSpider values={article.values} overlay={article.values.map((v) => client.affinities.find((a) => a.theme === v.key)?.weight ?? 0)} size={230} />
+        <p className="cnews-overlap-cap">
+          <span className="cnews-leg story">▬ this story</span>
+          <span className="cnews-leg client">▬ {client.name}'s values</span>
+          <br />Where both reach the same axis, the story touches a value the client holds.
+        </p>
       </div>
 
       <div className="cnews-sec">Overlap with {client.name}'s values</div>
