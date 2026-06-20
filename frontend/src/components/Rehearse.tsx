@@ -146,6 +146,22 @@ export function Rehearse({ focusClientId }: Props) {
 
   const reaction = llm ?? local;
   const aiRefined = reaction === llm && llm?.engine === "anthropic";
+
+  // Cycle "thinking" phrases while the model refines, so the wait reads as the
+  // copilot reasoning about this specific client rather than a generic spinner.
+  const phases = useMemo(() => [
+    `Reading ${client.name}'s values & mandate`,
+    "Weighing the proposal against their DNA",
+    `Predicting how ${client.name} would react`,
+  ], [client.name]);
+  const [phase, setPhase] = useState(0);
+  useEffect(() => {
+    if (!refining) return;
+    /* eslint-disable-next-line react-hooks/set-state-in-effect */
+    setPhase(0);
+    const id = setInterval(() => setPhase((p) => (p + 1) % phases.length), 1100);
+    return () => clearInterval(id);
+  }, [refining, phases.length]);
   const { compliance, impact } = useMemo(() => computeOutcome(client, sel, usingText ? text : null), [client, sel, usingText, text]);
 
   function pickAdvice(key: string) { setAdviceKey(key); setText(""); }
@@ -181,7 +197,12 @@ export function Rehearse({ focusClientId }: Props) {
       {usingText && text && <div className="rehearse-subject">Rehearsing your proposal: “{text}”</div>}
 
       <div className="ro-wrap">
-        {!reaction ? (
+        {refining ? (
+          <div className="sim-thinking" role="status" aria-live="polite">
+            <div className="sim-dots" aria-hidden="true"><span /><span /><span /></div>
+            <p className="sim-thinking-label" key={phase}>{phases[phase]}…</p>
+          </div>
+        ) : !reaction ? (
           <p className="empty" style={{ padding: "28px 0" }}>Pick a proposal above or type your own to rehearse.</p>
         ) : (
           <>
@@ -189,9 +210,7 @@ export function Rehearse({ focusClientId }: Props) {
               <div className="ro-accept" style={{ marginBottom: 6 }}>
                 <span className="pct" style={{ color: accColor }}>{acc}%</span>
                 <span className="lbl" style={{ marginLeft: 8 }}>likely acceptance · {client.name}</span>
-                {refining ? (
-                  <span className="lbl" style={{ marginLeft: 8, fontStyle: "italic", opacity: 0.7 }}>refining…</span>
-                ) : aiRefined ? (
+                {aiRefined ? (
                   <span className="lbl" style={{ marginLeft: 8, opacity: 0.7 }} title={`Refined by ${reaction?.model}`}>✦ AI-refined</span>
                 ) : null}
               </div>
