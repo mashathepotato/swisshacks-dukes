@@ -1,12 +1,14 @@
 export type Mandate = "Defensive" | "Balanced" | "Growth";
 
+// Aligned 1:1 with the news pipeline's theme vocabulary (news-test THEME_KEYS),
+// so article themes map straight onto client affinities.
 export type ThemeId =
-  | "environmental"
-  | "us_tech_bullish"
-  | "defensive"
-  | "income"
-  | "reputation"
-  | "healthcare";
+  | "environment"
+  | "tech-innovation"
+  | "healthcare"
+  | "governance"
+  | "consumer"
+  | "financials";
 
 export interface Theme {
   id: ThemeId;

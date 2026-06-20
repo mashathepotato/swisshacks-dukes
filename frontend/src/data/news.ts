@@ -17,7 +17,7 @@ export const NEWS: NewsItem[] = [
       "An investigation alleges systematic labour exploitation across LuxeWear's South-East Asian suppliers. Shares fell 9% intraday.",
     type: "reputational",
     severity: 88,
-    themes: ["reputation"],
+    themes: ["governance"],
     matchedHoldings: ["LuxeWear Group"],
     whyItMatters:
       "A held consumer brand is now at the centre of a labour-exploitation scandal. For reputation-sensitive clients this is not a price move — it is a direct association risk that they expect to hear about from us before it reaches the press.",
@@ -55,7 +55,7 @@ export const NEWS: NewsItem[] = [
       "GreenStaples announced the largest palm-oil deforestation cut-off in its sector — a landmark sustainable-supply-chain pledge.",
     type: "opportunity",
     severity: 54,
-    themes: ["environmental"],
+    themes: ["environment"],
     matchedHoldings: ["GreenStaples Co"],
     whyItMatters:
       "Rare good news that lines up with the environmental thesis of impact-first clients. It is a proof point that the capital behind their portfolio is moving the way they intended — a relationship-building moment, not a problem to defuse.",
@@ -74,7 +74,7 @@ export const NEWS: NewsItem[] = [
       "The latest house view rotates a slice of blue-chip staples into US AI mega-caps to capture momentum across mandates.",
     type: "mandate_drift",
     severity: 49,
-    themes: ["us_tech_bullish", "defensive"],
+    themes: ["tech-innovation", "consumer"],
     matchedHoldings: ["Nestlé S.A."],
     whyItMatters:
       "The default CIO advice would push conservative, hype-averse clients into the precise exposure they reject — while genuinely fitting the tech-forward ones. The signal matters most as something to suppress for some of the book and amplify for the rest.",
@@ -93,7 +93,7 @@ export const NEWS: NewsItem[] = [
       "Fresh export restrictions on advanced chips rattled AI hardware names; Nvidia and peers traded sharply lower on the headline.",
     type: "exposure",
     severity: 63,
-    themes: ["us_tech_bullish"],
+    themes: ["tech-innovation"],
     matchedHoldings: ["Nvidia Corp"],
     whyItMatters:
       "A direct hit to the AI-hardware complex that growth-oriented clients are overweight. Worth a proactive note on exposure and sizing before the next leg of volatility.",
@@ -112,7 +112,7 @@ export const NEWS: NewsItem[] = [
       "Several defensive blue chips lifted payouts ahead of forecasts, reinforcing the income case for dividend-quality names.",
     type: "opportunity",
     severity: 42,
-    themes: ["income", "defensive"],
+    themes: ["financials", "consumer"],
     matchedHoldings: ["Nestlé S.A.", "Procter & Gamble"],
     whyItMatters:
       "A quiet positive for income- and preservation-focused clients: the dividend-quality core they trust just got stronger. A low-key reassurance note lands well with conservative relationships.",

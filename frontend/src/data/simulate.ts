@@ -23,35 +23,35 @@ export function simulateProposal(client: Client, proposal: string): SimulationRe
 
   // US-tech-averse / defensive clients resist AI/tech adds
   if (isUSTech && isIncrease) {
-    const resist = affinity("defensive") * 0.6 + affinity("income") * 0.3 - affinity("us_tech_bullish") * 0.7;
+    const resist = affinity("consumer") * 0.6 + affinity("financials") * 0.3 - affinity("tech-innovation") * 0.7;
     acceptance -= resist;
     if (resist > 0.2) {
       objections.push("Sees US tech/AI as speculative; explicitly wants to avoid Silicon Valley hype.");
       reasonBits.push("the proposal pushes into US tech the client distrusts");
     } else {
-      acceptance += affinity("us_tech_bullish") * 0.4;
+      acceptance += affinity("tech-innovation") * 0.4;
       reasonBits.push("the client is already bullish on US tech");
     }
   }
 
   if (isUSTech && isReduce) {
-    acceptance += affinity("defensive") * 0.4 - affinity("us_tech_bullish") * 0.5;
-    if (affinity("us_tech_bullish") > 0.6)
+    acceptance += affinity("consumer") * 0.4 - affinity("tech-innovation") * 0.5;
+    if (affinity("tech-innovation") > 0.6)
       objections.push("Reluctant to cut a conviction position while momentum is strong.");
   }
 
   if (isESG) {
-    acceptance += affinity("environmental") * 0.6;
-    if (affinity("environmental") > 0.6) reasonBits.push("it aligns tightly with the client's environmental mission");
+    acceptance += affinity("environment") * 0.6;
+    if (affinity("environment") > 0.6) reasonBits.push("it aligns tightly with the client's environmental mission");
   }
 
   if (isDividend) {
-    acceptance += affinity("income") * 0.5;
-    if (affinity("income") > 0.6) reasonBits.push("it preserves the predictable income the client relies on");
+    acceptance += affinity("financials") * 0.5;
+    if (affinity("financials") > 0.6) reasonBits.push("it preserves the predictable income the client relies on");
   }
 
   // reputation-sensitive clients welcome exiting tainted names
-  if (client.affinities.some((a) => a.theme === "reputation" && a.weight > 0.6) && isReduce) {
+  if (client.affinities.some((a) => a.theme === "governance" && a.weight > 0.6) && isReduce) {
     acceptance += 0.25;
     reasonBits.push("the client treats reputational risk as financial risk and welcomes distancing");
   }
@@ -60,7 +60,7 @@ export function simulateProposal(client: Client, proposal: string): SimulationRe
 
   // best framing by comm style
   const valuesLed = client.affinities.some(
-    (a) => (a.theme === "environmental" || a.theme === "healthcare" || a.theme === "reputation") && a.weight > 0.6
+    (a) => (a.theme === "environment" || a.theme === "healthcare" || a.theme === "governance") && a.weight > 0.6
   );
   const bestFraming = valuesLed
     ? "Lead with values and personal narrative; tie the move to what the client cares about, then show the numbers."
@@ -84,7 +84,7 @@ export function simulateProposal(client: Client, proposal: string): SimulationRe
     objections.push("Wants to understand why now, and what it changes about their long-term plan.");
 
   // trajectory: trust & alignment over the next 3 quarters under this proposal
-  const base = 60 + Math.round(affinity("defensive") * 10);
+  const base = 60 + Math.round(affinity("consumer") * 10);
   const dir = acceptance > 0.5 ? 1 : -1;
   const mag = Math.round((Math.abs(acceptance - 0.5) * 2) * 18);
   const trajectory = [
