@@ -2,11 +2,15 @@ import { useMemo, useState } from "react";
 import type { Client, FeedbackDecision, PreferenceModel, Voice } from "../types";
 import { THEME_BY_ID } from "../data/themes";
 import { SIGNAL_META, formatMoney, relativeTime } from "../lib/format";
-import { REASON_META, EVIDENCE_META, buildReasoningChain, buildDraftEmail } from "../lib/explain";
+import { REASON_META, EVIDENCE_META, buildReasoningChain } from "../lib/explain";
 import { adjustConfidence, primaryTheme } from "../lib/learning";
 import { PERSONA_PLAY } from "../lib/portfolio";
+import { buildMessage, CHANNEL_META, LENGTH_META } from "../lib/commPrefs";
+import type { CommChannel, CommLength } from "../lib/commPrefs";
 import { useLearning } from "../lib/learningStore";
 import { useDone } from "../lib/doneStore";
+import { useCommPrefs } from "../lib/commPrefStore";
+import { useRmProfile } from "../lib/rmProfileStore";
 import { ValueRadar } from "./ValueRadar";
 import { ComplianceDesk } from "./ComplianceDesk";
 
@@ -364,22 +368,37 @@ function Recommendations({ client }: { client: Client }) {
 }
 
 /** The actionable next step: a proposed client message, defaulted to the learned tone. */
+function fmtPref(field: "channel" | "length", val: string): string {
+  return field === "channel"
+    ? CHANNEL_META[val as CommChannel]?.label ?? val
+    : LENGTH_META[val as CommLength]?.label ?? val;
+}
+
 function DraftMessage({ client }: { client: Client }) {
   const { record, modelFor } = useLearning();
+  const { prefFor, isCustom, setChannel, setLength, historyFor } = useCommPrefs();
+  const { profile } = useRmProfile();
   const model: PreferenceModel = modelFor(client);
-  const draft = useMemo(() => buildDraftEmail(client), [client]);
   const theme = primaryTheme(client);
+  const pref = prefFor(client);
 
-  // remounted per client (keyed in the parent); initial tone = learned preference
-  const [voice, setVoice] = useState<Voice>(model.preferredVoice ?? "values-led");
+  // remounted per client (keyed in the parent); initial tone = learned preference, else RM house tone
+  const [voice, setVoice] = useState<Voice>(model.preferredVoice ?? profile.defaultVoice);
   const [copied, setCopied] = useState(false);
   const [sent, setSent] = useState(false);
 
-  const body = draft.body[voice];
-  const mailto = `mailto:?subject=${encodeURIComponent(draft.subject)}&body=${encodeURIComponent(body)}`;
+  const msg = useMemo(
+    () => buildMessage(client, pref.channel, pref.length, voice, profile),
+    [client, pref.channel, pref.length, voice, profile],
+  );
+  const history = historyFor(client.id);
+  const learnedThisVoice = model.preferredVoice === voice && model.voiceRates[voice].n > 0;
+  const channels = Object.keys(CHANNEL_META) as CommChannel[];
+  const lengths = Object.keys(LENGTH_META) as CommLength[];
 
   function copy() {
-    navigator.clipboard?.writeText(`Subject: ${draft.subject}\n\n${body}`).then(
+    const text = (msg.subject ? `Subject: ${msg.subject}\n\n` : "") + msg.body;
+    navigator.clipboard?.writeText(text).then(
       () => {
         setCopied(true);
         window.setTimeout(() => setCopied(false), 1800);
@@ -389,16 +408,50 @@ function DraftMessage({ client }: { client: Client }) {
   }
 
   function send() {
-    if (theme) record({ clientId: client.id, theme, decision: "accepted", summary: `Sent: ${draft.subject}`, voice });
+    if (theme) record({ clientId: client.id, theme, decision: "accepted", summary: `Sent via ${pref.channel}: ${msg.subject ?? client.name}`, voice });
     setSent(true);
   }
-
-  const learnedThisVoice = model.preferredVoice === voice && model.voiceRates[voice].n > 0;
 
   return (
     <>
       <div className="section-title">Proposed message · next step</div>
       <div className="draft">
+        {/* communication preference: how this client wants to hear from us */}
+        <div className="pref-block">
+          <div className="pref-row">
+            <span className="pref-lbl">Channel</span>
+            <div className="pref-opts">
+              {channels.map((ch) => (
+                <button key={ch} className={"pref-opt" + (pref.channel === ch ? " on" : "")} onClick={() => { setChannel(client, ch); setSent(false); }}>
+                  {CHANNEL_META[ch].icon} {CHANNEL_META[ch].label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="pref-row">
+            <span className="pref-lbl">Length</span>
+            <div className="pref-opts">
+              {lengths.map((l) => (
+                <button key={l} className={"pref-opt" + (pref.length === l ? " on" : "")} onClick={() => { setLength(client, l); setSent(false); }}>
+                  {LENGTH_META[l].label}
+                </button>
+              ))}
+            </div>
+          </div>
+          <p className="pref-note">
+            {isCustom(client.id)
+              ? <>★ Tuned by you — {client.name} set to <b>{CHANNEL_META[pref.channel].label.toLowerCase()}</b>, <b>{pref.length}</b>. The draft below follows it.</>
+              : <>On file: {client.name} prefers <b>{CHANNEL_META[pref.channel].label.toLowerCase()}</b>, <b>{pref.length}</b>. The draft below follows it.</>}
+          </p>
+          {history.length > 0 && (
+            <ul className="pref-history">
+              {history.slice(0, 3).map((h, i) => (
+                <li key={i}>{h.field === "channel" ? "Channel" : "Length"}: {fmtPref(h.field, h.from)} → {fmtPref(h.field, h.to)} · {h.date}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+
         <div className="draft-voices">
           <button className={"voice" + (voice === "values-led" ? " on" : "")} onClick={() => setVoice("values-led")}>
             Values-led
@@ -410,16 +463,24 @@ function DraftMessage({ client }: { client: Client }) {
         {learnedThisVoice && (
           <p className="draft-learned">★ Pre-selected — {client.name} accepts this tone most often.</p>
         )}
-        <div className="draft-subject">
-          <span className="k">Subject</span> {draft.subject}
-        </div>
-        <textarea className="draft-body" value={body} readOnly rows={Math.min(14, body.split("\n").length + 2)} />
+
+        <div className="draft-format">{msg.format}{msg.subject ? "" : " · spoken / no subject line"}</div>
+        {msg.subject && (
+          <div className="draft-subject">
+            <span className="k">Subject</span> {msg.subject}
+          </div>
+        )}
+        <textarea className="draft-body" value={msg.body} readOnly rows={Math.min(16, msg.body.split("\n").length + 2)} />
         <div className="draft-actions">
-          <a className="draft-send" href={mailto} onClick={send}>✉️ Send to {client.name}</a>
-          <button className="draft-copy" onClick={copy}>{copied ? "✓ Copied" : "Copy draft"}</button>
+          {msg.sendHref ? (
+            <a className="draft-send" href={msg.sendHref} onClick={send}>{CHANNEL_META[pref.channel].icon} {msg.sendLabel}</a>
+          ) : (
+            <button className="draft-send" onClick={send}>{CHANNEL_META[pref.channel].icon} {msg.sendLabel}</button>
+          )}
+          <button className="draft-copy" onClick={copy}>{copied ? "✓ Copied" : "Copy"}</button>
         </div>
         {sent ? (
-          <p className="draft-note" style={{ color: "var(--green)" }}>✓ Logged as accepted ({voice}) — the copilot will favour this tone next time.</p>
+          <p className="draft-note" style={{ color: "var(--green)" }}>✓ Logged via {CHANNEL_META[pref.channel].label.toLowerCase()} ({voice}) — the copilot will favour this tone next time.</p>
         ) : (
           <p className="draft-note">AI drafts only — you review and approve before anything is sent.</p>
         )}
@@ -427,3 +488,4 @@ function DraftMessage({ client }: { client: Client }) {
     </>
   );
 }
+

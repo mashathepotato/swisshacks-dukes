@@ -6,8 +6,10 @@ import { ClientDetail } from "./components/ClientDetail";
 import { ClientPage } from "./components/ClientPage";
 import { NewsFeed } from "./components/NewsFeed";
 import { NewsDetail } from "./components/NewsDetail";
+import { RmProfilePanel } from "./components/RmProfilePanel";
 import type { Client, NewsItem } from "./types";
 import { RANKED_NEWS } from "./data/news";
+import { useRmProfile } from "./lib/rmProfileStore";
 
 type Tab = "priority" | "clients" | "news" | "rehearse";
 
@@ -18,6 +20,8 @@ export default function App() {
   const [simFocus, setSimFocus] = useState<string | null>(null);
   // when set, the full client page is shown full-screen over the tabs
   const [fullClient, setFullClient] = useState<Client | null>(null);
+  const [showProfile, setShowProfile] = useState(false);
+  const { profile } = useRmProfile();
 
   function openSimulator(client: Client) {
     setFullClient(null);
@@ -51,8 +55,11 @@ export default function App() {
           <button className={"tab" + (tab === "news" ? " active" : "")} onClick={() => setTab("news")}>📰 News feed</button>
           <button className={"tab" + (tab === "rehearse" ? " active" : "")} onClick={() => setTab("rehearse")}>💬 Rehearse</button>
         </div>
-        <div className="rm-badge">Relationship Manager · <b>T. Keller</b></div>
+        <button className="rm-badge" onClick={() => setShowProfile(true)} title="Edit your communication conventions">
+          Relationship Manager · <b>{profile.name}</b> <span className="rm-gear">⚙</span>
+        </button>
       </div>
+      <RmProfilePanel open={showProfile} onClose={() => setShowProfile(false)} />
 
       <div className="main">
         <div className="content">
@@ -67,6 +74,7 @@ export default function App() {
     </div>
   );
 }
+
 
 
 
