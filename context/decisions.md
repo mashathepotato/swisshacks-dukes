@@ -12,6 +12,35 @@ Append a short entry whenever we make a notable choice. Newest first.
 
 ---
 
+### 2026-06-20 — Portfolio anomaly detection via SIX, into a computed priority score
+- **Decision:** Detect extreme market-data moves (vol-scaled daily-return z-score
+  ≥ 3, or volume ≥ 4×) on held instruments using the SIX MCP, associate each move
+  with the clients who hold it (severity scaled by real CHF exposure), and surface
+  it as a new `market_anomaly` signal in the existing priority queue. SIX is read
+  through a **fetch-and-cache fixture behind a `PriceProvider` seam** (live MCP
+  provider drop-in later). The priority score is **recomputed from scratch** as a
+  transparent weighted model; the anomaly is one driver among
+  value-conflict 0.32 / exposure 0.22 / relationship 0.16 / drift 0.16 /
+  **anomaly 0.14**.
+- **Why:** Price/volume anomalies are the one signal the dashboard lacks (news and
+  mandate-drift are covered) and are exactly what the SIX key unlocks. The fixture
+  seam keeps the demo deterministic (never hard-fail on flaky wifi) while the
+  provenance is genuinely SIX EOD data, and leaves a one-file path to go live
+  app-wide later. Recomputing the score makes it a glass-threaded, decomposable
+  number rather than an authored constant — straight at the Trust/Explainability
+  criterion. Anomaly weight sits below value-conflict and drift because a sharp
+  price move is urgent but should not outrank a values conflict or a mandate
+  breach; it still compounds with exposure so the same move ranks higher for the
+  client with more at stake. Weights are calibrated to preserve the four personas'
+  order, locked by a test.
+- **Alternatives considered:** position/transaction anomalies (rejected — doesn't
+  use SIX, overlaps Compliance Desk); a dedicated "Market Anomalies" tab (rejected
+  — second surface, loses the queue's existing trust + Glass Thread); live runtime
+  MCP calls (rejected for demo path — flaky-network risk, EOD lags a settled day
+  anyway); layering anomaly onto the existing authored score (rejected — user
+  asked for a from-scratch, justifiably-weighted recompute).
+- **Owner:** Varad · spec `docs/superpowers/specs/2026-06-20-portfolio-anomaly-detection-design.md`.
+
 ### 2026-06-20 — Voice Conversation Capture as the next feature
 - **Decision:** Add in-browser live STT (Web Speech API) behind a consent gate
   that distills a consented client conversation into a reviewed CRM note + Client-
