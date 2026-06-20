@@ -9,24 +9,33 @@ import { NewsFeed } from "./components/NewsFeed";
 import { NewsDetail } from "./components/NewsDetail";
 import type { Client, NewsItem } from "./types";
 import { RANKED_NEWS } from "./data/news";
+import { useCustomize } from "./lib/customizeStore";
 
 type Tab = "priority" | "clients" | "news" | "simulator" | "book";
 
+const TAB_CONFIG: Record<Tab, string> = {
+  priority: "📋 Priority queue",
+  clients: "👥 Clients",
+  news: "📰 News feed",
+  simulator: "💬 Rehearse",
+  book: "🔬 Rehearse outcome",
+};
+
 export default function App() {
+  const { customising, toggleCustomising, tabOrder, reorderTabs, density, setDensity } = useCustomize();
+
   const [tab, setTab] = useState<Tab>("priority");
   const [selected, setSelected] = useState<Client | null>(null);
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(RANKED_NEWS[0]?.news ?? null);
   const [simFocus, setSimFocus] = useState<string | null>(null);
-  // when set, the full client page is shown full-screen over the tabs
   const [fullClient, setFullClient] = useState<Client | null>(null);
+  const [dragTab, setDragTab] = useState<string | null>(null);
 
   function openSimulator(client: Client) {
     setFullClient(null);
     setSimFocus(client.id);
     setTab("simulator");
   }
-
-  // open the dedicated full-screen client page (from the queue drawer or news impact map)
   function openFullClient(client: Client) {
     setSelected(client);
     setFullClient(client);
@@ -34,27 +43,62 @@ export default function App() {
 
   if (fullClient) {
     return (
-      <ClientPage
-        client={fullClient}
-        onBack={() => setFullClient(null)}
-        onSimulate={openSimulator}
-      />
+      <div className={"density-" + density}>
+        <ClientPage client={fullClient} onBack={() => setFullClient(null)} onSimulate={openSimulator} />
+      </div>
     );
   }
 
   return (
-    <div className="app">
+    <div className={"app density-" + density}>
       <div className="topbar">
         <div className="brand">RM Copilot <span className="sub">SwissHacks · Dukes</span></div>
-        <div className="tabs">
-          <button className={"tab" + (tab === "priority" ? " active" : "")} onClick={() => setTab("priority")}>📋 Priority queue</button>
-          <button className={"tab" + (tab === "clients" ? " active" : "")} onClick={() => setTab("clients")}>👥 Clients</button>
-          <button className={"tab" + (tab === "news" ? " active" : "")} onClick={() => setTab("news")}>📰 News feed</button>
-          <button className={"tab" + (tab === "simulator" ? " active" : "")} onClick={() => setTab("simulator")}>💬 Rehearse</button>
-          <button className={"tab" + (tab === "book" ? " active" : "")} onClick={() => setTab("book")}>🔬 Rehearse outcome</button>
+        <div className={"tabs" + (customising ? " editing" : "")}>
+          {tabOrder.map((key) => {
+            const label = TAB_CONFIG[key as Tab];
+            if (!label) return null;
+            return (
+              <button
+                key={key}
+                className={"tab" + (tab === key ? " active" : "") + (customising ? " draggable" : "") + (dragTab === key ? " dragging" : "")}
+                draggable={customising}
+                onDragStart={(e) => { e.dataTransfer.setData("text/plain", key); e.dataTransfer.effectAllowed = "move"; setDragTab(key); }}
+                onDragEnd={() => setDragTab(null)}
+                onDragOver={(e) => { if (customising) e.preventDefault(); }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  const from = e.dataTransfer.getData("text/plain") || dragTab;
+                  if (from && from !== key) reorderTabs(from, key);
+                  setDragTab(null);
+                }}
+                onClick={() => setTab(key as Tab)}
+                title={customising ? "Drag to reorder" : undefined}
+              >
+                {customising && <span className="grip">⠿</span>}{label}
+              </button>
+            );
+          })}
         </div>
-        <div className="rm-badge">Relationship Manager · <b>T. Keller</b></div>
+        <div className="topbar-actions">
+          <button
+            className="dens-toggle"
+            onClick={() => setDensity(density === "comfortable" ? "compact" : "comfortable")}
+            title="Toggle spacing"
+          >
+            {density === "compact" ? "⊟ Compact" : "▦ Comfortable"}
+          </button>
+          <button className={"cust-toggle" + (customising ? " on" : "")} onClick={toggleCustomising}>
+            ⚙ {customising ? "Done" : "Customise"}
+          </button>
+          <div className="rm-badge">RM · <b>T. Keller</b></div>
+        </div>
       </div>
+
+      {customising && (
+        <div className="cust-hint">
+          ⚙ Customise mode — drag the tabs above to reorder them. Open a client to rearrange and resize their page. Your layout is saved automatically.
+        </div>
+      )}
 
       <div className="main">
         <div className="content">
@@ -70,6 +114,4 @@ export default function App() {
     </div>
   );
 }
-
-
 
