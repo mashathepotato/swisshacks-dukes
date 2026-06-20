@@ -121,6 +121,13 @@ export function ConversationCapture({ client }: { client: Client }) {
     }
   }
 
+  // Switch tabs and clear the shared insight state so one tab's result never
+  // bleeds into the other.
+  function switchTab(t: "voice" | "manual") {
+    setTab(t);
+    setResult(null); setAccepted({}); setNoteText(""); setErr(null); setDigest(null);
+  }
+
   function approve(medium?: string) {
     if (!result) return;
     const deltas = {
@@ -138,8 +145,8 @@ export function ConversationCapture({ client }: { client: Client }) {
       <h3>🎙️ Conversation Capture — {client.name}</h3>
 
       <div style={{ display: "flex", gap: 8, margin: "8px 0 12px" }}>
-        <button onClick={() => setTab("voice")} disabled={tab === "voice"}>🎙️ Voice (consented)</button>
-        <button onClick={() => setTab("manual")} disabled={tab === "manual"}>📝 Manual notes</button>
+        <button onClick={() => switchTab("voice")} disabled={tab === "voice"}>🎙️ Voice (consented)</button>
+        <button onClick={() => switchTab("manual")} disabled={tab === "manual"}>📝 Manual notes</button>
       </div>
 
       {tab === "manual" && (
