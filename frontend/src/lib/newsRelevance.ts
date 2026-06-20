@@ -27,17 +27,46 @@ export interface HoldingMatch { issuer: string; isins: string[]; }
 export type ReasonKind = "holding" | "value" | "mandate";
 export interface Reason { kind: ReasonKind; text: string; }
 
+// Weights for the combined priority score (sum to 1 → score stays in 0..1).
+// Justification: docs/relevance-metric.md
+export const RELEVANCE_WEIGHTS = { value: 0.5, severity: 0.3, recency: 0.2 } as const;
+const HALF_LIFE_DAYS = 7;   // news relevance halves about weekly
+const DAY_MS = 86_400_000;
+
+const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
+
+/** Intrinsic significance of the story, 0..1 (independent of any client). */
+function severityOf(a: FeedArticle): number {
+  const sentMag = Math.min(1, Math.abs(a.sentiment ?? 0) / 0.5); // observed |sentiment| tops out near 0.5
+  const mm = a.stage2?.marketMovement ? 1 : 0;
+  const breadth = Math.min(1, (a.stage2?.themes.length ?? 0) / 2);
+  return clamp01(0.45 * mm + 0.35 * sentMag + 0.2 * breadth);
+}
+
+/** Exponential-decay recency, 0..1, relative to the feed's newest story. */
+function recencyOf(a: FeedArticle, nowMs: number): number {
+  if (!a.date) return 0.5;
+  const t = Date.parse(a.date);
+  if (Number.isNaN(t)) return 0.5;
+  const ageDays = Math.max(0, (nowMs - t) / DAY_MS);
+  return clamp01(Math.pow(0.5, ageDays / HALF_LIFE_DAYS));
+}
+
 export interface Relevance {
   holdings: HoldingMatch[];      // unique issuers the story affects that the client holds
   valueMatches: ValueMatch[];    // value-axes overlapping the client's convictions
   mandateMatch: boolean;
-  valueScore: number;            // Σ touched convictions (raw)
-  valueOverlap: number;          // valueScore normalised 0..1 by the client's total conviction
-  reasons: Reason[];             // the explainable "why" — no opaque number
+  valueScore: number;            // Σ (story value × client value), raw
+  valueOverlap: number;          // weighted avg of (story value × client value) over affected axes
+  severity: number;              // 0..1 intrinsic story significance
+  recency: number;               // 0..1 exponential-decay freshness
+  combined: number;              // 0..1 weighted blend — the ranking score
+  reasons: Reason[];             // the explainable "why"
 }
 
-/** Relevance of one funnel article to one client — expressed as concrete reasons. */
-export function relevance(article: FeedArticle, client: Client): Relevance {
+/** Relevance of one funnel article to one client. `nowMs` anchors recency
+ *  (defaults to real now; callers pass the feed's newest date for the static feed). */
+export function relevance(article: FeedArticle, client: Client, nowMs: number = Date.now()): Relevance {
   // 1. value overlap: article's implicated axes ∩ the client's convictions
   const valueMatches: ValueMatch[] = [];
   for (const v of article.values) {
@@ -89,24 +118,32 @@ export function relevance(article: FeedArticle, client: Client): Relevance {
   }
   if (mandateMatch) reasons.push({ kind: "mandate", text: `Their ${client.mandate} mandate holds an affected instrument` });
 
-  return { holdings, valueMatches, mandateMatch, valueScore, valueOverlap, reasons };
+  // 5. combined priority score (0..1): value overlap × severity × recency, weighted
+  const severity = severityOf(article);
+  const recency = recencyOf(article, nowMs);
+  const combined =
+    RELEVANCE_WEIGHTS.value * valueOverlap +
+    RELEVANCE_WEIGHTS.severity * severity +
+    RELEVANCE_WEIGHTS.recency * recency;
+
+  return { holdings, valueMatches, mandateMatch, valueScore, valueOverlap, severity, recency, combined, reasons };
 }
 
 export function hasRelevance(r: Relevance): boolean {
   return r.holdings.length > 0 || r.valueMatches.length > 0 || r.mandateMatch;
 }
 
-/** Funnel articles relevant to one client, sorted by total value overlap (desc).
- *  Ties break to held instruments, then mandate, so holdings-only stories still
- *  surface — below anything that touches the client's values. */
+/** Funnel articles relevant to one client, ranked by the combined priority score
+ *  (value overlap + severity + recency). Recency is anchored to the feed's newest
+ *  story so it's meaningful on the static feed. Ties break to held instruments. */
 export function articlesForClient(articles: FeedArticle[], client: Client, limit = 14) {
-  return articles
-    .filter((a) => a.selected)
-    .map((a) => ({ article: a, rel: relevance(a, client) }))
+  const selected = articles.filter((a) => a.selected);
+  const nowMs = Math.max(0, ...selected.map((a) => (a.date ? Date.parse(a.date) : 0)).filter((n) => !Number.isNaN(n)));
+  return selected
+    .map((a) => ({ article: a, rel: relevance(a, client, nowMs) }))
     .filter((x) => hasRelevance(x.rel))
     .sort((a, b) =>
-      (b.rel.valueOverlap - a.rel.valueOverlap) ||
-      (b.rel.holdings.length - a.rel.holdings.length) ||
-      ((b.rel.mandateMatch ? 1 : 0) - (a.rel.mandateMatch ? 1 : 0)))
+      (b.rel.combined - a.rel.combined) ||
+      (b.rel.holdings.length - a.rel.holdings.length))
     .slice(0, limit);
 }
