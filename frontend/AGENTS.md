@@ -106,46 +106,9 @@ source or a stated assumption. Reuse the receipt pattern (`EVIDENCE_META` +
 
 ## Workflow for a task
 
-1. Pick a `[ ]` task below. Read the files it names.
+1. Read the files your task names; skim neighbours for the existing pattern.
 2. Make the scoped change, matching style. Put pure logic in `lib/`, UI in
    `components/`, shared styles in `index.css`.
 3. Verify: `npx tsc --noEmit -p tsconfig.app.json` clean, `npm run lint` clean,
    and load `http://localhost:5173` to exercise it.
-4. Commit (no co-author trailer) and check the task box here.
-
-## Task backlog (small, scoped)
-
-- [ ] **"vs. doing nothing" baseline on monetary impact.** Add a one-line baseline
-  to the Rehearse-outcome impact block ("staying put risks ~CHF X"). Files:
-  `RehearseOutcome.tsx`, maybe `lib/portfolio.ts`. Accept: shown only when there's
-  exposure; figure is explained.
-- [ ] **Horizon selector for impact.** Let the RM pick 6 / 12 / 24 months; scale
-  the CHF figures and update the notes. Files: `lib/portfolio.ts` (`estimateImpact`
-  takes `horizonMonths`), `RehearseOutcome.tsx`. Accept: assumptions stay visible.
-- [ ] **Extract a shared `Receipt` component.** `ComplianceDesk.tsx` and
-  `ClientDetail.tsx` both render receipts; pull one `components/Receipt.tsx` and
-  reuse. Accept: no visual change, both call sites use it.
-- [ ] **Compliance stamp tooltips.** Add a short `title`/hover explanation to each
-  ✓/✗ stamp ("same sub-asset class keeps sleeve weights within ±2.0pp"). File:
-  `ComplianceDesk.tsx`, `RehearseOutcome.tsx`.
-- [ ] **Tab badge for active count.** Show the number of clients still needing
-  attention on the Priority-queue tab. Files: `App.tsx` (read `useDone`),
-  `PriorityQueue` logic. Accept: badge updates as you mark clients complete.
-- [ ] **Soft "mark complete" nudge after sending a draft.** When the RM clicks
-  "✉️ Send" in `DraftMessage`, show a non-blocking prompt offering to mark the
-  client complete (still a manual click). Files: `ClientDetail.tsx`, `doneStore`.
-- [ ] **"Reopen all" / clear completed.** A small control in the Completed section
-  to reopen everything. Files: `PriorityQueue.tsx`, `doneStore.tsx`.
-- [ ] **Set up Vitest for `lib/`.** Add `vitest`, a `test` script, and unit tests
-  for `computeDrift`, `proposeSwap`, `simulateSwap`, `estimateImpact` (port the
-  cases from the sibling `demo/` backend tests). Accept: `npm test` green; update
-  "Run & verify" above.
-- [ ] **Tune drawdown by signal type.** `estimateImpact` uses one `MAX_DRAWDOWN`;
-  vary it by the client's signal `type` (reputational vs mandate_drift vs
-  opportunity), with the mapping stated in the note. File: `lib/portfolio.ts`.
-- [ ] **a11y pass on the queue + rehearse.** Keyboard focus + `aria` on `.qrow`,
-  `.adv`, `.pick`, and the mark/reopen buttons. Files: `PriorityQueue.tsx`,
-  `RehearseOutcome.tsx`, `index.css` (`:focus-visible`).
-- [ ] **Empty/edge states.** Synthetic clients have no `PERSONA_PLAY`; make the
-  Rehearse-outcome compliance panel and ComplianceDesk degrade gracefully with a
-  clear message. Files: `RehearseOutcome.tsx`, `ComplianceDesk.tsx`.
+4. Commit (no co-author trailer).
