@@ -96,16 +96,22 @@ export function Rehearse({ focusClientId }: Props) {
   const [clientId, setClientId] = useState(focusClientId ?? personas[0].id);
   const client = CLIENTS.find((c) => c.id === clientId)!;
 
-  useEffect(() => {
-    // sync the client when the parent focuses one (e.g. "Rehearse this proposal with …")
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (focusClientId) setClientId(focusClientId);
-  }, [focusClientId]);
-
   const advice = useMemo(() => adviceFor(client), [client]);
   const [adviceKey, setAdviceKey] = useState<string | null>(advice[0]?.key ?? null);
   const [text, setText] = useState("");   // submitted free-text proposal
   const [input, setInput] = useState(""); // composer field
+
+  useEffect(() => {
+    // the client is chosen from the nav dropdown now — sync and reset the proposal
+    if (!focusClientId) return;
+    const next = adviceFor(CLIENTS.find((c) => c.id === focusClientId)!);
+    /* eslint-disable react-hooks/set-state-in-effect */
+    setClientId(focusClientId);
+    setAdviceKey(next[0]?.key ?? null);
+    setText("");
+    setInput("");
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, [focusClientId]);
 
   const usingText = adviceKey === null;
   const sel = usingText ? null : advice.find((a) => a.key === adviceKey) ?? advice[0] ?? null;
@@ -114,11 +120,6 @@ export function Rehearse({ focusClientId }: Props) {
   const reaction = useMemo(() => (proposalText ? simulateProposal(client, proposalText) : null), [client, proposalText]);
   const { compliance, impact } = useMemo(() => computeOutcome(client, sel, usingText ? text : null), [client, sel, usingText, text]);
 
-  function pickClient(id: string) {
-    setClientId(id);
-    setAdviceKey(adviceFor(CLIENTS.find((c) => c.id === id)!)[0]?.key ?? null);
-    setText(""); setInput("");
-  }
   function pickAdvice(key: string) { setAdviceKey(key); setText(""); }
   function submitText() { const t = input.trim(); if (!t) return; setText(t); setAdviceKey(null); }
 
@@ -128,14 +129,8 @@ export function Rehearse({ focusClientId }: Props) {
   return (
     <div className="booksim">
       <div className="bs-head" style={{ paddingBottom: 14 }}>
-        <h1 style={{ margin: "0 0 4px", fontSize: 18, fontWeight: 600 }}>Rehearse a proposal</h1>
-        <p className="lead" style={{ margin: 0 }}>Pick a client, then a ready-made strategy <b>or</b> describe your own — see how they'd likely react, the estimated CHF impact, and whether it keeps their mandate.</p>
-      </div>
-
-      <div className="ro-clients" style={{ marginBottom: 12 }}>
-        {CLIENTS.map((c) => (
-          <button key={c.id} className={"pick" + (c.id === clientId ? " on" : "")} onClick={() => pickClient(c.id)}>{c.name}</button>
-        ))}
+        <h1 style={{ margin: "0 0 4px", fontSize: 18, fontWeight: 600 }}>Rehearse a proposal · {client.name}</h1>
+        <p className="lead" style={{ margin: 0 }}>Pick a ready-made strategy <b>or</b> describe your own — see how {client.name} would likely react, the estimated CHF impact, and whether it keeps their mandate. Switch client from the <b>Rehearse</b> menu in the nav.</p>
       </div>
 
       <div className="bs-advice">

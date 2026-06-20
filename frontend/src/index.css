@@ -33,7 +33,12 @@
   --orange: #a85a1c;
   --purple: #5a4b86;
 
-  font-family: "Helvetica Neue", Helvetica, "Inter", Arial, sans-serif;
+  /* SIX house typography */
+  --font-sans: "Noto Sans", Helvetica, Arial, sans-serif;
+  --font-serif: "Noto Serif", Georgia, "Times New Roman", Times, serif;
+  --font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   color: var(--text);
@@ -42,7 +47,16 @@
 
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; margin: 0; }
-body { background: var(--bg); }
+body { background: var(--bg); font-family: var(--font-sans); }
+
+/* Headings echo SIX's condensed Noto Sans — tight, precise, editorial */
+h1, h2, h3, h4,
+.brand, .cp-bar-title, .rmp-head h2,
+.drawer h2, .queue h1, .clients h1, .sim-head h1, .bs-head h1, .cp-head h1 {
+  font-stretch: 75%;
+  letter-spacing: -.005em;
+}
+.brand { letter-spacing: .04em; }  /* keep tracked caps for the wordmark */
 
 button { font-family: inherit; cursor: pointer; }
 
@@ -75,6 +89,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .tab:hover { color: var(--text); }
 .tab.active { color: var(--text); border-bottom-color: var(--accent); }
+
 .rm-badge {
   margin-left: auto; color: var(--text-dim); font-size: 12.5px; background: transparent;
   border: 1px solid transparent; border-radius: 2px; padding: 6px 10px; cursor: pointer; font-family: inherit;
@@ -133,9 +148,9 @@ button { font-family: inherit; cursor: pointer; }
 }
 .rcpt-src {
   font-size: 10.5px; color: var(--text-faint);
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--font-mono);
 }
-.rcpt-quote { margin: 0; font-style: italic; font-size: 12.5px; line-height: 1.55; color: var(--text); }
+.rcpt-quote { margin: 0; font-family: var(--font-serif); font-style: italic; font-size: 13px; line-height: 1.6; color: var(--text); }
 .rcpt-ref { font-size: 10.5px; color: var(--accent); display: inline-block; margin-top: 5px; word-break: break-all; }
 
 /* ---- draft message (next step) ---- */
@@ -425,7 +440,7 @@ button { font-family: inherit; cursor: pointer; }
 /* ---- mandate & compliance desk (Phase A–C engines) ---- */
 .drift-row { display: flex; align-items: baseline; justify-content: space-between; font-size: 12.5px; padding: 6px 0; border-bottom: 1px solid var(--border-soft); }
 .drift-row .sa { color: var(--text-dim); }
-.drift-row .dv { font-weight: 700; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text-faint); }
+.drift-row .dv { font-weight: 700; font-family: var(--font-mono); color: var(--text-faint); }
 .drift-row.breach .dv { color: var(--amber); }
 .cdesk-controls { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; margin: 4px 0 10px; }
 .cdesk-controls label { font-size: 10px; text-transform: uppercase; letter-spacing: .07em; color: var(--text-faint); display: flex; flex-direction: column; gap: 4px; }
@@ -442,7 +457,7 @@ button { font-family: inherit; cursor: pointer; }
 .dverdict.conflicts { background: var(--red-soft); color: var(--red); }
 .dverdict.neutral { background: var(--panel-2); color: var(--text-dim); }
 .cdesk-moved { font-size: 11.5px; color: var(--text-dim); margin-top: 9px; }
-.cdesk-moved b { color: var(--text); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.cdesk-moved b { color: var(--text); font-family: var(--font-mono); }
 .alts { margin-top: 9px; }
 .alt-row { font-size: 11.5px; color: var(--text-dim); padding: 7px 0; border-top: 1px solid var(--border-soft); line-height: 1.45; }
 .alt-row .ai { color: var(--text); font-weight: 600; }
@@ -492,7 +507,7 @@ button { font-family: inherit; cursor: pointer; }
 .impact-comp { padding: 10px 0; border-bottom: 1px solid var(--border-soft); }
 .impact-comp:last-of-type { border-bottom: none; }
 .ic-top { display: flex; justify-content: space-between; align-items: baseline; font-size: 13px; color: var(--text); }
-.ic-top .amt { font-weight: 700; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.ic-top .amt { font-weight: 700; font-family: var(--font-mono); }
 .ic-top .amt.pos { color: var(--green); }
 .ic-top .amt.neg { color: var(--red); }
 .ic-bar { height: 6px; border-radius: 0; margin: 7px 0 6px; min-width: 4px; opacity: .9; }

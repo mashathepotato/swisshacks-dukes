@@ -23,6 +23,7 @@ export default function App() {
   const [showProfile, setShowProfile] = useState(false);
   const { profile } = useRmProfile();
 
+  // Rehearse is reached only from a client's profile ("Rehearse this proposal with…")
   function openSimulator(client: Client) {
     setFullClient(null);
     setSimFocus(client.id);
@@ -53,7 +54,6 @@ export default function App() {
           <button className={"tab" + (tab === "priority" ? " active" : "")} onClick={() => setTab("priority")}>Priority queue</button>
           <button className={"tab" + (tab === "clients" ? " active" : "")} onClick={() => setTab("clients")}>Clients</button>
           <button className={"tab" + (tab === "news" ? " active" : "")} onClick={() => setTab("news")}>News feed</button>
-          <button className={"tab" + (tab === "rehearse" ? " active" : "")} onClick={() => setTab("rehearse")}>Rehearse</button>
         </div>
         <button className="rm-badge" onClick={() => setShowProfile(true)} title="Edit your communication conventions">
           Relationship Manager · <b>{profile.name}</b> <span className="rm-gear">Edit</span>
