@@ -440,6 +440,116 @@ export const CLIENTS: Client[] = [
       },
     },
   },
+  {
+    id: "lecun",
+    name: "Lecun",
+    archetype: "The AI-Native Anomaly",
+    isPersona: true,
+    mandate: "Growth",
+    tenureYears: 6,
+    riskProfile: "High",
+    commStyle: "Technical, first-principles, fast — wants the model's reasoning, not its conclusions",
+    values: ["European technological sovereignty", "First-principles conviction over consensus", "Open research over closed platforms"],
+    dislikes: ["US mega-cap tech concentration", "Meta's LLM-first AI strategy", "Hype-driven momentum trades"],
+    affinities: [
+      { theme: "us-exposure", weight: 0.92, polarity: -1 },
+      { theme: "geographic-anchoring", weight: 0.82 },
+      { theme: "confidentiality", weight: 0.55 },
+    ],
+    priorityScore: 90,
+    amountAtStake: 204_568,
+    topReason: "A 65-year-old US-domiciled Growth client whose book is US-tech-heavy — but his stated conviction is the inverse: out of Meta over its AI strategy, out of US mega-cap, into Europe.",
+    topHoldings: ["Meta Platforms Inc.", "Nvidia Corp", "Broadcom Inc.", "ASML Holding N.V.", "SAP SE"],
+    signals: [
+      {
+        id: "lec-news-1",
+        headline: "Meta doubles down on LLM-scale 'superintelligence', sidelines long-term AI research",
+        source: "The Information",
+        publishedAt: "2026-06-19",
+        summary:
+          "Meta is reorganising its AI org around large-language-model scale and product, winding down open-ended research — a strategic split prominent AI scientists have publicly criticised.",
+        type: "value_conflict",
+        severity: 72,
+        matchedHoldings: ["Meta Platforms Inc."],
+      },
+    ],
+    recommendations: [
+      {
+        id: "lec-rec-1",
+        action: "Propose exiting the Meta Platforms position and rotating the US mega-cap tech overweight into European CIO names (ASML, SAP).",
+        rationale:
+          "His profile reads as a standard high-risk Growth client, but his stated conviction is the opposite of the book: he rejects Meta's AI direction and US mega-cap concentration, and wants European exposure. Selling Meta resolves a values conflict he holds publicly; ASML and SAP are European CIO BUYs that keep the equity sleeve intact.",
+        evidence: [
+          "CRM 2026-05: 'Meta is betting the company on LLM scale — I think that's the wrong path, and I don't want my own capital riding on it.'",
+          "CRM 2025-11: 'The next decade of value compounds in Europe. Get me out of the US mega-cap crowd.'",
+          "News: Meta sidelines long-term research (The Information, 2026-06-19)",
+          "CIO List: ASML, SAP rated BUY — European tech",
+        ],
+        confidence: 0.84,
+      },
+    ],
+    reasoningChain: [
+      {
+        kind: "dna",
+        label: "Anti-Meta strategy, bullish on Europe",
+        detail: "An AI pioneer who built his career in the US but now bets against US mega-cap concentration and Meta's LLM-first direction — an anomaly for his 65-year-old, US-domiciled profile.",
+        source: "CRM 2026-05",
+        evidence: [
+          {
+            kind: "crm",
+            sourceId: "crm_lecun.csv:2026-05-12",
+            date: "2026-05-12",
+            quote: "Meta is betting the company on LLM scale — I think that's the wrong path, and I don't want my own capital riding on it. The real work, and the real returns, are moving to Europe.",
+          },
+        ],
+      },
+      {
+        kind: "holding",
+        label: "Holds Meta Platforms in a US-tech-heavy Growth book",
+        detail: "His Growth mandate carries the standard US mega-cap overweight — Meta, Nvidia, Broadcom — the exact concentration he says he wants out of.",
+        source: "Portfolio · Growth sleeve",
+      },
+      {
+        kind: "news",
+        label: "Meta sidelines long-term AI research",
+        detail: "Meta reorganises around LLM-scale 'superintelligence' and winds down open-ended research — the strategy he has publicly broken with.",
+        source: "The Information · 2026-06-19",
+        evidence: [
+          {
+            kind: "news",
+            sourceId: "theinformation.com/meta-superintelligence-pivot",
+            date: "2026-06-19",
+            quote: "Meta is consolidating its AI effort around large-language-model scale and shipping product, winding down the open-ended research bets that defined its lab for a decade.",
+            ref: "https://www.theinformation.com/meta-superintelligence-pivot",
+          },
+        ],
+      },
+      {
+        kind: "conflict",
+        label: "Book contradicts conviction",
+        detail: "A held US name collides head-on with his public anti-Meta, anti-US-concentration stance — the portfolio is invested in exactly what he argues against.",
+      },
+      {
+        kind: "relationship",
+        label: "Wants the reasoning, fast",
+        detail: "First-principles and AI-native — he won't accept a conclusion without the chain behind it, and he moves quickly once it holds up.",
+      },
+      {
+        kind: "score",
+        label: "Priority 90 / 100",
+        detail: "Severity 72 × direct holding conflict × a high-conviction client actively asking to act → near the top of the book.",
+      },
+    ],
+    draftEmail: {
+      subject: "Acting on your Meta position and the US-tech overweight",
+      body: {
+        "values-led":
+          "Dear Dr Lecun,\n\nYou've been clear that Meta's direction is one you no longer want your own capital behind, and that you see the next decade compounding in Europe. Your portfolio doesn't yet reflect that — it still carries the US mega-cap overweight, Meta included.\n\nI'd like to propose exiting Meta and rotating that exposure into European names on our buy list — ASML and SAP — so the book finally matches your conviction. Nothing executes without your sign-off.\n\nAt your convenience,\nT. Keller",
+        "data-driven":
+          "Dear Dr Lecun,\n\nActioning your stated view: your Growth mandate holds Meta Platforms (~CHF 205k) inside a broader US mega-cap tech overweight, against your preference to reduce US concentration and tilt to Europe.\n\nRecommended action: exit Meta and rotate proceeds into ASML and SAP — both European CIO BUYs in the technology sleeve, preserving your equity allocation while cutting US exposure. I can stage the trades for your approval.\n\nBest regards,\nT. Keller",
+      },
+    },
+  },
 
   // ---- synthetic twins (lighter detail; populate the network & scale) ----
   syn("nguyen", "Nguyen", "Tech-forward growth seeker", "Growth", "High", [

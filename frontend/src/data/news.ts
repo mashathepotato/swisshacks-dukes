@@ -9,6 +9,25 @@ import { THEME_BY_ID } from "./themes";
  */
 export const NEWS: NewsItem[] = [
   {
+    id: "news-meta-ai-strategy",
+    headline: "Meta doubles down on LLM-scale 'superintelligence', sidelines long-term AI research",
+    source: "The Information",
+    publishedAt: "2026-06-19",
+    summary:
+      "Meta is reorganising its AI org around large-language-model scale and product, winding down the open-ended research bets that defined its lab for a decade. The split has drawn public criticism from leading AI scientists.",
+    type: "value_conflict",
+    severity: 72,
+    themes: ["us-exposure"],
+    matchedHoldings: ["Meta Platforms Inc."],
+    whyItMatters:
+      "For a client who has publicly broken with Meta's AI direction and wants out of US mega-cap concentration, a held Meta position is now invested against his own stated conviction. This is a values conflict he is actively asking us to resolve, not a price move to monitor.",
+    drivers: [
+      "Direct conflict for clients who reject Meta's LLM-first strategy",
+      "Hits the US mega-cap overweight in Growth mandates",
+      "High relationship upside: acting confirms we listen to conviction, not just the CIO",
+    ],
+  },
+  {
     id: "news-luxewear",
     headline: "LuxeWear Group accused of forced labour in supplier factories",
     source: "Reuters",
