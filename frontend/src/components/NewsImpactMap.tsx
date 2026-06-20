@@ -63,18 +63,18 @@ export function NewsImpactMap({ news, impacts, onPick }: Props) {
     <svg viewBox={`0 0 ${SIZE} ${SIZE}`} width="100%" height={SIZE} style={{ display: "block" }}>
       {/* grid rings */}
       {[0.33, 0.66, 1].map((f) => (
-        <polygon key={f} points={ringPoly(f)} fill="none" stroke="#232c3d" strokeWidth={1} />
+        <polygon key={f} points={ringPoly(f)} fill="none" stroke="#d7d4cc" strokeWidth={1} />
       ))}
       {/* spokes */}
       {THEMES.map((_, i) => {
         const p = pt(i, R);
-        return <line key={i} x1={C} y1={C} x2={p.x} y2={p.y} stroke="#1b2331" strokeWidth={1} />;
+        return <line key={i} x1={C} y1={C} x2={p.x} y2={p.y} stroke="#e7e4dc" strokeWidth={1} />;
       })}
       {/* story footprint */}
-      <polygon points={footprintPoly} fill="#dd6b2022" stroke="#dd6b20" strokeWidth={1.5} strokeLinejoin="round" />
+      <polygon points={footprintPoly} fill="#de39191c" stroke="#de3919" strokeWidth={1.5} strokeLinejoin="round" />
       {/* connectors from centre to each client */}
       {dots.map(({ im, x, y }) => (
-        <line key={"l" + im.client.id} x1={C} y1={C} x2={x} y2={y} stroke="#2b3c5e" strokeWidth={1} opacity={0.5} />
+        <line key={"l" + im.client.id} x1={C} y1={C} x2={x} y2={y} stroke="#c9c5bc" strokeWidth={1} opacity={0.7} />
       ))}
       {/* affected clients */}
       {dots.map(({ im, x, y }) => {
@@ -83,7 +83,7 @@ export function NewsImpactMap({ news, impacts, onPick }: Props) {
         return (
           <g key={im.client.id} onClick={() => onPick?.(im)} style={{ cursor: onPick ? "pointer" : "default" }}>
             <circle cx={x} cy={y} r={r} fill={col + "cc"} stroke={col} strokeWidth={1.5} />
-            <text x={x} y={y - r - 4} fill="#cdd8e6" fontSize={11} fontWeight={600} textAnchor="middle">
+            <text x={x} y={y - r - 4} fill="#16181d" fontSize={11} fontWeight={600} textAnchor="middle">
               {im.client.name}
             </text>
           </g>
@@ -98,12 +98,14 @@ export function NewsImpactMap({ news, impacts, onPick }: Props) {
             key={t.id}
             x={p.x}
             y={p.y}
-            fill={lit ? "#e6edf6" : "#5a6678"}
-            fontSize={lit ? 16 : 13}
+            fill={lit ? "#16181d" : "#8c8f97"}
+            fontSize={lit ? 12 : 10.5}
+            fontWeight={lit ? 700 : 600}
+            letterSpacing=".02em"
             textAnchor="middle"
             dominantBaseline="middle"
           >
-            {t.emoji}
+            {t.short}
           </text>
         );
       })}

@@ -50,13 +50,13 @@ export default function App() {
       <div className="topbar">
         <div className="brand">RM Copilot <span className="sub">SwissHacks · Dukes</span></div>
         <div className="tabs">
-          <button className={"tab" + (tab === "priority" ? " active" : "")} onClick={() => setTab("priority")}>📋 Priority queue</button>
-          <button className={"tab" + (tab === "clients" ? " active" : "")} onClick={() => setTab("clients")}>👥 Clients</button>
-          <button className={"tab" + (tab === "news" ? " active" : "")} onClick={() => setTab("news")}>📰 News feed</button>
-          <button className={"tab" + (tab === "rehearse" ? " active" : "")} onClick={() => setTab("rehearse")}>💬 Rehearse</button>
+          <button className={"tab" + (tab === "priority" ? " active" : "")} onClick={() => setTab("priority")}>Priority queue</button>
+          <button className={"tab" + (tab === "clients" ? " active" : "")} onClick={() => setTab("clients")}>Clients</button>
+          <button className={"tab" + (tab === "news" ? " active" : "")} onClick={() => setTab("news")}>News feed</button>
+          <button className={"tab" + (tab === "rehearse" ? " active" : "")} onClick={() => setTab("rehearse")}>Rehearse</button>
         </div>
         <button className="rm-badge" onClick={() => setShowProfile(true)} title="Edit your communication conventions">
-          Relationship Manager · <b>{profile.name}</b> <span className="rm-gear">⚙</span>
+          Relationship Manager · <b>{profile.name}</b> <span className="rm-gear">Edit</span>
         </button>
       </div>
       <RmProfilePanel open={showProfile} onClose={() => setShowProfile(false)} />
