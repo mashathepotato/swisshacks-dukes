@@ -133,14 +133,12 @@ function OverlapDetail({ article, rel, client }: { article: FeedArticle; rel: Re
             )}
           </div>
         ))}
-        {rel.valueScore > 0 && (
-          <div className="cnews-axis total">
-            <span className="cnews-axis-name">Total value overlap</span>
-            <span className="cnews-axis-math"><b>{rel.valueScore.toFixed(2)}</b></span>
-          </div>
-        )}
+        <div className="cnews-axis total">
+          <span className="cnews-axis-name">Total value overlap</span>
+          <span className="cnews-axis-math"><b>{rel.valueOverlap.toFixed(2)}</b></span>
+        </div>
       </div>
-      <p className="cnews-overlap-cap" style={{ textAlign: "left", marginTop: 8 }}>Each value the story touches contributes the client's conviction on it (0–1); the total is their overlap.</p>
+      <p className="cnews-overlap-cap" style={{ textAlign: "left", marginTop: 8 }}>Sum of the client's convictions on the values the story touches, normalised 0–1 against their total conviction (1.00 = it touches all their values).</p>
     </div>
   );
 }

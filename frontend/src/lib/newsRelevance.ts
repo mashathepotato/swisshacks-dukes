@@ -30,7 +30,8 @@ export interface Relevance {
   holdings: HoldingMatch[];      // unique issuers the story affects that the client holds
   valueMatches: ValueMatch[];    // value-axes overlapping the client's convictions
   mandateMatch: boolean;
-  valueScore: number;            // Σ contributions (labelled sum of the shown overlaps)
+  valueScore: number;            // Σ touched convictions (raw)
+  valueOverlap: number;          // valueScore normalised 0..1 by the client's total conviction
   reasons: Reason[];             // the explainable "why" — no opaque number
 }
 
@@ -55,6 +56,9 @@ export function relevance(article: FeedArticle, client: Client): Relevance {
   }
   valueMatches.sort((a, b) => b.contribution - a.contribution);
   const valueScore = valueMatches.reduce((s, m) => s + m.contribution, 0);
+  // normalise against the client's total conviction → 1.0 = touches all their values
+  const totalConviction = client.affinities.reduce((s, a) => s + a.weight, 0);
+  const valueOverlap = totalConviction > 0 ? valueScore / totalConviction : 0;
 
   // 2. direct holding match — deduped by issuer (one Nestlé, not one per ISIN)
   const held = new Set(client.topHoldings.map(norm));
@@ -85,7 +89,7 @@ export function relevance(article: FeedArticle, client: Client): Relevance {
   }
   if (mandateMatch) reasons.push({ kind: "mandate", icon: "🗂", text: `Their ${client.mandate} mandate holds an affected instrument` });
 
-  return { holdings, valueMatches, mandateMatch, valueScore, reasons };
+  return { holdings, valueMatches, mandateMatch, valueScore, valueOverlap, reasons };
 }
 
 export function hasRelevance(r: Relevance): boolean {
@@ -101,7 +105,7 @@ export function articlesForClient(articles: FeedArticle[], client: Client, limit
     .map((a) => ({ article: a, rel: relevance(a, client) }))
     .filter((x) => hasRelevance(x.rel))
     .sort((a, b) =>
-      (b.rel.valueScore - a.rel.valueScore) ||
+      (b.rel.valueOverlap - a.rel.valueOverlap) ||
       (b.rel.holdings.length - a.rel.holdings.length) ||
       ((b.rel.mandateMatch ? 1 : 0) - (a.rel.mandateMatch ? 1 : 0)))
     .slice(0, limit);
