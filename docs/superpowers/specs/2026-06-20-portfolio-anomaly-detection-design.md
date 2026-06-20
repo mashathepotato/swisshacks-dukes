@@ -1,223 +1,220 @@
 # Portfolio Anomaly Detection — Design
 
 **Date:** 2026-06-20
-**Status:** Approved (brainstorm) → ready for plan
-**Feature:** Detect extreme market-data moves in held instruments via the SIX MCP,
-associate each move with the clients who hold it (scaled by real CHF exposure),
-and surface it as a first-class signal in the RM priority queue — contributing to
-a newly **computed** priority score.
+**Status:** Approved (brainstorm) + validated against live SIX MCP → ready for implementation
+**Feature:** Detect extreme market-data moves in held instruments using SIX EOD
+price/volume data, associate each move with the clients who hold it (scaled by
+real CHF exposure), and surface it as a first-class `market_anomaly` signal that
+flows through the existing priority-score model and Glass Thread.
 
 ## Goal
 
-Give the RM a market-data-driven early-warning signal: when a holding's price
-makes an extreme move relative to its own volatility (or volume spikes), flag the
-clients exposed to it, ranked by how much money is at stake, with a fully
-traceable "why." This is the one capability the dashboard does not already have
-(news → holdings → clients and mandate-drift are covered) and it is exactly what
-the SIX MCP key unlocks.
+A market-data-driven early-warning signal: when a holding's daily return is
+extreme relative to its own 30-day volatility (or volume spikes), flag the
+exposed clients, ranked by money at stake, with a fully traceable "why." It is
+the one capability the dashboard lacks (news → holdings → clients and
+mandate-drift are covered) and is exactly what the SIX MCP key unlocks.
 
-## Decisions locked in brainstorming
+## Decisions locked (brainstorm + validation)
 
-1. **Anomaly signal = market-data price/volume moves** (not position/transaction
-   anomalies). Detected on the instrument from SIX EOD/intraday data.
-2. **Surfacing = fold into the existing Priority Queue** as a new signal type,
-   reusing the Glass-Thread "why" — no separate tab.
-3. **SIX integration = fetch-and-cache a fixture behind a provider seam.** The
-   detector is a pure, deterministic, offline-testable function over OHLCV. A live
-   MCP provider is a drop-in behind the same seam for a later app-wide migration.
-4. **Priority score is recomputed from scratch** as a transparent weighted model;
-   the market anomaly is one justifiably-weighted driver among the others. Weights
-   are calibrated to preserve the four personas' relative order (locked by a test).
+1. **Signal = market-data price/volume moves** (vol-scaled daily-return z-score
+   and volume spike), detected per instrument.
+2. **Surfacing = the existing Priority Queue** via a new `market_anomaly`
+   `SignalType`, reusing the Glass Thread — no separate tab.
+3. **Detector is frontend-centric.** A pure TS detector (`lib/anomaly.ts`)
+   computes anomalies in-browser over a committed SIX-derived price fixture
+   (`data/sixPrices.ts`), exactly like `news.ts` `newsImpacts()` computes impact
+   in-browser. Deterministic, offline, self-contained demo. The zero-dep
+   `news-test` backend **cannot call the SIX MCP at runtime** (no MCP SDK), so a
+   thin `/api/anomalies` + `PriceProvider` seam there is documented as the
+   later live-migration path, not built now.
+4. **Priority score extends the existing model** in `frontend/src/lib/priority.ts`
+   (do NOT rewrite). That file already is a transparent weighted blend
+   (severity 0.35 / exposure 0.25 / conflict 0.2 / recency 0.2 with a per-
+   `SignalType` `CONFLICT_WEIGHT`). We add `market_anomaly` to `CONFLICT_WEIGHT`
+   and make the "active signal" the highest-severity one so a fresh anomaly
+   re-ranks the client. Weights unchanged ⇒ persona ordering cannot regress.
+5. **Provenance = real US + honest synthetic.** SIX EOD coverage on this token is
+   **US-listed instruments only** (validated below). The fixture carries REAL SIX
+   series for US holdings and clearly-labeled `source:"synthetic"` series for
+   non-US holdings. The Glass-Thread receipt shows the true source per
+   instrument; synthetic is never disguised as SIX.
+
+## SIX data reality (validated live, 2026-06-20)
+
+Smoke-tested against the connected MCP:
+
+- **Coverage:** US listings (XNAS/XNYS) return full data; Swiss/EU venues
+  (XSWX, XETR) return **empty for both `end_of_day_history` and
+  `end_of_day_snapshot`** — even XETR flagged `MOST_LIQUID_MARKET` for Adidas.
+  So real SIX anomalies are available for the book's US names (Meta, Apple,
+  NVDA, Amazon, Alphabet, Tesla, Costco, J&J, Walmart, Visa, Eli Lilly,
+  Broadcom, …); Swiss/EU names (Nestlé, Roche, Adidas, Novartis, ABB, …) get
+  synthetic series.
+- **Persona impact:** only **LeCun → Meta** (US30303M1027, `14917609_XNAS`) has
+  real data. Ammann→Adidas, Schneider→Roche, Räber→Nestlé use synthetic.
+- **Fields:** `end_of_day_history(format="full")` returns
+  `sessionDate, open, high, low, close, volume, historicalVolatility30Days`.
+  `totalReturn` comes back **empty**, so we compute daily returns from `close`
+  ourselves. `historicalVolatility30Days` is an **annualized %** (e.g. 26.6) →
+  de-annualize to a daily σ via `/100/sqrt(252)`.
+- **Real anomalies exist:** Meta 2026-03-26 close 547.54 (−8.0% vs 594.89, ~26.9%
+  annualized vol ⇒ ≈ −4.7σ); 2026-04-30 −8.6% on 14M volume (~3.5× normal);
+  2026-06-18 volume spike 12M. No synthetic seeding needed for Meta.
+- **Quota:** `end_of_day_history` is hard-capped at **1 listing per call**
+  (auto-fans 5/sec). The fixture is generated once at dev time by the
+  MCP-connected session (this Claude Code), not at runtime.
+- **Identifier resolution:** `listing_id = {valor}_{mic}` from the portfolio
+  CSVs. Some portfolio ISINs are stale (e.g. Roche `CH0012032048` → current line
+  `CH1499059983`); the fixture stores prices under the **portfolio's** ISIN.
 
 ## Architecture
 
 ```
-data/portfolio/*.csv ──► held instruments (Valor + MIC + ISIN)
+data/portfolio/*.csv ──► held instruments (Valor + MIC + ISIN, per mandate)
+        │
+        │  (dev-time, MCP-connected session)
+        ▼
+fetch via SIX MCP (US: real EOD) + synthetic (non-US)  ──►  frontend/src/data/sixPrices.ts
+        │                                                    (committed fixture; per-instrument `source`)
+        ▼
+frontend/src/lib/anomaly.ts  ── pure detector ──►  AnomalyEvent[] (per instrument)
+        │   z = return/dailySigma ; volRatio ; severity ; direction ; source
+        ▼
+associate to clients: ISIN → issuer → clients in that mandate (PORTFOLIOS[mandate])
+        │   per-client severity scaled by holding.currentCHF (exposure)
+        ▼
+attach as a `market_anomaly` NewsSignal on the client (+ set/raise amountAtStake)
         │
         ▼
-[PriceProvider seam]  ── fixture (default) ─┐   six-live (later) ──┐
-        │                                   ▼                      ▼
-        │                       news-test/fixtures/        @modelcontextprotocol/sdk
-        │                        six-prices.json            → SIX MCP (bearer key)
-        ▼
-anomalies.mjs  ──►  pure detector: per-instrument OHLCV → AnomalyEvent[]
-        │            (vol-scaled return z-score + volume spike)
-        ▼
-associate to clients (held ISIN → client) → severity × CHF exposure
+lib/priority.ts (existing model, extended)  ── re-ranks the queue
         │
         ▼
-GET /api/anomalies  ──►  dashboard mirrors as a market_anomaly signal
-        │
-        ▼
-Priority Queue (re-ranked by computed score) + Glass-Thread receipt
+Priority Queue badge (SIGNAL_META) + Glass-Thread step (explain.ts) with the
+SIX/synthetic receipt
 ```
 
-### The provider seam (the migration boundary)
-
-The single interface a live migration swaps. Everything downstream depends only
-on this, so going live app-wide later is "implement one more provider," not a
-rewrite.
-
-```js
-// PriceProvider
-//   getDailyHistory(listingId) -> { listingId, isin, bars: [{date, open, high, low, close, volume}] }
-//   getSnapshot(listingId)     -> { listingId, close, volume, hist30dVol, asOf }
-```
-
-- `fixtureProvider` (now) reads `six-prices.json`.
-- `sixLiveProvider` (later) wraps the MCP SDK; selected by `SIX_SOURCE=live`.
-- On live error / missing key, log and **fall back to the fixture** (same
-  degrade-to-deterministic pattern as the assessor/distill seams).
-
-`listing_id = {valor}_{mic}` — composed from the portfolio CSVs, which already
-carry Valor + MIC. SIX tools used: `end_of_day_history(listing_id)` (OHLCV
-series) and `end_of_day_snapshot(listing_id)` (close, volume, `hist30dVol`).
-Fundamentals/estimates/classification tools are gated with the hackathon token
-and are **not** needed — CIO ratings + industry groups come from our CSVs.
-
-### New / touched files
+### New / touched files (frontend)
 
 | File | Purpose |
 |---|---|
-| `news-test/priceProvider.mjs` | seam + `fixtureProvider` (+ stub for `sixLiveProvider`) |
-| `news-test/anomalies.mjs` | pure detector + client association |
-| `news-test/fixtures/six-prices.json` | cached real SIX EOD series for held instruments |
-| `news-test/fetch-six.mjs` | dev script: (re)generate the fixture via the SIX MCP; reference for the future live provider |
-| `news-test/anomalies.test.mjs` | detector / association / priority-calibration tests |
-| `news-test/server.mjs` | add `GET /api/anomalies` route |
-| `frontend/src/types.ts` | add `"market_anomaly"` to `SignalType` |
-| `frontend/src/lib/priority.ts` | new: transparent weighted priority-score recompute |
-| `frontend/src/data/clients.ts` | scores become computed outputs (driver inputs authored) |
-| `frontend/src/lib/explain.ts` | Glass-Thread step for the anomaly + each score driver |
+| `frontend/src/data/sixPrices.ts` | committed price fixture: per-instrument `{ isin, listingId, issuer, source: "six"\|"synthetic", asOf, bars:[{date,close,volume}], hvol30 }` |
+| `frontend/src/lib/anomaly.ts` | pure detector (returns/z/volRatio/severity) + client association + signal construction |
+| `frontend/src/lib/anomaly.test.ts` | Vitest unit tests (detector, severity, association, calibration) |
+| `frontend/src/types.ts` | add `"market_anomaly"` to `SignalType` (forces the `CONFLICT_WEIGHT` + `SIGNAL_META` additions — TS-enforced) |
+| `frontend/src/lib/priority.ts` | add `market_anomaly` to `CONFLICT_WEIGHT`; select active signal by max severity |
+| `frontend/src/lib/format.ts` | add `market_anomaly` to `SIGNAL_META` (label "Market move") |
+| `frontend/src/lib/explain.ts` | Glass-Thread step for the anomaly with `Evidence{kind:"market"}` (kind already exists) |
+| `frontend/src/data/clients.ts` | attach computed `market_anomaly` signals to affected clients (via the detector, at module load) |
+| `frontend/scripts/gen-sixprices.cjs` *(optional)* | regenerate the synthetic portion / merge real pulls; the real pulls are produced by the MCP session |
+| `docs/priority-metric.md` | create (currently a dangling ref in `priority.ts`); document the weights incl. the new `market_anomaly` conflict weight |
 
-## Detector (the maths)
+The `news-test` `PriceProvider` seam + `/api/anomalies` are described in
+"Migration" below but are **not** part of this implementation.
 
-Pure deterministic function over one instrument's daily OHLCV. Two independent,
-vol-normalised detectors:
+## Detector (the maths) — `lib/anomaly.ts`
 
-**1. Return shock.** Daily log returns from the bars. Baseline σ = the snapshot's
-`hist30dVol` de-annualised to a daily figure, falling back to the trailing-30-bar
-stdev if the snapshot is missing.
+Pure deterministic functions over one instrument's daily bars:
+
+**Return shock.** `dailyReturn[i] = close[i]/close[i-1] - 1`. Baseline daily σ
+from `hvol30` (annualized %): `dailySigma = hvol30/100/Math.sqrt(252)`, with a
+fallback to the trailing-30-bar stdev of returns when `hvol30` is missing.
 
 ```
 z = latestDailyReturn / dailySigma
 flag if |z| ≥ Z_THRESHOLD   (default 3.0, tunable)
 ```
 
-**2. Volume spike.** `volRatio = latestVolume / mean(prior 30 bars volume)`; flag
-if `volRatio ≥ VOL_THRESHOLD` (default 4.0, tunable). Volume-only is a weaker
+**Volume spike.** `volRatio = latestVolume / mean(prior 30 bars volume)`; flag if
+`volRatio ≥ VOL_THRESHOLD` (default 4.0, tunable). Volume-only is a weaker
 "watch" signal; a return shock is primary.
 
-**Severity (0–100), instrument-level**, blended and clamped into the existing
-`severity` field:
+**Severity (0–100), instrument-level:**
 
 ```
-sev = clamp( 100 * (|z| / Z_SAT)                       // saturates at Z_SAT = 6
+sev = clamp( 100 * (|z| / Z_SAT)                        // Z_SAT = 6 (saturation)
            + 15 * max(0, volRatio/VOL_THRESHOLD - 1), 0, 100 )
-direction = sign(latestDailyReturn)   // ▼ drop / ▲ spike — drives framing
+direction = sign(latestDailyReturn)   // ▼ drop / ▲ spike
 ```
 
-**Output** per flagged instrument:
+**AnomalyEvent:** `{ isin, issuer, listingId, source, asOf, latestReturn, z,
+volRatio, direction, severity, kind: "return_shock"|"volume_spike"|"both" }`.
 
-```js
-AnomalyEvent = {
-  isin, listingId, issuer,
-  asOf,                      // bar date (EOD lags a settled day — shown honestly)
-  latestReturn, z, volRatio, // raw receipts
-  direction,                 // -1 down / +1 up
-  severity,                  // 0..100
-  kind: "return_shock" | "volume_spike" | "both",
-}
-```
-
-All thresholds (`Z_THRESHOLD`, `VOL_THRESHOLD`, `Z_SAT`) live in one config block,
-overridable via env. The fixture is deliberately seeded so the persona holdings
-(Adidas, Roche, Nestlé, Meta) light up for the demo.
+Thresholds (`Z_THRESHOLD`, `VOL_THRESHOLD`, `Z_SAT`) live in one exported config
+object so they're tunable.
 
 ## Client association
 
-An anomaly is detected on an *instrument*; fan it out to every client holding it:
-
 ```
 for each AnomalyEvent:
-  holders = clients where event.isin ∈ client's holdings (by ISIN)
-  for each holder:
-    exposureCHF    = that holding's currentCHF for this client
-    clientSeverity = combine(event.severity, exposureScale(exposureCHF))
+  for each mandate M, for each holding H in PORTFOLIOS[M] with H.isin === event.isin:
+     clients in mandate M holding that issuer are exposed
+     exposureCHF    = H.currentCHF
+     clientSeverity = clamp( event.severity * exposureScale(exposureCHF), 0, 100 )
 ```
 
-`exposureScale` nudges severity up for larger positions (a 3σ drop on CHF 200k
-matters more than on CHF 5k), using the same `currentCHF` the Compliance Desk
-reads. The same market event therefore ranks differently per client, by their
-real money at stake.
-
-The dashboard mirrors each holder's event as a `NewsSignal`-shaped record so it
-flows through the existing queue/feed UI unchanged:
+`exposureScale` gently boosts severity for larger positions (same `currentCHF`
+the Compliance Desk reads). Clients reference holdings by **issuer name within
+their mandate** (`Client.topHoldings` are names; `PERSONA_PLAY[id].mandate` /
+`Client.mandate` gives the portfolio). The dashboard mirrors each holder's event
+as a `NewsSignal`:
 
 ```
-headline: "ABB ▼ 9.2% — 3.4σ daily move on 11× volume"
+headline: "Meta ▼ 8.0% — 4.7σ daily move on 2.3× volume"
 type:     "market_anomaly"
 severity: clientSeverity
-matchedHoldings: ["ABB Ltd."]
+matchedHoldings: ["Meta Platforms Inc."]
 ```
 
-## Priority score — recomputed from scratch
+## Priority score — extend the existing model
 
-`priorityScore = round( 100 × Σ (wᵢ × mᵢ) )`, clamped 0–100. Each driver
-`mᵢ ∈ [0,1]` is a normalised magnitude traceable to real data; weights sum to 1.
+`frontend/src/lib/priority.ts` already computes the ranking. Changes:
 
-| Driver | `mᵢ` — what it measures (source) | Weight |
-|---|---|---|
-| Value conflict | dominant value/reputational signal severity ÷ 100 (persona triggers) | 0.32 |
-| Exposure | CHF at stake on the flagged holding ÷ book size | 0.22 |
-| Relationship | DNA sensitivity amplifier (affinity weight on the touched theme) | 0.16 |
-| Mandate drift | breach magnitude vs the ±2.0pp line (Compliance Desk maths) | 0.16 |
-| **Market anomaly** | client-level anomaly severity ÷ 100 (new SIX-driven driver) | **0.14** |
+1. **`CONFLICT_WEIGHT.market_anomaly = 0.85`** — a sharp price move is risk-type
+   (demands proactive contact), just below `reputational`/`value_conflict` (1.0)
+   and above `mandate_drift`/`exposure` (0.7). *Justification:* a market move is
+   urgent but a values conflict or reputational hit still outranks it.
+2. **Active signal = highest-severity** signal (replacing the implicit
+   `signals[0]`), so a fresh extreme anomaly drives `severity`/`conflict` and the
+   client re-ranks up. Exposure already flows through `amountAtStake`.
+3. Weights (0.35/0.25/0.2/0.2) **unchanged** → personas keep their order. A test
+   pins the persona ranking.
 
-**Justification for the weights.** A *values* conflict is the heart of every
-persona trigger, so it dominates (0.32). Money-at-stake (0.22) is the next most
-objective urgency lever. A sharp price move is urgent but should not outrank a
-values conflict or a mandate breach, so the market anomaly sits at 0.14 — below
-drift (0.16) — yet it compounds with exposure and relationship, so the same move
-ranks higher for a client with more in the position. A max-severity anomaly
-contributes up to ~14 points on its own.
+Every driver is already a Glass-Thread candidate; we add a `market_anomaly`
+reason step with the SIX/synthetic receipt, e.g. `Market move +N: Meta −8.0%,
+4.7σ, on CHF 185k · SIX EOD 2026-06-18`.
 
-Every driver is rendered as a **Glass-Thread step with its receipt**, e.g.
-`Market anomaly +11: ABB −9.2%, 3.4σ, on your CHF 185k position · SIX EOD
-2026-06-18`, so the score is fully decomposable on screen. Weights live in the
-tunable config block.
+## Error handling & honesty
 
-**Demo safety:** weights are calibrated so the four personas keep their current
-relative order; `anomalies.test.mjs` asserts that ranking. A weight change that
-reorders the personas fails the test.
+- **Provenance shown, never disguised.** Each event/receipt carries
+  `source: "six" | "synthetic"`; the UI labels synthetic series explicitly.
+- **Stale-data honesty.** SIX EOD lags a settled day; the `asOf` bar date is
+  shown verbatim.
+- **Short/empty series** (< ~5 bars) are skipped (no baseline) — not fatal.
+- **Zero anomalies** is valid — the queue ranks on the other drivers.
 
-## Error handling & fallback
+## Testing (Vitest, pure logic, no network)
 
-- Fixture is the default and always present (`SIX_SOURCE=fixture`).
-  `SIX_SOURCE=live` selects `sixLiveProvider`; on throw / missing key it logs and
-  falls back to the fixture.
-- Instruments with no bars or < ~5 bars are skipped (no baseline) — logged, not
-  fatal.
-- SIX EOD lags one settled day; the `asOf` bar date is shown verbatim, never
-  disguised as live.
-- Zero anomalies is valid — the queue ranks on the other drivers.
-
-## Testing (`node:test`, pure logic, no network)
-
-- **Detector:** clean 3.4σ drop flags; 1σ wiggle does not; volume-only spike →
-  `volume_spike`; flat/short series skip; threshold boundaries honoured.
+- **Detector:** a real Meta-derived series flags the −4.7σ day; a 1σ wiggle does
+  not; a volume-only spike → `volume_spike`; flat/short series skip; thresholds
+  honoured at the boundary.
 - **Severity/direction:** monotonic in |z|, saturates at 100, sign correct.
-- **Association:** one event → multiple holders; per-client severity scales with
-  `currentCHF`.
-- **Priority recompute:** driver math; saturating clamp; **calibration test**
-  pinning persona order (Ammann > Schneider > …).
-- **Provider seam:** fixture provider returns the expected shape; live failure
-  falls back to the fixture.
+- **Association:** one event → all holders in the mandate; per-client severity
+  scales with `currentCHF`.
+- **Priority:** `CONFLICT_WEIGHT.market_anomaly` applied; active-signal-by-max
+  selection; **calibration test** pinning persona order (Ammann > Schneider > …).
+
+## Migration to live SIX (future, not in this scope)
+
+Implement `news-test/priceProvider.mjs` (`fixtureProvider` now; `sixLiveProvider`
+wrapping `@modelcontextprotocol/sdk` calling `end_of_day_history`/`_snapshot`)
+behind a `SIX_SOURCE=fixture|live` seam that degrades to the fixture on
+error/missing key — mirroring the `assessor.mjs`/`distill.mjs` pattern. Expose
+`GET /api/anomalies`; the dashboard can then fetch live instead of importing the
+committed fixture. The dev-time pull this session performs is the working
+reference for those exact MCP calls.
 
 ## Out of scope
 
-- Live runtime MCP calls in the demo path (fixture is the demo source; the live
-  provider is a drop-in for a later migration).
-- Intraday/tick anomaly detection (EOD bars are sufficient for the demo).
-- A separate "Market Anomalies" tab (folds into the priority queue).
-- Writing back any computed score to source workbooks.
+- Runtime MCP calls in the demo path; intraday/tick detection; a separate
+  "Market Anomalies" tab; writing computed scores back to source workbooks.

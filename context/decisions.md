@@ -12,33 +12,40 @@ Append a short entry whenever we make a notable choice. Newest first.
 
 ---
 
-### 2026-06-20 — Portfolio anomaly detection via SIX, into a computed priority score
+### 2026-06-20 — Portfolio anomaly detection via SIX, into the priority score
 - **Decision:** Detect extreme market-data moves (vol-scaled daily-return z-score
-  ≥ 3, or volume ≥ 4×) on held instruments using the SIX MCP, associate each move
+  ≥ 3, or volume ≥ 4×) on held instruments using SIX EOD data, associate each move
   with the clients who hold it (severity scaled by real CHF exposure), and surface
-  it as a new `market_anomaly` signal in the existing priority queue. SIX is read
-  through a **fetch-and-cache fixture behind a `PriceProvider` seam** (live MCP
-  provider drop-in later). The priority score is **recomputed from scratch** as a
-  transparent weighted model; the anomaly is one driver among
-  value-conflict 0.32 / exposure 0.22 / relationship 0.16 / drift 0.16 /
-  **anomaly 0.14**.
+  it as a new `market_anomaly` signal in the existing priority queue + Glass
+  Thread. Detection is **frontend-centric**: a pure TS detector (`lib/anomaly.ts`)
+  runs in-browser over a committed SIX-derived fixture (`data/sixPrices.ts`), like
+  `newsImpacts()`. The priority score **extends the existing weighted model** in
+  `lib/priority.ts` (severity 0.35 / exposure 0.25 / conflict 0.2 / recency 0.2):
+  add `market_anomaly` to `CONFLICT_WEIGHT` (0.85) and pick the highest-severity
+  signal as the active driver. Provenance is **real US + honest synthetic**: SIX
+  EOD coverage on the hackathon token is US-listed only (Swiss/EU venues return
+  empty, validated live), so US holdings carry real SIX series and non-US holdings
+  carry clearly-labeled `source:"synthetic"` series — never disguised.
 - **Why:** Price/volume anomalies are the one signal the dashboard lacks (news and
-  mandate-drift are covered) and are exactly what the SIX key unlocks. The fixture
-  seam keeps the demo deterministic (never hard-fail on flaky wifi) while the
-  provenance is genuinely SIX EOD data, and leaves a one-file path to go live
-  app-wide later. Recomputing the score makes it a glass-threaded, decomposable
-  number rather than an authored constant — straight at the Trust/Explainability
-  criterion. Anomaly weight sits below value-conflict and drift because a sharp
-  price move is urgent but should not outrank a values conflict or a mandate
-  breach; it still compounds with exposure so the same move ranks higher for the
-  client with more at stake. Weights are calibrated to preserve the four personas'
-  order, locked by a test.
+  mandate-drift are covered) and are what the SIX key unlocks. Frontend-centric +
+  committed fixture keeps the demo deterministic and offline (the zero-dep backend
+  can't be an MCP client at runtime anyway); the fixture is generated once by the
+  MCP-connected Claude Code session. Extending the existing priority model (not a
+  rewrite — that model already exists and is exactly "weighted like the others")
+  means weights stay unchanged so persona ordering can't regress, while the
+  anomaly is justifiably weighted just below reputational/value-conflict and above
+  mandate-drift. Real Meta data already shows genuine −4.7σ / volume-spike events,
+  so the SIX provenance is real where coverage exists.
 - **Alternatives considered:** position/transaction anomalies (rejected — doesn't
   use SIX, overlaps Compliance Desk); a dedicated "Market Anomalies" tab (rejected
-  — second surface, loses the queue's existing trust + Glass Thread); live runtime
-  MCP calls (rejected for demo path — flaky-network risk, EOD lags a settled day
-  anyway); layering anomaly onto the existing authored score (rejected — user
-  asked for a from-scratch, justifiably-weighted recompute).
+  — loses the queue's trust + Glass Thread); backend `news-test` pipeline as the
+  primary path (deferred — kept as the documented live-migration seam, but the
+  backend can't call the MCP at runtime and the dashboard is static); rewriting
+  the priority score from scratch (rejected once `lib/priority.ts` was found to
+  already be the transparent weighted model requested); all-synthetic prices
+  (rejected — wastes the real SIX integration); US-only with no Swiss anomalies
+  (rejected — three of four personas are Swiss/EU, so honest synthetic keeps them
+  demoable).
 - **Owner:** Varad · spec `docs/superpowers/specs/2026-06-20-portfolio-anomaly-detection-design.md`.
 
 ### 2026-06-20 — Voice Conversation Capture as the next feature
