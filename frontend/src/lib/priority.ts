@@ -1,4 +1,4 @@
-import type { Client, SignalType } from "../types";
+import type { Client, NewsSignal, SignalType } from "../types";
 
 // Transparent priority score for the queue: a weighted blend of four signals,
 // each normalised to [0,1]. Weights sum to 1 → score stays in [0,1] (shown /100).
@@ -10,13 +10,24 @@ const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
 
 // How adversarial each event type is — a risk demands proactive contact more
 // than a positive opportunity (which is "nice to mention", not "must defuse").
-const CONFLICT_WEIGHT: Record<SignalType, number> = {
+export const CONFLICT_WEIGHT: Record<SignalType, number> = {
   reputational: 1.0,
   value_conflict: 1.0,
+  // A sharp, vol-scaled price move is a risk that demands proactive contact —
+  // urgent, but a values conflict or reputational hit still outranks it.
+  market_anomaly: 0.85,
   mandate_drift: 0.7,
   exposure: 0.7,
   opportunity: 0.3,
 };
+
+/** The signal that drives a client's priority: the most severe, not array order. */
+function activeSignal(c: Client): NewsSignal | undefined {
+  return c.signals.reduce<NewsSignal | undefined>(
+    (best, s) => (best && best.severity >= s.severity ? best : s),
+    undefined,
+  );
+}
 
 export interface PriorityBreakdown {
   severity: number;   // 0..1 magnitude of the active event
@@ -27,11 +38,11 @@ export interface PriorityBreakdown {
 }
 
 function triggerDate(c: Client): string | null {
-  return c.lastMessageAt ?? c.signals[0]?.publishedAt ?? null;
+  return c.lastMessageAt ?? activeSignal(c)?.publishedAt ?? null;
 }
 
 function priorityOf(client: Client, bookMax: number, nowMs: number): PriorityBreakdown {
-  const sig = client.signals[0];
+  const sig = activeSignal(client);
   const severity = sig ? clamp01(sig.severity / 100) : 0;
   const exposure = bookMax > 0 ? clamp01((client.amountAtStake ?? 0) / bookMax) : 0;
   const conflict = sig ? CONFLICT_WEIGHT[sig.type] ?? 0 : 0;

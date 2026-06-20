@@ -38,7 +38,8 @@ export type SignalType =
   | "reputational"
   | "mandate_drift"
   | "opportunity"
-  | "exposure";
+  | "exposure"
+  | "market_anomaly";
 
 export interface NewsSignal {
   id: string;
