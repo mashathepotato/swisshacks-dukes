@@ -60,11 +60,14 @@ All seams degrade gracefully — missing key or network failure returns a
 deterministic heuristic result so the demo never hard-fails.
 
 - **`POST /api/transcript/distill`** — summarise a meeting transcript into
-  structured talking points. Body `{ transcript }` → `{ ...result, engine }`.
+  structured talking points. Body `{ clientId, transcript, rmName?, clientContact?, date? }`
+  (`clientId` and `transcript` required) → `{ ...result, engine }`.
   Backed by `distill.mjs` (Anthropic, key from `demo/.env`).
 
 - **`POST /api/transcript/digest`** — lightweight single-pass digest of a
-  transcript. Body `{ transcript }` → `{ ...result }`. Backed by `digest.mjs`.
+  transcript. Body `{ transcript, clientId?, mode?, dnaContext? }`
+  (`transcript` required; `mode` is `"live"` or `"final"`) → `{ ...result }`.
+  Backed by `digest.mjs`.
 
 - **`POST /api/transcript/dialogue`** — analyse dialogue turns in a transcript.
   Body `{ transcript }` → `{ ...result }`. Backed by `dialogue.mjs`.
