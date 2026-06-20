@@ -51,7 +51,7 @@ body { background: var(--bg); font-family: var(--font-sans); }
 
 /* Headings echo SIX's condensed Noto Sans — tight, precise, editorial */
 h1, h2, h3, h4,
-.brand, .cp-bar-title, .rmp-head h2,
+.brand, .rmp-head h2,
 .drawer h2, .queue h1, .clients h1, .sim-head h1, .bs-head h1, .cp-head h1 {
   font-stretch: 75%;
   letter-spacing: -.005em;
@@ -502,6 +502,16 @@ button { font-family: inherit; cursor: pointer; }
 .ro-block p.strong { color: var(--text); }
 .ro-traj { max-width: 520px; }
 
+/* rehearse body: full-width panel grid (no fixed sidebar) */
+.ro-wrap { flex: 1; min-height: 0; min-width: 0; overflow-y: auto; padding: 18px 26px 28px; }
+.ro-top { margin-bottom: 20px; }
+.ro-grid { column-width: 340px; column-gap: 24px; }
+.ro-grid .ro-block {
+  break-inside: avoid; -webkit-column-break-inside: avoid;
+  margin: 0 0 16px; max-width: none; display: inline-block; width: 100%;
+  border: 1px solid var(--border-soft); border-radius: 3px; padding: 14px 15px; background: var(--panel);
+}
+
 /* ---- monetary impact breakdown ---- */
 .impact-net { font-size: 30px; font-weight: 800; line-height: 1; margin: 2px 0 2px; }
 .impact-comp { padding: 10px 0; border-bottom: 1px solid var(--border-soft); }
@@ -523,21 +533,17 @@ button { font-family: inherit; cursor: pointer; }
 .cp-open:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
 
 /* ---- full client page ---- */
+/* sits under the global topbar and fills the rest of the viewport */
 .clientpage {
-  display: flex; flex-direction: column; height: 100vh; background: var(--bg);
+  flex: 1; display: flex; flex-direction: column; min-height: 0; background: var(--bg);
   overflow: hidden;
 }
-.clientpage-bar {
-  display: flex; align-items: center; gap: 16px;
-  padding: 0 22px; height: 56px; border-bottom: 1px solid var(--border); background: var(--panel);
-  flex-shrink: 0;
+.cp-rehearse {
+  flex: 0 0 auto; white-space: nowrap; background: var(--accent); color: #fff; border: none;
+  border-radius: 2px; padding: 8px 16px; font-size: 13px; font-weight: 700;
+  letter-spacing: .02em; font-family: inherit;
 }
-.cp-back {
-  background: var(--panel); border: 1px solid var(--border); color: var(--text-dim);
-  padding: 7px 14px; border-radius: 2px; font-size: 13.5px; font-weight: 600;
-}
-.cp-back:hover { color: var(--text); background: var(--panel-2); border-color: var(--text-faint); }
-.cp-bar-title { font-weight: 700; font-size: 15px; }
+.cp-rehearse:hover { background: #c4310f; }
 .clientpage-inner {
   flex: 1; overflow-y: auto; padding: 30px 36px 64px; max-width: 1280px;
   width: 100%; margin: 0 auto;
@@ -677,3 +683,30 @@ button { font-family: inherit; cursor: pointer; }
 .rmp-reset:hover { color: var(--text); border-color: var(--text-faint); }
 .rmp-done { background: var(--accent); border: none; color: #fff; border-radius: 2px; padding: 9px 20px; font-size: 13px; font-weight: 700; font-family: inherit; cursor: pointer; letter-spacing: .02em; }
 .rmp-done:hover { background: #c4310f; }
+
+/* ── Conversation Capture — house-style controls ── */
+.conv-tabs { display: flex; gap: 6px; margin: 8px 0 14px; }
+.conv-tab {
+  background: var(--panel-2); border: 1px solid var(--border-soft); color: var(--text-dim);
+  border-radius: 2px; padding: 6px 12px; font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer;
+}
+.conv-tab:hover:not(:disabled) { color: var(--text); border-color: var(--border); }
+.conv-tab.on { background: var(--accent-soft); color: var(--accent); border-color: var(--accent-line); cursor: default; }
+.conv-btn {
+  background: var(--panel); border: 1px solid var(--border); color: var(--text);
+  border-radius: 2px; padding: 7px 13px; font-size: 13px; font-family: inherit; cursor: pointer; margin-right: 8px;
+}
+.conv-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.conv-btn:disabled { opacity: .45; cursor: default; }
+.conv-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.conv-btn.primary:hover:not(:disabled) { background: #c4310f; border-color: #c4310f; color: #fff; }
+.conv-badge {
+  padding: 1px 7px; border-radius: 2px; background: var(--accent-soft); color: var(--accent);
+  font-size: 11px; font-weight: 700; letter-spacing: .02em;
+}
+.conv-dialogue { margin: 8px 0; padding: 10px 12px; background: var(--panel-2); border: 1px solid var(--border-soft); border-radius: 2px; }
+.conv-dialogue-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-faint); margin-bottom: 6px; }
+.conv-turn { font-size: 13px; line-height: 1.5; padding: 4px 8px; border-radius: 2px; margin-bottom: 4px; }
+.conv-turn.rm { background: var(--accent-soft); }
+.conv-turn.client { background: var(--panel); border: 1px solid var(--border-soft); }
+.conv-turn-who { font-weight: 700; font-size: 11px; color: var(--accent); margin-right: 6px; }

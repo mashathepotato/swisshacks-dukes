@@ -18,8 +18,6 @@ interface RAdvice {
   trade?: { sellIsin: string; buyIsin: string };
 }
 
-const KIND_LABEL: Record<AdviceKind, string> = { swap: "Recommended swap", rec: "Copilot rec", preset: "Strategy" };
-
 function adviceFor(client: Client): RAdvice[] {
   const list: RAdvice[] = [];
   const play = PERSONA_PLAY[client.id];
@@ -130,13 +128,13 @@ export function Rehearse({ focusClientId }: Props) {
     <div className="booksim">
       <div className="bs-head" style={{ paddingBottom: 14 }}>
         <h1 style={{ margin: "0 0 4px", fontSize: 18, fontWeight: 600 }}>Rehearse a proposal · {client.name}</h1>
-        <p className="lead" style={{ margin: 0 }}>Pick a ready-made strategy <b>or</b> describe your own — see how {client.name} would likely react, the estimated CHF impact, and whether it keeps their mandate. Switch client from the <b>Rehearse</b> menu in the nav.</p>
+        <p className="lead" style={{ margin: 0 }}>Pick a strategy <b>or</b> describe your own — see how {client.name} would likely react, the CHF impact, and whether it keeps their mandate.</p>
       </div>
 
       <div className="bs-advice">
-        {advice.map((a) => (
+        {advice.slice(0, 3).map((a) => (
           <button key={a.key} className={"adv" + (!usingText && a.key === adviceKey ? " on" : "")} onClick={() => pickAdvice(a.key)} title={a.detail}>
-            <span className="k">{KIND_LABEL[a.kind]}</span>{a.label}
+            <span className="k">Proposal</span>{a.label}
           </button>
         ))}
       </div>
@@ -152,21 +150,23 @@ export function Rehearse({ focusClientId }: Props) {
       </div>
       {usingText && text && <div className="rehearse-subject">Rehearsing your proposal: “{text}”</div>}
 
-      <div className="bs-body">
-        <div className="bs-main">
-          {!reaction ? (
-            <p className="empty" style={{ padding: "28px 0" }}>Pick a strategy above or type a proposal to rehearse.</p>
-          ) : (
-            <>
+      <div className="ro-wrap">
+        {!reaction ? (
+          <p className="empty" style={{ padding: "28px 0" }}>Pick a proposal above or type your own to rehearse.</p>
+        ) : (
+          <>
+            <div className="ro-top">
               <div className="ro-accept" style={{ marginBottom: 6 }}>
                 <span className="pct" style={{ color: accColor }}>{acc}%</span>
                 <span className="lbl" style={{ marginLeft: 8 }}>likely acceptance · {client.name}</span>
               </div>
-              <div className="bar" style={{ maxWidth: 280, marginBottom: 10 }}>
+              <div className="bar" style={{ maxWidth: 320, marginBottom: 10 }}>
                 <div style={{ width: `${acc}%`, background: accColor }} />
               </div>
-              <p className="ro-react" style={{ marginBottom: 16 }}>{reaction.predictedReaction}</p>
+              <p className="ro-react" style={{ margin: 0, maxWidth: 820 }}>{reaction.predictedReaction}</p>
+            </div>
 
+            <div className="ro-grid">
               <div className="ro-block">
                 <div className="lbl" style={{ marginBottom: 6 }}>Estimated monetary impact · next {impact.horizonMonths} months</div>
                 {impact.components.length ? (
@@ -188,10 +188,30 @@ export function Rehearse({ focusClientId }: Props) {
                         </div>
                       );
                     })}
-                    <p className="impact-assump">An estimate, not a guarantee — each figure is the real position value × a stated assumption (severity→drawdown, 0.20% transaction cost, 1.5% CIO-BUY premium), so it's fully traceable rather than a black-box forecast.</p>
+                    <p className="impact-assump">Estimates, not guarantees — each figure is a position value × a stated assumption, fully traceable.</p>
                   </>
                 ) : (
                   <p style={{ fontSize: 12.5, color: "var(--text-faint)" }}>Limited direct monetary effect — this proposal doesn't change {client.name}'s at-risk exposure.</p>
+                )}
+              </div>
+
+              <div className="ro-block">
+                <div className="lbl">Portfolio &amp; compliance</div>
+                {compliance ? (
+                  <>
+                    <div className={"verdict " + (compliance.compliant ? "ok" : "no")}>{compliance.compliant ? "✓ Mandate-compliant" : "✗ Not mandate-compliant"}</div>
+                    <div className="stamp"><span className={"mk " + (compliance.sameSector ? "y" : "n")}>{compliance.sameSector ? "✓" : "✗"}</span> Same sector{compliance.buy.industryGroup ? ` (${compliance.buy.industryGroup})` : ""}</div>
+                    <div className="stamp"><span className={"mk " + (compliance.buyRatingOk ? "y" : "n")}>{compliance.buyRatingOk ? "✓" : "✗"}</span> Buy is CIO-rated BUY</div>
+                    <div className="stamp"><span className={"mk " + (compliance.newBreaches.length === 0 ? "y" : "n")}>{compliance.newBreaches.length === 0 ? "✓" : "✗"}</span> No new ±2.0pp drift breach</div>
+                    <div className="cdesk-moved"><b>{formatMoney(compliance.amountCHF)}</b> moves from {compliance.sell.issuer} to {compliance.buy.issuer}.</div>
+                    <div className={"dverdict " + compliance.dna.verdict}><b>Client values: {compliance.dna.verdict}</b> — {compliance.dna.reason}</div>
+                  </>
+                ) : sel?.kind === "preset" && sel.fit != null ? (
+                  <div className={"dverdict " + (sel.fit > 0.15 ? "honors" : sel.fit < -0.15 ? "conflicts" : "neutral")}>
+                    <b>Value fit: {sel.fit > 0.15 ? "strong" : sel.fit < -0.15 ? "misfit" : "neutral"}</b> — {sel.fit > 0.15 ? "this broadcast strategy aligns with the client's values." : sel.fit < -0.15 ? "this broadcast strategy cuts against the client's stated values." : "this strategy is roughly value-neutral for the client."}
+                  </div>
+                ) : (
+                  <p style={{ fontSize: 12.5, color: "var(--text-faint)", lineHeight: 1.5 }}>No single-instrument trade to check for this proposal. Pick a proposal with a trade (or name a holding) to see the full mandate &amp; CIO check.</p>
                 )}
               </div>
 
@@ -207,29 +227,9 @@ export function Rehearse({ focusClientId }: Props) {
                 <div className="lbl">Suggested next step</div>
                 <p className="strong">{reaction.nextStep}</p>
               </div>
-            </>
-          )}
-        </div>
-
-        <div className="bs-side">
-          <div className="lbl" style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: ".07em", color: "var(--text-faint)", marginBottom: 10 }}>Portfolio &amp; compliance</div>
-          {compliance ? (
-            <>
-              <div className={"verdict " + (compliance.compliant ? "ok" : "no")}>{compliance.compliant ? "✓ Mandate-compliant" : "✗ Not mandate-compliant"}</div>
-              <div className="stamp"><span className={"mk " + (compliance.sameSector ? "y" : "n")}>{compliance.sameSector ? "✓" : "✗"}</span> Same sector{compliance.buy.industryGroup ? ` (${compliance.buy.industryGroup})` : ""}</div>
-              <div className="stamp"><span className={"mk " + (compliance.buyRatingOk ? "y" : "n")}>{compliance.buyRatingOk ? "✓" : "✗"}</span> Buy is CIO-rated BUY</div>
-              <div className="stamp"><span className={"mk " + (compliance.newBreaches.length === 0 ? "y" : "n")}>{compliance.newBreaches.length === 0 ? "✓" : "✗"}</span> No new ±2.0pp drift breach</div>
-              <div className="cdesk-moved"><b>{formatMoney(compliance.amountCHF)}</b> moves from {compliance.sell.issuer} to {compliance.buy.issuer}.</div>
-              <div className={"dverdict " + compliance.dna.verdict}><b>Client values: {compliance.dna.verdict}</b> — {compliance.dna.reason}</div>
-            </>
-          ) : sel?.kind === "preset" && sel.fit != null ? (
-            <div className={"dverdict " + (sel.fit > 0.15 ? "honors" : sel.fit < -0.15 ? "conflicts" : "neutral")}>
-              <b>Value fit: {sel.fit > 0.15 ? "strong" : sel.fit < -0.15 ? "misfit" : "neutral"}</b> — {sel.fit > 0.15 ? "this broadcast strategy aligns with the client's values." : sel.fit < -0.15 ? "this broadcast strategy cuts against the client's stated values." : "this strategy is roughly value-neutral for the client."}
             </div>
-          ) : (
-            <p style={{ fontSize: 11.5, color: "var(--text-faint)", lineHeight: 1.5 }}>No single instrument trade to check for this proposal. Pick a <b>Recommended swap</b> (or name a holding to trade) to see the full mandate &amp; CIO check.</p>
-          )}
-        </div>
+          </>
+        )}
       </div>
     </div>
   );

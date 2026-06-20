@@ -24,7 +24,7 @@ export function ClientGrid({ onOpen }: Props) {
   return (
     <div className="clients">
       <h1>All clients</h1>
-      <p className="lead">{clients.length} of {sorted.length} clients. Click any card to open the full profile.</p>
+      <p className="lead">{clients.length} of {sorted.length} clients</p>
 
       <input
         className="clients-search"
@@ -51,7 +51,6 @@ export function ClientGrid({ onOpen }: Props) {
             >
               <div className="cc-top">
                 <div className="cc-name">{c.name}</div>
-                {c.isPersona && <span className="cc-tag">persona</span>}
               </div>
               <div className="cc-arch">{c.archetype} · {c.mandate}</div>
               {meta && (

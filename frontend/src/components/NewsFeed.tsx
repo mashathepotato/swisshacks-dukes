@@ -11,10 +11,7 @@ export function NewsFeed({ selectedId, onSelect }: Props) {
   return (
     <div className="queue">
       <h1>Live news — by priority</h1>
-      <p className="lead">
-        {RANKED_NEWS.length} stories on the desk · ranked by severity, hardest client hit and reach across your
-        book. Click a story for why it matters and a map of who it touches.
-      </p>
+      <p className="lead">{RANKED_NEWS.length} stories, ranked by severity and reach.</p>
 
       {RANKED_NEWS.map(({ news, priority }) => {
         const meta = SIGNAL_META[news.type];
