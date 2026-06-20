@@ -248,3 +248,13 @@ export interface DigestResult {
   topics: string[];
   historyLinks?: string[];  // final pass only
 }
+
+export interface DialogueTurn {
+  speaker: "RM" | "Client" | "Conversation";
+  text: string;
+}
+
+export interface DialogueResult {
+  model: string;
+  turns: DialogueTurn[];
+}

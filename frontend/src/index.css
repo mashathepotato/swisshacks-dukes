@@ -656,3 +656,30 @@ button { font-family: inherit; cursor: pointer; }
 .rmp-reset:hover { color: var(--text); border-color: var(--text-faint); }
 .rmp-done { background: var(--accent); border: none; color: #fff; border-radius: 2px; padding: 9px 20px; font-size: 13px; font-weight: 700; font-family: inherit; cursor: pointer; letter-spacing: .02em; }
 .rmp-done:hover { background: #c4310f; }
+
+/* ── Conversation Capture — house-style controls ── */
+.conv-tabs { display: flex; gap: 6px; margin: 8px 0 14px; }
+.conv-tab {
+  background: var(--panel-2); border: 1px solid var(--border-soft); color: var(--text-dim);
+  border-radius: 2px; padding: 6px 12px; font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer;
+}
+.conv-tab:hover:not(:disabled) { color: var(--text); border-color: var(--border); }
+.conv-tab.on { background: var(--accent-soft); color: var(--accent); border-color: var(--accent-line); cursor: default; }
+.conv-btn {
+  background: var(--panel); border: 1px solid var(--border); color: var(--text);
+  border-radius: 2px; padding: 7px 13px; font-size: 13px; font-family: inherit; cursor: pointer; margin-right: 8px;
+}
+.conv-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.conv-btn:disabled { opacity: .45; cursor: default; }
+.conv-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+.conv-btn.primary:hover:not(:disabled) { background: #c4310f; border-color: #c4310f; color: #fff; }
+.conv-badge {
+  padding: 1px 7px; border-radius: 2px; background: var(--accent-soft); color: var(--accent);
+  font-size: 11px; font-weight: 700; letter-spacing: .02em;
+}
+.conv-dialogue { margin: 8px 0; padding: 10px 12px; background: var(--panel-2); border: 1px solid var(--border-soft); border-radius: 2px; }
+.conv-dialogue-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-faint); margin-bottom: 6px; }
+.conv-turn { font-size: 13px; line-height: 1.5; padding: 4px 8px; border-radius: 2px; margin-bottom: 4px; }
+.conv-turn.rm { background: var(--accent-soft); }
+.conv-turn.client { background: var(--panel); border: 1px solid var(--border-soft); }
+.conv-turn-who { font-weight: 700; font-size: 11px; color: var(--accent); margin-right: 6px; }
