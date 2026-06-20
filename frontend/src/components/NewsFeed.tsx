@@ -1,8 +1,6 @@
 import { useMemo, useState } from "react";
 import { NEWS_FEED } from "../data/newsFeed";
 import type { FeedArticle } from "../data/newsFeed";
-import { NewsViewToggle } from "./NewsViewToggle";
-import type { NewsView } from "./NewsViewToggle";
 import { ValueSpider } from "./ValueSpider";
 
 const TYPE_LABEL: Record<string, string> = {
@@ -20,7 +18,7 @@ function matchesTheme(a: FeedArticle, theme: string | null): boolean {
   return Boolean(a.stage2?.themes.includes(theme)) || (theme === "market-movement" && Boolean(a.stage2?.marketMovement));
 }
 
-export function NewsFeed({ view, onView }: { view: NewsView; onView: (v: NewsView) => void }) {
+export function NewsFeed() {
   const feed = NEWS_FEED;
   const [marketOnly, setMarketOnly] = useState(false);
   const [theme, setTheme] = useState<string | null>(null);
@@ -50,12 +48,9 @@ export function NewsFeed({ view, onView }: { view: NewsView; onView: (v: NewsVie
           <h1>News desk</h1>
           <p className="lead">Every headline, filtered for investment relevance — drops the noise, themes the survivors, ranks by portfolio exposure &amp; client values, and labels the instruments each story touches.</p>
         </div>
-        <div className="nf-head-right">
-          <NewsViewToggle view={view} onView={onView} />
-          <span className={"nf-eng " + (e.llmReady ? "llm" : "heur")} title={`Stage 2 engine: ${e.engine} (${e.model})`}>
-            Stage 2 · {e.llmReady ? e.model : "heuristic"}
-          </span>
-        </div>
+        <span className={"nf-eng " + (e.llmReady ? "llm" : "heur")} title={`Stage 2 engine: ${e.engine} (${e.model})`}>
+          Stage 2 · {e.llmReady ? e.model : "heuristic"}
+        </span>
       </div>
 
       <div className="nf-funnel">

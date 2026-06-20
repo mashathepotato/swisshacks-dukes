@@ -7,6 +7,7 @@ import { ClientPage } from "./components/ClientPage";
 import { NewsFeed } from "./components/NewsFeed";
 import { ClientNewsFeed } from "./components/ClientNewsFeed";
 import { NewsDetail } from "./components/NewsDetail";
+import { NewsViewToggle } from "./components/NewsViewToggle";
 import type { NewsView } from "./components/NewsViewToggle";
 import { RmProfilePanel } from "./components/RmProfilePanel";
 import type { Client, NewsItem } from "./types";
@@ -68,9 +69,16 @@ export default function App() {
         <div className="content">
           {tab === "priority" && <PriorityQueue selectedId={selected?.id ?? null} onSelect={setSelected} />}
           {tab === "clients" && <ClientGrid onOpen={openFullClient} />}
-          {tab === "news" && (newsView === "funnel"
-            ? <NewsFeed view={newsView} onView={setNewsView} />
-            : <ClientNewsFeed view={newsView} onView={setNewsView} selectedId={selectedNews?.id ?? null} onSelect={setSelectedNews} />)}
+          {tab === "news" && (
+            <div className="newstab">
+              <div className="newstab-bar">
+                <NewsViewToggle view={newsView} onView={setNewsView} />
+              </div>
+              {newsView === "funnel"
+                ? <NewsFeed />
+                : <ClientNewsFeed selectedId={selectedNews?.id ?? null} onSelect={setSelectedNews} />}
+            </div>
+          )}
           {tab === "rehearse" && <Rehearse focusClientId={simFocus} />}
         </div>
         {tab === "priority" && <ClientDetail client={selected} onOpenFull={openFullClient} />}

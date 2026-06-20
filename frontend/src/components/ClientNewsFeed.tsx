@@ -1,23 +1,16 @@
 import { RANKED_NEWS, newsImpacts } from "../data/news";
 import { scoreColor, SIGNAL_META } from "../lib/format";
 import type { NewsItem } from "../types";
-import { NewsViewToggle } from "./NewsViewToggle";
-import type { NewsView } from "./NewsViewToggle";
 
 interface Props {
-  view: NewsView;
-  onView: (v: NewsView) => void;
   selectedId: string | null;
   onSelect: (news: NewsItem) => void;
 }
 
-export function ClientNewsFeed({ view, onView, selectedId, onSelect }: Props) {
+export function ClientNewsFeed({ selectedId, onSelect }: Props) {
   return (
     <div className="queue">
-      <div className="news-head-row">
-        <h1>Live news — by client impact</h1>
-        <NewsViewToggle view={view} onView={onView} />
-      </div>
+      <h1>Live news — by client impact</h1>
       <p className="lead">
         {RANKED_NEWS.length} curated stories · ranked by severity, hardest client hit and reach across your
         book. Click a story for why it matters and a map of who it touches.
