@@ -18,9 +18,10 @@ export interface ValueMatch {
   label: string;
   emoji: string;
   color: string;
+  articleScore: number;   // 0..1 — how strongly the story implicates this axis
   clientWeight: number;   // 0..1 — the client's conviction on this axis
   polarity: 1 | -1;       // -1 = the client guards against this axis
-  contribution: number;   // = the client's conviction (the story touches the axis; it contributes their conviction)
+  contribution: number;   // story value × client value
 }
 export interface HoldingMatch { issuer: string; isins: string[]; }
 export type ReasonKind = "holding" | "value" | "mandate";
@@ -49,16 +50,16 @@ export function relevance(article: FeedArticle, client: Client): Relevance {
       label: t?.label ?? v.label,
       emoji: t?.emoji ?? "",
       color: t?.color ?? "#888",
+      articleScore: v.score,
       clientWeight: aff.weight,
       polarity: aff.polarity ?? 1,
-      contribution: aff.weight,
+      contribution: v.score * aff.weight,
     });
   }
   valueMatches.sort((a, b) => b.contribution - a.contribution);
   const valueScore = valueMatches.reduce((s, m) => s + m.contribution, 0);
-  // normalise against the client's total conviction → 1.0 = touches all their values
-  const totalConviction = client.affinities.reduce((s, a) => s + a.weight, 0);
-  const valueOverlap = totalConviction > 0 ? valueScore / totalConviction : 0;
+  // weighted average: Σ(story value × client value) ÷ number of affected values
+  const valueOverlap = valueMatches.length ? valueScore / valueMatches.length : 0;
 
   // 2. direct holding match — deduped by issuer (one Nestlé, not one per ISIN)
   const held = new Set(client.topHoldings.map(norm));
