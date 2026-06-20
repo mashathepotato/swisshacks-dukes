@@ -204,3 +204,36 @@ export interface SimulationResult {
   nextStep: string;
   trajectory: TrajectoryPoint[];
 }
+
+export interface ConsentRecord {
+  clientId: string;
+  rmName: string;
+  method: "verbal" | "written";
+  timestamp: string; // ISO datetime
+}
+
+export interface AffinityDelta {
+  theme: ThemeId;
+  fromWeight: number; // current weight (0 if new)
+  toWeight: number;   // proposed weight (0..1)
+}
+
+export interface DnaDeltas {
+  values: string[];
+  dislikes: string[];
+  affinities: AffinityDelta[];
+}
+
+export interface DistillNote {
+  date: string;
+  medium: string;
+  rmName: string;
+  clientContact: string;
+  text: string;
+}
+
+export interface DistillResult {
+  note: DistillNote;
+  dnaDeltas: DnaDeltas;
+  receipts: Evidence[];
+}
