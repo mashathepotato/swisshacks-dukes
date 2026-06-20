@@ -22,7 +22,7 @@ const TAB_CONFIG: Record<Tab, string> = {
 };
 
 export default function App() {
-  const { customising, toggleCustomising, tabOrder, reorderTabs, density, setDensity } = useCustomize();
+  const { customising, toggleCustomising, tabOrder, reorderTabs, resetTabs, density, setDensity } = useCustomize();
 
   const [tab, setTab] = useState<Tab>("priority");
   const [selected, setSelected] = useState<Client | null>(null);
@@ -80,6 +80,9 @@ export default function App() {
           })}
         </div>
         <div className="topbar-actions">
+          {customising && (
+            <button className="dens-toggle" onClick={resetTabs} title="Reset tab order">↺ Tabs</button>
+          )}
           <button
             className="dens-toggle"
             onClick={() => setDensity(density === "comfortable" ? "compact" : "comfortable")}
@@ -114,5 +117,6 @@ export default function App() {
     </div>
   );
 }
+
 
 

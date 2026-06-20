@@ -54,3 +54,27 @@ _(appended as work proceeds)_
   - Header bar gained **⚙ Customise**, **density**, and (in customise mode) **↺ Reset layout** controls. A **hidden-panels tray** lets the RM re-add anything they've hidden. A customise-mode hint explains the gestures.
   - Reworked the page into a single `.cp-grid` (2-track grid, `auto-flow: dense`) instead of two `.cp-col` stacks.
 - **`src/index.css`** — styles for `.cp-section` cards, the section drag-bar + controls, the resizable body, the hidden-panels tray, the bar actions, reset button, and the rehearse CTA. Responsive: collapses to one column under 980px.
+
+### Slice 4 — polish
+- **`src/App.tsx`** — added a **↺ Tabs** reset (resets nav order) shown in the topbar while customising.
+
+---
+
+## How to use (for review)
+
+1. Click **⚙ Customise** (top-right). A hint bar appears and edit handles turn on.
+2. **Top nav:** drag any tab (⠿ grip) left/right to reorder. **↺ Tabs** resets it.
+3. **Density:** the **▦ Comfortable / ⊟ Compact** button tightens spacing across the whole UI.
+4. **Client page:** open any client → each panel now has a ⠿ drag-header. Drag to reorder, **↔** to switch half/full width, drag a panel's **bottom edge** to resize its height, **✕** to hide. Hidden panels collect in a tray to re-add. **↺ Reset layout** restores defaults.
+5. Click **⚙ Done** to exit. Everything is saved to `localStorage` and restored on refresh (per browser ≈ per RM).
+
+## Verification
+- `npx tsc --noEmit -p tsconfig.app.json` — clean.
+- `npm run lint` — clean (one pre-existing `exhaustive-deps` warning in the now-unused `BookSimulator.tsx`, unrelated).
+- Dev server HMR healthy; app serves.
+
+## Deliberately left (kept scope tight)
+- No drag-to-arbitrary-pixel canvas / no external grid library (native DnD + CSS only).
+- Keyboard reordering isn't wired (native HTML5 DnD is mouse/touch); tabs remain keyboard-focusable for navigation.
+- Per-RM identity is the browser (single demo RM); no server-side profiles.
+- `BookSimulator.tsx` is still dead code from an earlier change — left untouched here.
