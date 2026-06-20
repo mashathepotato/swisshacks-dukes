@@ -69,7 +69,10 @@ export function ClientPage({ client, onBack, onSimulate }: Props) {
           </button>
         </div>
 
-        <div className="cp-priority"><PriorityScore client={client} /></div>
+        <div className="cp-toprow">
+          <div className="cp-toprow-col"><PriorityScore client={client} /></div>
+          <div className="cp-toprow-col"><LearningPanel client={client} /></div>
+        </div>
 
         <div className="cp-grid">
           <div className="cp-col">
@@ -130,8 +133,6 @@ export function ClientPage({ client, onBack, onSimulate }: Props) {
           </div>
 
           <div className="cp-col">
-            <LearningPanel client={client} />
-
             <Recommendations key={"rec-" + client.id} client={client} />
 
             {PERSONA_PLAY[client.id] && <ComplianceDesk key={"cdesk-" + client.id} client={client} />}

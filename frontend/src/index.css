@@ -845,5 +845,7 @@ button { font-family: inherit; cursor: pointer; }
 .pscore-break b { color: var(--text); font-family: var(--font-mono); }
 .pscore-cap { font-size: 11px; color: var(--text-faint); margin: 6px 0 4px; line-height: 1.4; }
 
-/* ---- priority score on the client page ---- */
-.cp-priority { max-width: 540px; margin: 6px 0 4px; }
+/* ---- priority score + learning, side by side, on the client page ---- */
+.cp-toprow { display: flex; gap: 24px; align-items: flex-start; margin: 6px 0 8px; }
+.cp-toprow-col { flex: 1; min-width: 0; }
+@media (max-width: 980px) { .cp-toprow { flex-direction: column; } }
