@@ -357,7 +357,7 @@ const BASE_CLIENTS: Client[] = [
     priorityScore: 58,
     amountAtStake: 2_100_000,
     topReason: "CIO suggests rebalancing from Swiss blue chips into US AI stocks — directly conflicts with their stated aversion.",
-    topHoldings: ["Nestlé S.A.", "Procter & Gamble", "Zurich Insurance", "Swiss Govt Bond 2031"],
+    topHoldings: ["Nestlé S.A.", "Procter & Gamble", "Abbott Laboratories", "Zurich Insurance", "Swiss Govt Bond 2031"],
     signals: [
       {
         id: "rae-news-1",

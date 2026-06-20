@@ -67,11 +67,38 @@ describe("priority — market anomaly as a weighted driver", () => {
   });
 });
 
+function withMandate(c: Client, mandate: Client["mandate"]): Client {
+  return { ...c, mandate };
+}
+
 describe("priority — anomaly is its own always-on term in the blend", () => {
-  it("weights still sum to 1 and include a dedicated anomaly term", () => {
-    expect(PRIORITY_WEIGHTS.anomaly).toBeGreaterThan(0);
-    const sum = Object.values(PRIORITY_WEIGHTS).reduce((s, w) => s + w, 0);
-    expect(sum).toBeCloseTo(1, 10);
+  it("every mandate's weight vector sums to 1 and includes an anomaly term", () => {
+    for (const m of ["Defensive", "Balanced", "Growth"] as const) {
+      const w = PRIORITY_WEIGHTS[m];
+      expect(w.anomaly).toBeGreaterThan(0);
+      expect(w.severity + w.exposure + w.conflict + w.recency + w.anomaly).toBeCloseTo(1, 10);
+    }
+  });
+
+  it("weights the anomaly more for Defensive than Growth (strategy-aware)", () => {
+    expect(PRIORITY_WEIGHTS.Defensive.anomaly).toBeGreaterThan(PRIORITY_WEIGHTS.Balanced.anomaly);
+    expect(PRIORITY_WEIGHTS.Balanced.anomaly).toBeGreaterThan(PRIORITY_WEIGHTS.Growth.anomaly);
+  });
+
+  it("the SAME secondary market move adds more score to a Defensive client than a Growth client", () => {
+    // A dominant reputational event stays the active driver for both; the market
+    // move is secondary, so its marginal contribution is purely the anomaly term.
+    const lead = signal({ type: "reputational", severity: 95, publishedAt: "2026-06-18" });
+    const move = signal({ type: "market_anomaly", severity: 70, publishedAt: "2026-06-18" });
+    const marginal = (mandate: Client["mandate"]) => {
+      const without = withMandate(client("a", [lead]), mandate);
+      const withMove = withMandate(client("a", [lead, move]), mandate);
+      const book = [without, withMove];
+      return priorityFor(withMove, book).combined - priorityFor(without, book).combined;
+    };
+    expect(marginal("Defensive")).toBeGreaterThan(marginal("Growth"));
+    expect(marginal("Defensive")).toBeCloseTo(0.24 * 0.7, 5);
+    expect(marginal("Growth")).toBeCloseTo(0.1 * 0.7, 5);
   });
 
   it("a SECONDARY market move (not the top signal) still contributes to the score", () => {
