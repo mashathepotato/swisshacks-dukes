@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import type { Client, ConsentRecord, DistillResult, AffinityDelta, DigestResult } from "../types";
 import { countWords, shouldRequestDigest, dnaContextOf } from "../lib/digest";
 import { useRecorder } from "../lib/useRecorder";
@@ -19,6 +20,8 @@ export function ConversationCapture({ client }: { client: Client }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [digest, setDigest] = useState<DigestResult | null>(null);
+  const [tab, setTab] = useState<"voice" | "manual">("voice");
+  const [manualText, setManualText] = useState("");
   const lastWordsRef = useRef(0);
   const lastAtRef = useRef(0);
   const seqRef = useRef(0);
@@ -91,30 +94,86 @@ export function ConversationCapture({ client }: { client: Client }) {
     }
   }
 
-  function approve() {
+  // Distill-only path for the manual-notes tab (no recording, no digest).
+  async function finalizeManual() {
+    const transcript = manualText.trim();
+    if (!transcript) return;
+    setBusy(true); setErr(null);
+    try {
+      const res = await fetch("/api/transcript/distill", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ clientId: client.id, transcript, rmName: profile.name, clientContact: client.name }),
+      });
+      if (!res.ok) throw new Error(`distill failed (${res.status})`);
+      const data = (await res.json()) as DistillResult;
+      setResult(data);
+      setNoteText(data.note.text);
+      const init: Record<string, boolean> = {};
+      data.dnaDeltas.values.forEach((v) => (init[`v:${v}`] = true));
+      data.dnaDeltas.dislikes.forEach((dd) => (init[`d:${dd}`] = true));
+      data.dnaDeltas.affinities.forEach((a) => (init[`a:${a.theme}`] = true));
+      setAccepted(init);
+    } catch (e) {
+      setErr(String((e as Error).message));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function approve(medium?: string) {
     if (!result) return;
     const deltas = {
       values: result.dnaDeltas.values.filter((v) => accepted[`v:${v}`]),
       dislikes: result.dnaDeltas.dislikes.filter((d) => accepted[`d:${d}`]),
       affinities: result.dnaDeltas.affinities.filter((a: AffinityDelta) => accepted[`a:${a.theme}`]),
     };
-    commit(client.id, deltas, { ...result.note, text: noteText }, result.receipts);
-    setPhase("consent"); setConsent(null); setResult(null); rec.stop(); rec.reset(); setDigest(null); lastWordsRef.current = 0; lastAtRef.current = 0;
+    commit(client.id, deltas, { ...result.note, text: noteText, medium: medium ?? result.note.medium }, result.receipts);
+    setPhase("consent"); setConsent(null); setResult(null); rec.stop(); rec.reset();
+    setDigest(null); lastWordsRef.current = 0; lastAtRef.current = 0; setManualText("");
   }
 
   return (
     <section className="conv-capture" style={{ border: "1px solid var(--border, #2a3142)", borderRadius: 8, padding: 16, marginTop: 16 }}>
       <h3>🎙️ Conversation Capture — {client.name}</h3>
 
-      {phase === "consent" && (
+      <div style={{ display: "flex", gap: 8, margin: "8px 0 12px" }}>
+        <button onClick={() => setTab("voice")} disabled={tab === "voice"}>🎙️ Voice (consented)</button>
+        <button onClick={() => setTab("manual")} disabled={tab === "manual"}>📝 Manual notes</button>
+      </div>
+
+      {tab === "manual" && (
+        <div>
+          <p style={{ fontSize: 12, opacity: 0.7 }}>No recording — type your notes. (Use Voice if the client consented to recording.)</p>
+          <textarea
+            value={manualText}
+            onChange={(e) => setManualText(e.target.value)}
+            rows={6}
+            style={{ width: "100%" }}
+            placeholder="Type your notes from the meeting…"
+          />
+          {!result && (
+            <button onClick={finalizeManual} disabled={busy || !manualText.trim()}>{busy ? "Analyzing…" : "Generate insights"}</button>
+          )}
+          {err && <p style={{ color: "var(--red, #e53e3e)" }}>{err}</p>}
+          {result && (
+            <div style={{ marginTop: 12, border: "1px solid var(--border, #2a3142)", borderRadius: 6, padding: 12 }}>
+              <DnaProposal result={result} client={client} noteText={noteText} setNoteText={setNoteText} accepted={accepted} setAccepted={setAccepted} onApprove={() => approve("Manual note")} />
+            </div>
+          )}
+        </div>
+      )}
+
+      {tab === "voice" && phase === "consent" && (
         <div>
           <p>Recording requires the client's consent. Confirm how consent was given:</p>
           <button onClick={() => giveConsent("verbal")}>Client consented verbally</button>{" "}
           <button onClick={() => giveConsent("written")}>Client consented in writing</button>
+          <p style={{ fontSize: 12, opacity: 0.7, marginTop: 8 }}>No consent to record? Use the <strong>Manual notes</strong> tab.</p>
         </div>
       )}
 
-      {phase === "record" && (
+      {tab === "voice" && phase === "record" && (
         <div>
           <p style={{ fontSize: 12, opacity: 0.7 }}>
             ✓ Consent ({consent?.method}) recorded {consent?.timestamp}
@@ -144,41 +203,7 @@ export function ConversationCapture({ client }: { client: Client }) {
               {digest && <DigestView d={digest} />}
               {result && (
                 <div style={{ marginTop: digest ? 12 : 0 }}>
-                  <label><strong>CRM note</strong></label>
-                  <textarea value={noteText} onChange={(e) => setNoteText(e.target.value)} rows={3} style={{ width: "100%" }} />
-
-                  <h4 style={{ marginBottom: 4 }}>Proposed DNA changes (uncheck to reject)</h4>
-                  {result.dnaDeltas.values.length === 0 && result.dnaDeltas.dislikes.length === 0 && result.dnaDeltas.affinities.length === 0 ? (
-                    <p style={{ fontSize: 13, opacity: 0.7 }}>No DNA changes proposed for this conversation.</p>
-                  ) : (
-                    <ul style={{ listStyle: "none", padding: 0 }}>
-                      {result.dnaDeltas.values.map((v) => (
-                        <li key={`v:${v}`}><label><input type="checkbox" checked={!!accepted[`v:${v}`]} onChange={(e) => setAccepted((p) => ({ ...p, [`v:${v}`]: e.target.checked }))} /> Value: {v}</label></li>
-                      ))}
-                      {result.dnaDeltas.dislikes.map((d) => (
-                        <li key={`d:${d}`}><label><input type="checkbox" checked={!!accepted[`d:${d}`]} onChange={(e) => setAccepted((p) => ({ ...p, [`d:${d}`]: e.target.checked }))} /> Dislike: {d}</label></li>
-                      ))}
-                      {result.dnaDeltas.affinities.map((a) => {
-                        const cur = client.affinities.find((x) => x.theme === a.theme)?.weight ?? 0;
-                        return (
-                          <li key={`a:${a.theme}`}><label><input type="checkbox" checked={!!accepted[`a:${a.theme}`]} onChange={(e) => setAccepted((p) => ({ ...p, [`a:${a.theme}`]: e.target.checked }))} /> Affinity: {a.theme}: {cur.toFixed(2)} → {a.toWeight.toFixed(2)}</label></li>
-                        );
-                      })}
-                    </ul>
-                  )}
-
-                  {result.receipts.length > 0 && (
-                    <>
-                      <h4 style={{ marginBottom: 4 }}>Quote receipts</h4>
-                      <ul>
-                        {result.receipts.map((r, i) => (
-                          <li key={r.sourceId + ":" + i} style={{ fontSize: 13, opacity: 0.85 }}>"{r.quote}" <span style={{ opacity: 0.6 }}>— {r.sourceId}</span></li>
-                        ))}
-                      </ul>
-                    </>
-                  )}
-
-                  <button onClick={approve}>✓ Approve &amp; merge</button>
+                  <DnaProposal result={result} client={client} noteText={noteText} setNoteText={setNoteText} accepted={accepted} setAccepted={setAccepted} onApprove={() => approve()} />
                 </div>
               )}
             </div>
@@ -186,6 +211,62 @@ export function ConversationCapture({ client }: { client: Client }) {
         </div>
       )}
     </section>
+  );
+}
+
+function DnaProposal({
+  result, client, noteText, setNoteText, accepted, setAccepted, onApprove,
+}: {
+  result: DistillResult;
+  client: Client;
+  noteText: string;
+  setNoteText: (t: string) => void;
+  accepted: Record<string, boolean>;
+  setAccepted: Dispatch<SetStateAction<Record<string, boolean>>>;
+  onApprove: () => void;
+}) {
+  const empty =
+    result.dnaDeltas.values.length === 0 &&
+    result.dnaDeltas.dislikes.length === 0 &&
+    result.dnaDeltas.affinities.length === 0;
+  return (
+    <div>
+      <label><strong>CRM note</strong></label>
+      <textarea value={noteText} onChange={(e) => setNoteText(e.target.value)} rows={3} style={{ width: "100%" }} />
+
+      <h4 style={{ marginBottom: 4 }}>Proposed DNA changes (uncheck to reject)</h4>
+      {empty ? (
+        <p style={{ fontSize: 13, opacity: 0.7 }}>No DNA changes proposed for this conversation.</p>
+      ) : (
+        <ul style={{ listStyle: "none", padding: 0 }}>
+          {result.dnaDeltas.values.map((v) => (
+            <li key={`v:${v}`}><label><input type="checkbox" checked={!!accepted[`v:${v}`]} onChange={(e) => setAccepted((p) => ({ ...p, [`v:${v}`]: e.target.checked }))} /> Value: {v}</label></li>
+          ))}
+          {result.dnaDeltas.dislikes.map((d) => (
+            <li key={`d:${d}`}><label><input type="checkbox" checked={!!accepted[`d:${d}`]} onChange={(e) => setAccepted((p) => ({ ...p, [`d:${d}`]: e.target.checked }))} /> Dislike: {d}</label></li>
+          ))}
+          {result.dnaDeltas.affinities.map((a) => {
+            const cur = client.affinities.find((x) => x.theme === a.theme)?.weight ?? 0;
+            return (
+              <li key={`a:${a.theme}`}><label><input type="checkbox" checked={!!accepted[`a:${a.theme}`]} onChange={(e) => setAccepted((p) => ({ ...p, [`a:${a.theme}`]: e.target.checked }))} /> Affinity: {a.theme}: {cur.toFixed(2)} → {a.toWeight.toFixed(2)}</label></li>
+            );
+          })}
+        </ul>
+      )}
+
+      {result.receipts.length > 0 && (
+        <>
+          <h4 style={{ marginBottom: 4 }}>Quote receipts</h4>
+          <ul>
+            {result.receipts.map((r, i) => (
+              <li key={r.sourceId + ":" + i} style={{ fontSize: 13, opacity: 0.85 }}>"{r.quote}" <span style={{ opacity: 0.6 }}>— {r.sourceId}</span></li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      <button onClick={onApprove}>✓ Approve &amp; merge</button>
+    </div>
   );
 }
 
