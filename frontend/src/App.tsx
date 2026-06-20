@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { PriorityQueue } from "./components/PriorityQueue";
+import { ClientGrid } from "./components/ClientGrid";
 import { SimulatorChat } from "./components/SimulatorChat";
 import { RehearseOutcome } from "./components/RehearseOutcome";
 import { ClientDetail } from "./components/ClientDetail";
@@ -9,7 +10,7 @@ import { NewsDetail } from "./components/NewsDetail";
 import type { Client, NewsItem } from "./types";
 import { RANKED_NEWS } from "./data/news";
 
-type Tab = "priority" | "news" | "simulator" | "book";
+type Tab = "priority" | "clients" | "news" | "simulator" | "book";
 
 export default function App() {
   const [tab, setTab] = useState<Tab>("priority");
@@ -47,6 +48,7 @@ export default function App() {
         <div className="brand">RM Copilot <span className="sub">SwissHacks · Dukes</span></div>
         <div className="tabs">
           <button className={"tab" + (tab === "priority" ? " active" : "")} onClick={() => setTab("priority")}>📋 Priority queue</button>
+          <button className={"tab" + (tab === "clients" ? " active" : "")} onClick={() => setTab("clients")}>👥 Clients</button>
           <button className={"tab" + (tab === "news" ? " active" : "")} onClick={() => setTab("news")}>📰 News feed</button>
           <button className={"tab" + (tab === "simulator" ? " active" : "")} onClick={() => setTab("simulator")}>💬 Rehearse</button>
           <button className={"tab" + (tab === "book" ? " active" : "")} onClick={() => setTab("book")}>🔬 Rehearse outcome</button>
@@ -57,6 +59,7 @@ export default function App() {
       <div className="main">
         <div className="content">
           {tab === "priority" && <PriorityQueue selectedId={selected?.id ?? null} onSelect={setSelected} />}
+          {tab === "clients" && <ClientGrid onOpen={openFullClient} />}
           {tab === "news" && <NewsFeed selectedId={selectedNews?.id ?? null} onSelect={setSelectedNews} />}
           {tab === "simulator" && <SimulatorChat focusClientId={simFocus} />}
           {tab === "book" && <RehearseOutcome />}
@@ -67,5 +70,6 @@ export default function App() {
     </div>
   );
 }
+
 
 
