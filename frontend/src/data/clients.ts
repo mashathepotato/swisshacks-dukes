@@ -14,8 +14,8 @@ export const CLIENTS: Client[] = [
     values: ["Reputation = financial risk", "Swiss prominence", "Ethical supply chains"],
     dislikes: ["Labour exploitation", "Negative press exposure"],
     affinities: [
-      { theme: "governance", weight: 0.95 },
-      { theme: "tech-innovation", weight: 0.45 },
+      { theme: "reputation-sensitivity", weight: 0.95 },
+      { theme: "social-ethics", weight: 0.6 },
     ],
     priorityScore: 92,
     amountAtStake: 3_200_000,
@@ -122,8 +122,8 @@ export const CLIENTS: Client[] = [
     values: ["Family foundation", "Chronic-illness research", "Long-term stewardship"],
     dislikes: ["Cold/transactional advice"],
     affinities: [
-      { theme: "healthcare", weight: 0.9 },
-      { theme: "consumer", weight: 0.4 },
+      { theme: "personal-cause", weight: 0.9 },
+      { theme: "philanthropy", weight: 0.65 },
     ],
     priorityScore: 84,
     amountAtStake: 1_450_000,
@@ -239,8 +239,8 @@ export const CLIENTS: Client[] = [
     values: ["Reforestation", "Environmental impact", "Sustainable supply chains"],
     dislikes: ["Deforestation", "Greenwashing"],
     affinities: [
-      { theme: "environment", weight: 0.92 },
-      { theme: "consumer", weight: 0.5 },
+      { theme: "environmental", weight: 0.92 },
+      { theme: "social-ethics", weight: 0.55 },
     ],
     priorityScore: 67,
     amountAtStake: 640_000,
@@ -346,8 +346,8 @@ export const CLIENTS: Client[] = [
     values: ["Capital preservation", "Predictable dividends", "Tangible businesses"],
     dislikes: ["US tech / AI speculation", "High-beta names"],
     affinities: [
-      { theme: "consumer", weight: 0.9 },
-      { theme: "financials", weight: 0.8 },
+      { theme: "us-exposure", weight: 0.85, polarity: -1 },
+      { theme: "geographic-anchoring", weight: 0.8 },
     ],
     priorityScore: 58,
     amountAtStake: 2_100_000,
@@ -443,35 +443,35 @@ export const CLIENTS: Client[] = [
 
   // ---- synthetic twins (lighter detail; populate the network & scale) ----
   syn("nguyen", "Nguyen", "Tech-forward growth seeker", "Growth", "High", [
-    { theme: "tech-innovation", weight: 0.9 },
+    { theme: "us-exposure", weight: 0.9 },
   ], 61, "Overweight US AI; CIO momentum signal flashing — opportunity to add."),
   syn("oduya", "Oduya", "Impact-first saver", "Balanced", "Moderate", [
-    { theme: "environment", weight: 0.85 },
-    { theme: "healthcare", weight: 0.35 },
+    { theme: "environmental", weight: 0.85 },
+    { theme: "personal-cause", weight: 0.35 },
   ], 44, "ESG screen drift after an energy-sector earnings surprise."),
   syn("bianchi", "Bianchi", "Dividend retiree", "Defensive", "Low", [
-    { theme: "financials", weight: 0.9 },
-    { theme: "consumer", weight: 0.6 },
+    { theme: "us-exposure", weight: 0.55, polarity: -1 },
+    { theme: "geographic-anchoring", weight: 0.6 },
   ], 39, "Coupon reinvestment due; no urgent conflict."),
   syn("keller", "Keller", "Reputation-conscious founder", "Growth", "High", [
-    { theme: "governance", weight: 0.8 },
-    { theme: "tech-innovation", weight: 0.5 },
+    { theme: "reputation-sensitivity", weight: 0.8 },
+    { theme: "us-exposure", weight: 0.5 },
   ], 73, "Portfolio brand named in an ESG controversy watchlist."),
   syn("moreau", "Moreau", "Balanced pragmatist", "Balanced", "Moderate", [
-    { theme: "consumer", weight: 0.5 },
-    { theme: "tech-innovation", weight: 0.4 },
+    { theme: "geographic-anchoring", weight: 0.5 },
+    { theme: "us-exposure", weight: 0.4 },
   ], 31, "Mandate within tolerance; routine review."),
   syn("frei", "Frei", "Green-income blend", "Defensive", "Low", [
-    { theme: "environment", weight: 0.6 },
-    { theme: "financials", weight: 0.55 },
+    { theme: "environmental", weight: 0.6 },
+    { theme: "geographic-anchoring", weight: 0.55 },
   ], 36, "Utility holding raised dividend; minor positive."),
   syn("tanaka", "Tanaka", "Global growth optimist", "Growth", "High", [
-    { theme: "tech-innovation", weight: 0.75 },
-    { theme: "governance", weight: 0.3 },
+    { theme: "us-exposure", weight: 0.75 },
+    { theme: "reputation-sensitivity", weight: 0.3 },
   ], 52, "Semiconductor export-control headline; check exposure."),
   syn("vogel", "Vogel", "Conservative steward", "Defensive", "Low", [
-    { theme: "consumer", weight: 0.85 },
-    { theme: "healthcare", weight: 0.3 },
+    { theme: "geographic-anchoring", weight: 0.85 },
+    { theme: "personal-cause", weight: 0.3 },
   ], 28, "No active signal."),
 ];
 

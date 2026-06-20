@@ -17,7 +17,7 @@ export const NEWS: NewsItem[] = [
       "An investigation alleges systematic labour exploitation across LuxeWear's South-East Asian suppliers. Shares fell 9% intraday.",
     type: "reputational",
     severity: 88,
-    themes: ["governance"],
+    themes: ["reputation-sensitivity", "social-ethics"],
     matchedHoldings: ["LuxeWear Group"],
     whyItMatters:
       "A held consumer brand is now at the centre of a labour-exploitation scandal. For reputation-sensitive clients this is not a price move — it is a direct association risk that they expect to hear about from us before it reaches the press.",
@@ -36,7 +36,7 @@ export const NEWS: NewsItem[] = [
       "Helvetia Pharma will close its neuromuscular research division — a field several philanthropic clients actively fund through their foundations.",
     type: "value_conflict",
     severity: 71,
-    themes: ["healthcare"],
+    themes: ["personal-cause", "philanthropy"],
     matchedHoldings: ["Helvetia Pharma"],
     whyItMatters:
       "A holding is abandoning the exact cause a client's foundation supports. The financial impact is modest, but the values conflict is acute — the portfolio is now quietly working against what the client cares about most.",
@@ -55,7 +55,7 @@ export const NEWS: NewsItem[] = [
       "GreenStaples announced the largest palm-oil deforestation cut-off in its sector — a landmark sustainable-supply-chain pledge.",
     type: "opportunity",
     severity: 54,
-    themes: ["environment"],
+    themes: ["environmental"],
     matchedHoldings: ["GreenStaples Co"],
     whyItMatters:
       "Rare good news that lines up with the environmental thesis of impact-first clients. It is a proof point that the capital behind their portfolio is moving the way they intended — a relationship-building moment, not a problem to defuse.",
@@ -74,7 +74,7 @@ export const NEWS: NewsItem[] = [
       "The latest house view rotates a slice of blue-chip staples into US AI mega-caps to capture momentum across mandates.",
     type: "mandate_drift",
     severity: 49,
-    themes: ["tech-innovation", "consumer"],
+    themes: ["us-exposure"],
     matchedHoldings: ["Nestlé S.A."],
     whyItMatters:
       "The default CIO advice would push conservative, hype-averse clients into the precise exposure they reject — while genuinely fitting the tech-forward ones. The signal matters most as something to suppress for some of the book and amplify for the rest.",
@@ -93,7 +93,7 @@ export const NEWS: NewsItem[] = [
       "Fresh export restrictions on advanced chips rattled AI hardware names; Nvidia and peers traded sharply lower on the headline.",
     type: "exposure",
     severity: 63,
-    themes: ["tech-innovation"],
+    themes: ["us-exposure"],
     matchedHoldings: ["Nvidia Corp"],
     whyItMatters:
       "A direct hit to the AI-hardware complex that growth-oriented clients are overweight. Worth a proactive note on exposure and sizing before the next leg of volatility.",
@@ -112,7 +112,7 @@ export const NEWS: NewsItem[] = [
       "Several defensive blue chips lifted payouts ahead of forecasts, reinforcing the income case for dividend-quality names.",
     type: "opportunity",
     severity: 42,
-    themes: ["financials", "consumer"],
+    themes: ["geographic-anchoring"],
     matchedHoldings: ["Nestlé S.A.", "Procter & Gamble"],
     whyItMatters:
       "A quiet positive for income- and preservation-focused clients: the dividend-quality core they trust just got stronger. A low-key reassurance note lands well with conservative relationships.",
