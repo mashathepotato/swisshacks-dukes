@@ -65,12 +65,10 @@ export function PriorityQueue({ selectedId, onSelect }: Props) {
   return (
     <div className="queue">
       <h1>Your book — by priority</h1>
-      <p className="lead">
-        {active.length} need{active.length === 1 ? "s" : ""} attention · ranked by news severity, portfolio exposure, value conflict and relationship sensitivity. Mark a client complete once you've actioned it.
-      </p>
+      <p className="lead">{active.length} client{active.length === 1 ? "" : "s"} need attention.</p>
 
       {active.length > 0 ? active.map((c) => row(c, false)) : (
-        <p className="empty" style={{ padding: "32px 0" }}>✓ All caught up — every flagged client has been actioned.</p>
+        <p className="empty" style={{ padding: "32px 0" }}>All caught up.</p>
       )}
 
       {dealt.length > 0 && (

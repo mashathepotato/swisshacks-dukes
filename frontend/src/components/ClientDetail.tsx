@@ -12,7 +12,7 @@ export function ClientDetail({ client, onOpenFull }: Props) {
   if (!client) {
     return (
       <div className="drawer">
-        <p className="empty">Select a client to preview their priority, the top reason it surfaced and the headline next step. Open the full profile for the reasoning chain, value DNA, compliance desk and draft message.</p>
+        <p className="empty">Select a client to preview their priority and next step.</p>
       </div>
     );
   }
@@ -66,7 +66,7 @@ export function ClientDetail({ client, onOpenFull }: Props) {
       )}
 
       <button className="cp-open" onClick={() => onOpenFull?.(client)}>
-        View full profile — reasoning chain, value DNA, compliance &amp; draft →
+        View full profile →
       </button>
 
       <div>
