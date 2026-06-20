@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import type { ReactNode } from "react";
 import type { Client, FeedbackDecision, PreferenceModel, Voice } from "../types";
 import { THEME_BY_ID } from "../data/themes";
 import { SIGNAL_META, formatMoney, relativeTime } from "../lib/format";
@@ -9,6 +10,8 @@ import { useLearning } from "../lib/learningStore";
 import { useDone } from "../lib/doneStore";
 import { ValueRadar } from "./ValueRadar";
 import { ComplianceDesk } from "./ComplianceDesk";
+import { useCustomize } from "../lib/customizeStore";
+import type { ClientSection } from "../lib/customize";
 
 interface Props {
   client: Client;
@@ -24,13 +27,26 @@ const DECISION_META: Record<FeedbackDecision, { label: string; color: string }> 
 
 export function ClientPage({ client, onBack, onSimulate }: Props) {
   const { isDone, markDone, reopen } = useDone();
+  const {
+    customising, toggleCustomising, density, setDensity,
+    clientLayout, reorderSections, setSpan, setHeight, toggleHidden, resetLayout,
+  } = useCustomize();
   const dealt = isDone(client.id);
+  const visible = clientLayout.filter((s) => !s.hidden && (SECTION_HAS[s.id]?.(client) ?? true));
+  const hidden = clientLayout.filter((s) => s.hidden && (SECTION_HAS[s.id]?.(client) ?? true));
 
   return (
     <div className="clientpage">
       <div className="clientpage-bar">
         <button className="cp-back" onClick={onBack}>← Back</button>
         <div className="cp-bar-title">{client.name}</div>
+        <div className="cp-bar-actions">
+          {customising && <button className="cp-reset" onClick={resetLayout} title="Reset to default layout">↺ Reset layout</button>}
+          <button className="dens-toggle" onClick={() => setDensity(density === "comfortable" ? "compact" : "comfortable")} title="Toggle spacing">
+            {density === "compact" ? "⊟ Compact" : "▦ Comfortable"}
+          </button>
+          <button className={"cust-toggle" + (customising ? " on" : "")} onClick={toggleCustomising}>⚙ {customising ? "Done" : "Customise"}</button>
+        </div>
       </div>
 
       <div className="clientpage-inner">
@@ -64,86 +80,184 @@ export function ClientPage({ client, onBack, onSimulate }: Props) {
           </button>
         </div>
 
-        <div className="cp-grid">
-          <div className="cp-col">
-            <ReasoningChain key={"reason-" + client.id} client={client} />
+        {customising && (
+          <p className="cust-hint" style={{ borderRadius: 9, margin: "6px 0 14px", border: "1px solid #2b3c5e" }}>
+            ⚙ Drag a panel's ⠿ header to reorder · ↔ to switch half / full width · drag a panel's bottom edge to resize its height · ✕ to hide.
+          </p>
+        )}
 
-            <div className="section-title">Value vector</div>
-            <ValueRadar client={client} />
-            <div className="chips" style={{ marginTop: 4 }}>
-              {client.affinities
-                .filter((a) => a.weight > 0)
-                .sort((a, b) => b.weight - a.weight)
-                .map((a) => {
-                  const t = THEME_BY_ID[a.theme];
-                  return (
-                    <span key={a.theme} className="chip theme" style={{ background: t.color }}>
-                      {t.emoji} {t.label} · {Math.round(a.weight * 100)}
-                    </span>
-                  );
-                })}
-            </div>
-
-            <div className="kv"><span className="k">Mandate</span><span>{client.mandate}</span></div>
-            <div className="kv"><span className="k">Risk</span><span>{client.riskProfile}</span></div>
-            <div className="kv"><span className="k">Tenure</span><span>{client.tenureYears} yrs</span></div>
-            <div className="kv"><span className="k">Style</span><span>{client.commStyle}</span></div>
-
-            {client.values.length > 0 && (
-              <>
-                <div className="section-title">Client DNA</div>
-                <div className="chips">
-                  {client.values.map((v) => <span key={v} className="chip">✓ {v}</span>)}
-                  {client.dislikes.map((v) => <span key={v} className="chip" style={{ color: "#f0a0a0" }}>✕ {v}</span>)}
-                </div>
-              </>
-            )}
-
-            {client.signals.length > 0 && (
-              <>
-                <div className="section-title">Why now — signals</div>
-                {client.signals.map((s) => {
-                  const meta = SIGNAL_META[s.type];
-                  return (
-                    <div className="card" key={s.id}>
-                      <span
-                        className="badge"
-                        style={{ background: meta.color + "22", color: meta.color, fontSize: 10, padding: "2px 7px", borderRadius: 6, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".05em" }}
-                      >
-                        {meta.label} · sev {s.severity}
-                      </span>
-                      <h4 style={{ marginTop: 6 }}>{s.headline}</h4>
-                      <p>{s.summary}</p>
-                      <p style={{ marginTop: 6, color: "var(--text-faint)" }}>{s.source} · {s.publishedAt}</p>
-                    </div>
-                  );
-                })}
-              </>
-            )}
-          </div>
-
-          <div className="cp-col">
-            <LearningPanel client={client} />
-
-            <Recommendations key={"rec-" + client.id} client={client} />
-
-            {PERSONA_PLAY[client.id] && <ComplianceDesk key={"cdesk-" + client.id} client={client} />}
-
-            <DraftMessage key={"draft-" + client.id} client={client} />
-
-            {onSimulate && (
-              <button
-                onClick={() => onSimulate(client)}
-                style={{
-                  marginTop: 12, width: "100%", background: "transparent", color: "var(--text-dim)",
-                  border: "1px solid var(--border)", borderRadius: 9, padding: "11px", fontWeight: 600, fontSize: 13,
-                }}
-              >
-                Rehearse this proposal with {client.name} →
-              </button>
-            )}
-          </div>
+        <div className={"cp-grid" + (customising ? " editing" : "")}>
+          {visible.map((s) => (
+            <Section
+              key={s.id + "-" + client.id}
+              section={s}
+              title={SECTION_TITLE[s.id] ?? s.id}
+              customising={customising}
+              onReorder={reorderSections}
+              onSpan={setSpan}
+              onHeight={setHeight}
+              onHide={toggleHidden}
+            >
+              {sectionContent(s.id, client)}
+            </Section>
+          ))}
         </div>
+
+        {customising && hidden.length > 0 && (
+          <div className="cp-hidden-tray">
+            <span className="cp-tray-lbl">Hidden panels:</span>
+            {hidden.map((s) => (
+              <button key={s.id} onClick={() => toggleHidden(s.id)}>+ {SECTION_TITLE[s.id] ?? s.id}</button>
+            ))}
+          </div>
+        )}
+
+        {onSimulate && (
+          <button className="cp-rehearse" onClick={() => onSimulate(client)}>
+            Rehearse this proposal with {client.name} →
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ---- customisable section registry ----
+
+const SECTION_TITLE: Record<string, string> = {
+  reasoning: "Reasoning chain",
+  value: "Value vector",
+  profile: "Profile & DNA",
+  signals: "Why-now signals",
+  learning: "Learning (RLHF)",
+  recommendations: "Recommendations",
+  compliance: "Mandate & compliance",
+  draft: "Draft message",
+};
+
+const SECTION_HAS: Record<string, (c: Client) => boolean> = {
+  reasoning: (c) => buildReasoningChain(c).length > 0,
+  value: () => true,
+  profile: () => true,
+  signals: (c) => c.signals.length > 0,
+  learning: () => true,
+  recommendations: (c) => c.recommendations.length > 0,
+  compliance: (c) => !!PERSONA_PLAY[c.id],
+  draft: () => true,
+};
+
+function sectionContent(id: string, client: Client): ReactNode {
+  switch (id) {
+    case "reasoning":
+      return <ReasoningChain client={client} />;
+    case "value":
+      return (
+        <>
+          <div className="section-title">Value vector</div>
+          <ValueRadar client={client} />
+          <div className="chips" style={{ marginTop: 4 }}>
+            {client.affinities.filter((a) => a.weight > 0).sort((a, b) => b.weight - a.weight).map((a) => {
+              const t = THEME_BY_ID[a.theme];
+              return <span key={a.theme} className="chip theme" style={{ background: t.color }}>{t.emoji} {t.label} · {Math.round(a.weight * 100)}</span>;
+            })}
+          </div>
+        </>
+      );
+    case "profile":
+      return (
+        <>
+          <div className="section-title">Profile</div>
+          <div className="kv"><span className="k">Mandate</span><span>{client.mandate}</span></div>
+          <div className="kv"><span className="k">Risk</span><span>{client.riskProfile}</span></div>
+          <div className="kv"><span className="k">Tenure</span><span>{client.tenureYears} yrs</span></div>
+          <div className="kv"><span className="k">Style</span><span>{client.commStyle}</span></div>
+          {client.values.length > 0 && (
+            <>
+              <div className="section-title">Client DNA</div>
+              <div className="chips">
+                {client.values.map((v) => <span key={v} className="chip">✓ {v}</span>)}
+                {client.dislikes.map((v) => <span key={v} className="chip" style={{ color: "#f0a0a0" }}>✕ {v}</span>)}
+              </div>
+            </>
+          )}
+        </>
+      );
+    case "signals":
+      return (
+        <>
+          <div className="section-title">Why now — signals</div>
+          {client.signals.map((s) => {
+            const meta = SIGNAL_META[s.type];
+            return (
+              <div className="card" key={s.id}>
+                <span className="badge" style={{ background: meta.color + "22", color: meta.color, fontSize: 10, padding: "2px 7px", borderRadius: 6, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".05em" }}>{meta.label} · sev {s.severity}</span>
+                <h4 style={{ marginTop: 6 }}>{s.headline}</h4>
+                <p>{s.summary}</p>
+                <p style={{ marginTop: 6, color: "var(--text-faint)" }}>{s.source} · {s.publishedAt}</p>
+              </div>
+            );
+          })}
+        </>
+      );
+    case "learning":
+      return <LearningPanel client={client} />;
+    case "recommendations":
+      return <Recommendations client={client} />;
+    case "compliance":
+      return PERSONA_PLAY[client.id] ? <ComplianceDesk client={client} /> : null;
+    case "draft":
+      return <DraftMessage client={client} />;
+    default:
+      return null;
+  }
+}
+
+interface SectionProps {
+  section: ClientSection;
+  title: string;
+  customising: boolean;
+  onReorder: (from: string, to: string) => void;
+  onSpan: (id: string, span: 1 | 2) => void;
+  onHeight: (id: string, height: number | undefined) => void;
+  onHide: (id: string) => void;
+  children: ReactNode;
+}
+
+/** A draggable, resizable, hideable client-page panel (customise mode only shows the chrome). */
+function Section({ section, title, customising, onReorder, onSpan, onHeight, onHide, children }: SectionProps) {
+  const bodyRef = useRef<HTMLDivElement>(null);
+  return (
+    <div
+      className="cp-section"
+      style={{ gridColumn: `span ${section.span}` }}
+      onDragOver={(e) => { if (customising) e.preventDefault(); }}
+      onDrop={(e) => {
+        e.preventDefault();
+        const from = e.dataTransfer.getData("text/plain");
+        if (from && from !== section.id) onReorder(from, section.id);
+      }}
+    >
+      {customising && (
+        <div
+          className="cp-sec-bar"
+          draggable
+          onDragStart={(e) => { e.dataTransfer.setData("text/plain", section.id); e.dataTransfer.effectAllowed = "move"; }}
+        >
+          <span className="grip">⠿ {title}</span>
+          <span className="cp-sec-ctrls">
+            <button onClick={() => onSpan(section.id, section.span === 1 ? 2 : 1)} title="Toggle width">{section.span === 1 ? "↔ Full" : "↔ Half"}</button>
+            {section.height != null && <button onClick={() => onHeight(section.id, undefined)} title="Reset height">↕ Auto</button>}
+            <button onClick={() => onHide(section.id)} title="Hide panel">✕</button>
+          </span>
+        </div>
+      )}
+      <div
+        className="cp-sec-body"
+        ref={bodyRef}
+        style={{ height: section.height, resize: customising ? "vertical" : undefined, overflow: section.height != null || customising ? "auto" : undefined }}
+        onMouseUp={() => { if (customising && bodyRef.current) onHeight(section.id, bodyRef.current.offsetHeight); }}
+      >
+        {children}
       </div>
     </div>
   );
@@ -427,3 +541,4 @@ function DraftMessage({ client }: { client: Client }) {
     </>
   );
 }
+

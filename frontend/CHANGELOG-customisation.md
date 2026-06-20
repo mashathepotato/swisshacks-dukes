@@ -46,3 +46,11 @@ _(appended as work proceeds)_
 - **`src/main.tsx`** — wrapped the app in `<CustomizeProvider>`.
 - **`src/App.tsx`** — topbar now renders tabs from `tabOrder`; in customise mode each tab is `draggable` (native HTML5 DnD) to reorder, with a ⠿ grip. Added a **⚙ Customise** toggle and a **density** (Comfortable/Compact) toggle to the topbar, a customise-mode hint bar, and the `density-*` class on both the main app and the full-client-page wrapper.
 - **`src/index.css`** — styles for the topbar actions, draggable/dragging tabs, the hint bar, and a set of `.density-compact …` overrides that tighten padding/margins/gaps across panels, cards, rows and grids.
+
+### Slices 2 & 3 — client page: reorder, resize, hide
+- **`src/components/ClientPage.tsx`** — refactored the fixed two-column layout into a **section registry** driven by `clientLayout` from the store:
+  - Extracted the page body into named sections — `reasoning`, `value`, `profile`, `signals`, `learning`, `recommendations`, `compliance`, `draft` — via a `sectionContent(id, client)` switch (the existing sub-components are reused untouched). `SECTION_TITLE` (panel labels) and `SECTION_HAS` (per-client content predicates so empty panels never show) added.
+  - New local **`Section`** component renders each panel as a card. In customise mode it shows a ⠿ drag-header (native HTML5 DnD reorder), a **width** toggle (↔ half / full — a 1- or 2-column grid span), a **height** handle (native CSS `resize: vertical`, captured on release and **persisted**, with an "↕ Auto" reset), and a **✕ hide** button. Non-customise mode shows the panel clean (no chrome) and respects any saved height.
+  - Header bar gained **⚙ Customise**, **density**, and (in customise mode) **↺ Reset layout** controls. A **hidden-panels tray** lets the RM re-add anything they've hidden. A customise-mode hint explains the gestures.
+  - Reworked the page into a single `.cp-grid` (2-track grid, `auto-flow: dense`) instead of two `.cp-col` stacks.
+- **`src/index.css`** — styles for `.cp-section` cards, the section drag-bar + controls, the resizable body, the hidden-panels tray, the bar actions, reset button, and the rehearse CTA. Responsive: collapses to one column under 980px.
