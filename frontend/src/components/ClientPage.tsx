@@ -16,7 +16,6 @@ import { ComplianceDesk } from "./ComplianceDesk";
 
 interface Props {
   client: Client;
-  onBack: () => void;
   onSimulate?: (client: Client) => void;
 }
 
@@ -26,17 +25,12 @@ const DECISION_META: Record<FeedbackDecision, { label: string; color: string }> 
   declined: { label: "Declined", color: "var(--red)" },
 };
 
-export function ClientPage({ client, onBack, onSimulate }: Props) {
+export function ClientPage({ client, onSimulate }: Props) {
   const { isDone, markDone, reopen } = useDone();
   const dealt = isDone(client.id);
 
   return (
     <div className="clientpage">
-      <div className="clientpage-bar">
-        <button className="cp-back" onClick={onBack}>← Back</button>
-        <div className="cp-bar-title">{client.name}</div>
-      </div>
-
       <div className="clientpage-inner">
         <div className="cp-head">
           <div>
@@ -49,18 +43,24 @@ export function ClientPage({ client, onBack, onSimulate }: Props) {
           })()}
         </div>
 
-        <p className="why-priority"><b>Why prioritised:</b> {client.topReason}</p>
-
-        {client.amountAtStake != null && (
-          <div className="stake-line">
-            <b>{formatMoney(client.amountAtStake)}</b> at stake
-            {client.lastMessageAt
-              ? <> · <span className="ago">messaged {relativeTime(client.lastMessageAt)}</span></>
-              : client.signals[0]
-              ? <> · <span className="ago">news {relativeTime(client.signals[0].publishedAt)}</span></>
-              : null}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16 }}>
+          <div>
+            <p className="why-priority"><b>Why prioritised:</b> {client.topReason}</p>
+            {client.amountAtStake != null && (
+              <div className="stake-line">
+                <b>{formatMoney(client.amountAtStake)}</b> at stake
+                {client.lastMessageAt
+                  ? <> · <span className="ago">messaged {relativeTime(client.lastMessageAt)}</span></>
+                  : client.signals[0]
+                  ? <> · <span className="ago">news {relativeTime(client.signals[0].publishedAt)}</span></>
+                  : null}
+              </div>
+            )}
           </div>
-        )}
+          {onSimulate && (
+            <button className="cp-rehearse" onClick={() => onSimulate(client)}>Rehearse a proposal →</button>
+          )}
+        </div>
 
         <div>
           <button className={"markdone" + (dealt ? " on" : "")} onClick={() => (dealt ? reopen(client.id) : markDone(client.id))}>
@@ -74,21 +74,8 @@ export function ClientPage({ client, onBack, onSimulate }: Props) {
 
             <div className="section-title">Value vector</div>
             <ValueRadar client={client} />
-            <div className="chips" style={{ marginTop: 4 }}>
-              {client.affinities
-                .filter((a) => a.weight > 0)
-                .sort((a, b) => b.weight - a.weight)
-                .map((a) => {
-                  const t = THEME_BY_ID[a.theme];
-                  return (
-                    <span key={a.theme} className="chip theme" style={{ background: t.color }}>
-                      {t.emoji} {t.label} · {Math.round(a.weight * 100)}
-                    </span>
-                  );
-                })}
-            </div>
 
-            <div className="kv"><span className="k">Mandate</span><span>{client.mandate}</span></div>
+            <div className="kv" style={{ marginTop: 12 }}><span className="k">Mandate</span><span>{client.mandate}</span></div>
             <div className="kv"><span className="k">Risk</span><span>{client.riskProfile}</span></div>
             <div className="kv"><span className="k">Tenure</span><span>{client.tenureYears} yrs</span></div>
             <div className="kv"><span className="k">Style</span><span>{client.commStyle}</span></div>
@@ -136,14 +123,8 @@ export function ClientPage({ client, onBack, onSimulate }: Props) {
             <DraftMessage key={"draft-" + client.id} client={client} />
 
             {onSimulate && (
-              <button
-                onClick={() => onSimulate(client)}
-                style={{
-                  marginTop: 12, width: "100%", background: "transparent", color: "var(--text-dim)",
-                  border: "1px solid var(--border)", borderRadius: 9, padding: "11px", fontWeight: 600, fontSize: 13,
-                }}
-              >
-                Rehearse this proposal with {client.name} →
+              <button className="cp-rehearse" style={{ width: "100%", marginTop: 14, textAlign: "center" }} onClick={() => onSimulate(client)}>
+                Rehearse a proposal →
               </button>
             )}
           </div>
@@ -164,10 +145,7 @@ function ReasoningChain({ client }: { client: Client }) {
       <div className="section-title" style={{ marginTop: 16 }}>
         Why this priority — reasoning chain
       </div>
-      <p className="thread-intro">
-        How a combination of factors and a sequence of events led to this ranking. Expand any step to see the
-        direct evidence behind it.
-      </p>
+      <p className="thread-intro">Expand any step for the evidence behind it.</p>
       <div className="thread">
         {chain.map((step, i) => {
           const meta = REASON_META[step.kind];
@@ -176,9 +154,7 @@ function ReasoningChain({ client }: { client: Client }) {
           return (
             <div className="rstep" key={i}>
               <div className="rstep-rail">
-                <span className="rstep-node" style={{ background: meta.color + "22", color: meta.color, borderColor: meta.color }}>
-                  {meta.icon}
-                </span>
+                <span className="rstep-node" style={{ background: meta.color + "22", borderColor: meta.color }} />
                 {i < chain.length - 1 && <span className="rstep-line" />}
               </div>
               <div className="rstep-body">
@@ -198,7 +174,7 @@ function ReasoningChain({ client }: { client: Client }) {
                           return (
                             <div className="receipt" key={j}>
                               <div className="rcpt-meta">
-                                <span className="kindtag" style={{ background: em.color }}>{em.icon} {em.label}</span>
+                                <span className="kindtag" style={{ background: em.color }}>{em.label}</span>
                                 <span className="rcpt-src">{e.sourceId}{e.date ? ` · ${e.date}` : ""}</span>
                               </div>
                               <blockquote className="rcpt-quote">“{e.quote}”</blockquote>
@@ -230,13 +206,11 @@ function LearningPanel({ client }: { client: Client }) {
 
   return (
     <>
-      <div className="section-title">
-        Learning from your feedback <span className="learn-tag">RLHF</span>
-      </div>
+      <div className="section-title">Learning from your feedback</div>
 
       {model.sampleSize === 0 ? (
         <div className="card">
-          <p>No feedback logged yet for {client.name}. As you accept, tweak or decline recommendations below, the copilot tunes future confidence, value weights and tone for this relationship.</p>
+          <p>No feedback logged yet for {client.name}.</p>
         </div>
       ) : (
         <div className="learn">
@@ -264,7 +238,7 @@ function LearningPanel({ client }: { client: Client }) {
                 const down = t.delta < -0.005;
                 return (
                   <div className="lrow" key={t.theme}>
-                    <span className="lrow-name">{meta.emoji} {meta.label}</span>
+                    <span className="lrow-name">{meta.label}</span>
                     <div className="lrow-bar">
                       <span className="lrow-base" style={{ left: `${t.base * 100}%` }} />
                       <span className="lrow-fill" style={{ width: `${t.learned * 100}%`, background: meta.color }} />
@@ -423,7 +397,7 @@ function DraftMessage({ client }: { client: Client }) {
             <div className="pref-opts">
               {channels.map((ch) => (
                 <button key={ch} className={"pref-opt" + (pref.channel === ch ? " on" : "")} onClick={() => { setChannel(client, ch); setSent(false); }}>
-                  {CHANNEL_META[ch].icon} {CHANNEL_META[ch].label}
+                  {CHANNEL_META[ch].label}
                 </button>
               ))}
             </div>
@@ -473,16 +447,16 @@ function DraftMessage({ client }: { client: Client }) {
         <textarea className="draft-body" value={msg.body} readOnly rows={Math.min(16, msg.body.split("\n").length + 2)} />
         <div className="draft-actions">
           {msg.sendHref ? (
-            <a className="draft-send" href={msg.sendHref} onClick={send}>{CHANNEL_META[pref.channel].icon} {msg.sendLabel}</a>
+            <a className="draft-send" href={msg.sendHref} onClick={send}>{msg.sendLabel}</a>
           ) : (
-            <button className="draft-send" onClick={send}>{CHANNEL_META[pref.channel].icon} {msg.sendLabel}</button>
+            <button className="draft-send" onClick={send}>{msg.sendLabel}</button>
           )}
           <button className="draft-copy" onClick={copy}>{copied ? "✓ Copied" : "Copy"}</button>
         </div>
         {sent ? (
           <p className="draft-note" style={{ color: "var(--green)" }}>✓ Logged via {CHANNEL_META[pref.channel].label.toLowerCase()} ({voice}) — the copilot will favour this tone next time.</p>
         ) : (
-          <p className="draft-note">AI drafts only — you review and approve before anything is sent.</p>
+          <p className="draft-note">Drafts only — review before sending.</p>
         )}
       </div>
     </>

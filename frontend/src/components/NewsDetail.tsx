@@ -14,10 +14,7 @@ export function NewsDetail({ news, onOpenClient }: Props) {
   if (!news) {
     return (
       <div className="drawer">
-        <p className="empty">
-          Select a story to see why it surfaced, the value themes it touches, and a map of which clients in your
-          book it will affect.
-        </p>
+        <p className="empty">Select a story to see its impact across your book.</p>
       </div>
     );
   }
@@ -63,17 +60,13 @@ function NewsDetailBody({ news, onOpenClient }: { news: NewsItem; onOpenClient?:
           const t = THEME_BY_ID[id];
           return (
             <span key={id} className="chip theme" style={{ background: t.color }}>
-              {t.emoji} {t.label}
+              {t.label}
             </span>
           );
         })}
       </div>
 
       <div className="section-title">Who it affects — impact map</div>
-      <p className="thread-intro">
-        The same value hexagon your clients are profiled on. The orange shape is this story's footprint; each dot is
-        a client it reaches, placed on the value it hits them through and pushed outward by impact.
-      </p>
       <NewsImpactMap news={news} impacts={impacts} onPick={(im) => onOpenClient?.(im.client)} />
 
       <div className="section-title">Affected clients · {impacts.length}</div>
