@@ -3,29 +3,30 @@
 // whose severity is scaled by that client's CHF exposure. Pure — returns new
 // client objects; the input is untouched.
 
-import type { Client, Mandate, NewsSignal } from "../types";
-import { detectAnomalies, type InstrumentSeries } from "./anomaly";
+import type { Client, NewsSignal } from "../types";
+import { detectAnomalies, type AnomalyEvent, type InstrumentSeries } from "./anomaly";
 import { anomalySignal } from "./anomalySignal";
 
-interface Holding {
-  isin: string;
-  issuer: string;
-  currentCHF: number;
-}
+/**
+ * Per-client exposure to a moved instrument, in CHF — or null if this client
+ * doesn't hold it. Keeping the association client-specific (their actual
+ * positions, not the whole mandate book) is what keeps a market move
+ * *personalised* rather than flooding every client in the mandate.
+ */
+export type ExposureOf = (client: Client, event: AnomalyEvent) => number | null;
 
 export function attachAnomalies(
   clients: Client[],
   series: InstrumentSeries[],
-  holdingsFor: (mandate: Mandate) => Holding[],
+  exposureOf: ExposureOf,
 ): Client[] {
   const events = detectAnomalies(series);
 
   return clients.map((c) => {
-    const held = holdingsFor(c.mandate);
     const extra: NewsSignal[] = [];
     for (const ev of events) {
-      const h = held.find((x) => x.isin === ev.isin);
-      if (h) extra.push(anomalySignal(ev, h.currentCHF));
+      const exposureCHF = exposureOf(c, ev);
+      if (exposureCHF != null) extra.push(anomalySignal(ev, exposureCHF));
     }
     if (!extra.length) return c;
 

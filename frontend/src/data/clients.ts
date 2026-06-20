@@ -1,7 +1,9 @@
 import type { Client } from "../types";
 import { PORTFOLIOS } from "./portfolio";
+import { PERSONA_PLAY } from "../lib/portfolio";
 import { SIX_SERIES } from "./sixPrices";
 import { attachAnomalies } from "../lib/attachAnomalies";
+import type { AnomalyEvent } from "../lib/anomaly";
 
 // 4 challenge personas (rich) + synthetic twins (to show scale & clustering).
 const BASE_CLIENTS: Client[] = [
@@ -588,10 +590,22 @@ const BASE_CLIENTS: Client[] = [
   ], 28, "No active signal."),
 ];
 
-// Fan SIX-detected market anomalies into the book: each anomalous holding reaches
-// every client whose mandate holds it, scaled by their CHF exposure. This is what
-// makes a fresh market move re-rank the priority queue (see lib/attachAnomalies).
-export const CLIENTS: Client[] = attachAnomalies(BASE_CLIENTS, SIX_SERIES, (m) => PORTFOLIOS[m]);
+// Associate a market anomaly with a client only where they actually hold the
+// moved name — their persona-flagged position or a top-holding match — so a move
+// stays personalised (and re-ranks the queue) instead of flooding the mandate.
+const firstWord = (s: string) => s.toLowerCase().replace(/[^a-z0-9 ]/g, "").trim().split(/\s+/)[0];
+
+function exposureOf(client: Client, event: AnomalyEvent): number | null {
+  const holding = PORTFOLIOS[client.mandate].find((h) => h.isin === event.isin);
+  const holdsByName = client.topHoldings.some(
+    (n) => firstWord(n).length > 2 && firstWord(n) === firstWord(event.issuer),
+  );
+  const isFlagged = PERSONA_PLAY[client.id]?.sellIsin === event.isin;
+  if (!isFlagged && !holdsByName) return null;
+  return holding?.currentCHF ?? client.amountAtStake ?? 100_000;
+}
+
+export const CLIENTS: Client[] = attachAnomalies(BASE_CLIENTS, SIX_SERIES, exposureOf);
 
 function syn(
   id: string,

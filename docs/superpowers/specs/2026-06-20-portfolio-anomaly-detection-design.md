@@ -145,19 +145,15 @@ object so they're tunable.
 
 ## Client association
 
-```
-for each AnomalyEvent:
-  for each mandate M, for each holding H in PORTFOLIOS[M] with H.isin === event.isin:
-     clients in mandate M holding that issuer are exposed
-     exposureCHF    = H.currentCHF
-     clientSeverity = clamp( event.severity * exposureScale(exposureCHF), 0, 100 )
-```
-
-`exposureScale` gently boosts severity for larger positions (same `currentCHF`
-the Compliance Desk reads). Clients reference holdings by **issuer name within
-their mandate** (`Client.topHoldings` are names; `PERSONA_PLAY[id].mandate` /
-`Client.mandate` gives the portfolio). The dashboard mirrors each holder's event
-as a `NewsSignal`:
+Association is **client-specific** (not mandate-wide) — a market move only
+reaches a client who actually holds the moved name, so it stays personalised
+instead of flooding every client in the mandate. A client is exposed to an event
+when either their persona-flagged holding matches (`PERSONA_PLAY[id].sellIsin ===
+event.isin`) or one of their `topHoldings` names matches the event issuer.
+`exposureCHF` comes from that holding's `currentCHF` in `PORTFOLIOS[mandate]`
+(fallback `amountAtStake`); `exposureScale` gently boosts severity for larger
+positions. Synthetic twins (empty `topHoldings`) therefore stay clean. The
+dashboard mirrors each holder's event as a `NewsSignal`:
 
 ```
 headline: "Meta ▼ 8.0% — 4.7σ daily move on 2.3× volume"
