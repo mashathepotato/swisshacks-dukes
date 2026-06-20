@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { CLIENTS } from "../data/clients";
 import { NEWS_FEED } from "../data/newsFeed";
 import { THEME_BY_ID } from "../data/themes";
+import { gradeColor } from "../lib/format";
 import { articlesForClient, RELEVANCE_WEIGHTS } from "../lib/newsRelevance";
 import type { Relevance } from "../lib/newsRelevance";
 import type { Client } from "../types";
@@ -105,7 +106,7 @@ export function ClientNewsFeed() {
               >
                 <span className="cnews-rowtitle">{article.title}</span>
                 <span className="cnews-rowtags">
-                  <span className="cnews-cnum" title="Combined priority score (out of 100)">{Math.round(rel.combined * 100)}</span>
+                  <span className="cnews-cnum" title="Combined priority score (out of 100)" style={{ color: gradeColor(Math.round(rel.combined * 100)), background: gradeColor(Math.round(rel.combined * 100)) + "14", borderColor: gradeColor(Math.round(rel.combined * 100)) + "59" }}>{Math.round(rel.combined * 100)}</span>
                   {rel.holdings[0] && (
                     <span className="cnews-tag hold">
                       Holds {rel.holdings[0].issuer}
@@ -200,7 +201,7 @@ function OverlapDetail({
 
       <div className="cnews-sec">Combined priority score</div>
       <div className="cnews-combined">
-        <span className="cnews-cbig">{Math.round(rel.combined * 100)}</span>
+        <span className="cnews-cbig" style={{ color: gradeColor(Math.round(rel.combined * 100)) }}>{Math.round(rel.combined * 100)}</span>
         <div className="cnews-cbreak">
           <div><span>Value overlap</span><span><b>{Math.round(rel.valueOverlap * 100)}</b> × {RELEVANCE_WEIGHTS.value}</span></div>
           <div><span>Severity</span><span><b>{Math.round(rel.severity * 100)}</b> × {RELEVANCE_WEIGHTS.severity}</span></div>

@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { CLIENTS } from "../data/clients";
 import type { Client } from "../types";
-import { SIGNAL_META, formatMoney, relativeTime } from "../lib/format";
+import { SIGNAL_META, formatMoney, relativeTime, gradeColor } from "../lib/format";
 import { rankBook } from "../lib/priority";
 import { useDone } from "../lib/doneStore";
 
@@ -36,7 +36,7 @@ export function PriorityQueue({ selectedId, onSelect }: Props) {
         className={"qrow" + (selectedId === c.id ? " selected" : "") + (isDone ? " done" : "")}
         onClick={() => onSelect(c)}
       >
-        <span className="qscore" title="Priority score (out of 100)">{score}</span>
+        <span className="qscore" title="Priority score (out of 100)" style={{ color: gradeColor(score), background: gradeColor(score) + "14", borderColor: gradeColor(score) + "59" }}>{score}</span>
         <div className="who">
           <div className="nm">{c.name}</div>
           <div className="at">{c.archetype} · {c.mandate}</div>
