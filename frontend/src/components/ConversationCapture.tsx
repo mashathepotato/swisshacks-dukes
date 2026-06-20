@@ -1,5 +1,6 @@
-import { useState } from "react";
-import type { Client, ConsentRecord, DistillResult, AffinityDelta } from "../types";
+import { useEffect, useRef, useState } from "react";
+import type { Client, ConsentRecord, DistillResult, AffinityDelta, DigestResult } from "../types";
+import { countWords, shouldRequestDigest, dnaContextOf } from "../lib/digest";
 import { useRecorder } from "../lib/useRecorder";
 import { useConversation } from "../lib/conversationStore";
 import { useRmProfile } from "../lib/rmProfileStore";
@@ -17,6 +18,46 @@ export function ConversationCapture({ client }: { client: Client }) {
   const [accepted, setAccepted] = useState<Record<string, boolean>>({});
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [digest, setDigest] = useState<DigestResult | null>(null);
+  const lastWordsRef = useRef(0);
+  const lastAtRef = useRef(0);
+  const seqRef = useRef(0);
+
+  // Live rolling digest while recording: debounced by words + time, stale-guarded.
+  useEffect(() => {
+    if (phase !== "record" || !rec.recording) return;
+    const words = countWords(rec.transcript);
+    if (!shouldRequestDigest(lastWordsRef.current, words, lastAtRef.current, Date.now())) return;
+    lastWordsRef.current = words;
+    lastAtRef.current = Date.now();
+    const seq = ++seqRef.current;
+    fetch("/api/transcript/digest", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ clientId: client.id, transcript: rec.transcript, mode: "live" }),
+    })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: DigestResult | null) => { if (d && seq === seqRef.current) setDigest(d); })
+      .catch(() => {});
+  }, [rec.transcript, rec.recording, phase, client.id]);
+
+  async function handleStop() {
+    rec.stop();
+    const transcript = rec.transcript.trim();
+    if (!transcript) return;
+    const seq = ++seqRef.current;
+    try {
+      const res = await fetch("/api/transcript/digest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ clientId: client.id, transcript, mode: "final", dnaContext: dnaContextOf(client) }),
+      });
+      if (res.ok) {
+        const d: DigestResult = await res.json();
+        if (seq === seqRef.current) setDigest(d);
+      }
+    } catch { /* keep the last live digest */ }
+  }
 
   function giveConsent(method: "verbal" | "written") {
     setConsent({
@@ -66,7 +107,7 @@ export function ConversationCapture({ client }: { client: Client }) {
       affinities: result.dnaDeltas.affinities.filter((a: AffinityDelta) => accepted[`a:${a.theme}`]),
     };
     commit(client.id, deltas, { ...result.note, text: noteText }, result.receipts);
-    setPhase("consent"); setConsent(null); setResult(null); rec.stop(); rec.reset();
+    setPhase("consent"); setConsent(null); setResult(null); rec.stop(); rec.reset(); setDigest(null); lastWordsRef.current = 0; lastAtRef.current = 0;
   }
 
   return (
@@ -90,7 +131,7 @@ export function ConversationCapture({ client }: { client: Client }) {
           <div>
             {!rec.recording
               ? <button onClick={rec.start} disabled={!rec.supported}>● Record</button>
-              : <button onClick={rec.stop}>■ Stop</button>}
+              : <button onClick={handleStop}>■ Stop</button>}
           </div>
           <textarea
             value={rec.transcript + (rec.interim ? " " + rec.interim : "")}
@@ -105,12 +146,14 @@ export function ConversationCapture({ client }: { client: Client }) {
             {busy ? "Distilling…" : "Distill → review"}
           </button>
           {err && <p style={{ color: "var(--red, #e53e3e)" }}>{err}</p>}
+          {digest && <DigestView d={digest} />}
         </div>
       )}
 
       {phase === "review" && result && (
         <div>
           <p style={{ fontSize: 12, opacity: 0.7 }}>✓ Consent ({consent?.method}) · {consent?.timestamp}</p>
+          {digest && <DigestView d={digest} />}
           <label><strong>CRM note</strong></label>
           <textarea value={noteText} onChange={(e) => setNoteText(e.target.value)} rows={3} style={{ width: "100%" }} />
 
@@ -142,5 +185,43 @@ export function ConversationCapture({ client }: { client: Client }) {
         </div>
       )}
     </section>
+  );
+}
+
+function modelBadge(model: string): string {
+  if (model === "heuristic") return "heuristic";
+  if (model.includes("haiku")) return "Haiku";
+  if (model.includes("sonnet")) return "Sonnet";
+  if (model.includes("opus")) return "Opus";
+  return model;
+}
+
+function DigestView({ d }: { d: DigestResult }) {
+  return (
+    <div style={{ marginTop: 8, padding: 10, background: "var(--panel, #141824)", borderRadius: 6 }}>
+      <div style={{ fontSize: 11, opacity: 0.7 }}>
+        🧠 Digest · {d.mode === "final" ? "final" : "live"} ·{" "}
+        <span style={{ padding: "1px 6px", borderRadius: 4, background: "var(--accent, #2e1630)", color: "#d9b6df" }}>
+          {modelBadge(d.model)}
+        </span>
+      </div>
+      {d.summary && <p style={{ margin: "6px 0" }}>{d.summary}</p>}
+      {d.bullets.length > 0 && (
+        <ul style={{ margin: "4px 0", paddingLeft: 18 }}>
+          {d.bullets.map((b, i) => <li key={i} style={{ fontSize: 13 }}>{b}</li>)}
+        </ul>
+      )}
+      {d.topics.length > 0 && (
+        <div style={{ fontSize: 12, opacity: 0.8 }}>Topics: {d.topics.join(", ")}</div>
+      )}
+      {d.historyLinks && d.historyLinks.length > 0 && (
+        <div style={{ fontSize: 12, marginTop: 4 }}>
+          ↩ Connects to history:
+          <ul style={{ margin: "2px 0", paddingLeft: 18 }}>
+            {d.historyLinks.map((h, i) => <li key={i}>{h}</li>)}
+          </ul>
+        </div>
+      )}
+    </div>
   );
 }
