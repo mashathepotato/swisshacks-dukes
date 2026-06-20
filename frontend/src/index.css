@@ -672,3 +672,12 @@ button { font-family: inherit; cursor: pointer; }
 .nf-mand { color: var(--text-faint); font-size: 10.5px; }
 .nf-nohold { font-size: 11.5px; color: var(--text-faint); margin-top: 9px; font-style: italic; }
 .nf-empty { color: var(--text-faint); font-size: 13px; }
+
+/* ---- News view toggle (funnel vs by-client) ---- */
+.news-toggle { display: inline-flex; gap: 4px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 9px; padding: 3px; }
+.nt-opt { background: transparent; border: none; color: var(--text-dim); border-radius: 7px; padding: 6px 12px; font-size: 12.5px; font-weight: 600; font-family: inherit; cursor: pointer; white-space: nowrap; }
+.nt-opt:hover { color: var(--text); }
+.nt-opt.on { background: var(--accent); color: #fff; }
+.nf-head-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex: none; }
+.news-head-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.news-head-row h1 { margin: 0; }

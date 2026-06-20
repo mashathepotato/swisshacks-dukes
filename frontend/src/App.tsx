@@ -5,8 +5,12 @@ import { Rehearse } from "./components/Rehearse";
 import { ClientDetail } from "./components/ClientDetail";
 import { ClientPage } from "./components/ClientPage";
 import { NewsFeed } from "./components/NewsFeed";
+import { ClientNewsFeed } from "./components/ClientNewsFeed";
+import { NewsDetail } from "./components/NewsDetail";
+import type { NewsView } from "./components/NewsViewToggle";
 import { RmProfilePanel } from "./components/RmProfilePanel";
-import type { Client } from "./types";
+import type { Client, NewsItem } from "./types";
+import { RANKED_NEWS } from "./data/news";
 import { useRmProfile } from "./lib/rmProfileStore";
 
 type Tab = "priority" | "clients" | "news" | "rehearse";
@@ -14,6 +18,8 @@ type Tab = "priority" | "clients" | "news" | "rehearse";
 export default function App() {
   const [tab, setTab] = useState<Tab>("priority");
   const [selected, setSelected] = useState<Client | null>(null);
+  const [newsView, setNewsView] = useState<NewsView>("funnel");
+  const [selectedNews, setSelectedNews] = useState<NewsItem | null>(RANKED_NEWS[0]?.news ?? null);
   const [simFocus, setSimFocus] = useState<string | null>(null);
   // when set, the full client page is shown full-screen over the tabs
   const [fullClient, setFullClient] = useState<Client | null>(null);
@@ -62,10 +68,13 @@ export default function App() {
         <div className="content">
           {tab === "priority" && <PriorityQueue selectedId={selected?.id ?? null} onSelect={setSelected} />}
           {tab === "clients" && <ClientGrid onOpen={openFullClient} />}
-          {tab === "news" && <NewsFeed />}
+          {tab === "news" && (newsView === "funnel"
+            ? <NewsFeed view={newsView} onView={setNewsView} />
+            : <ClientNewsFeed view={newsView} onView={setNewsView} selectedId={selectedNews?.id ?? null} onSelect={setSelectedNews} />)}
           {tab === "rehearse" && <Rehearse focusClientId={simFocus} />}
         </div>
         {tab === "priority" && <ClientDetail client={selected} onOpenFull={openFullClient} />}
+        {tab === "news" && newsView === "client" && <NewsDetail news={selectedNews} onOpenClient={openFullClient} />}
       </div>
     </div>
   );
