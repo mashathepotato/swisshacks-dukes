@@ -5,14 +5,14 @@ import type { Client, DnaDeltas } from "../types";
 const base = {
   values: ["Existing value"],
   dislikes: [],
-  affinities: [{ theme: "reputation", weight: 0.4 }],
+  affinities: [{ theme: "reputation-sensitivity", weight: 0.4 }],
 } as Partial<Client> as Client;
 
 const deltas: DnaDeltas = {
   values: ["Reputation = financial risk", "Existing value"], // dup ignored
   dislikes: ["Labour exploitation"],
   affinities: [
-    { theme: "reputation", fromWeight: 0, toWeight: 0.9 }, // updates existing
+    { theme: "reputation-sensitivity", fromWeight: 0, toWeight: 0.9 }, // updates existing
     { theme: "environmental", fromWeight: 0, toWeight: 0.6 }, // new
   ],
 };
@@ -25,7 +25,7 @@ describe("mergeDeltas", () => {
   });
   it("updates an existing affinity weight and appends new ones", () => {
     const m = mergeDeltas(base, deltas);
-    const rep = m.affinities.find((a) => a.theme === "reputation");
+    const rep = m.affinities.find((a) => a.theme === "reputation-sensitivity");
     const env = m.affinities.find((a) => a.theme === "environmental");
     expect(rep?.weight).toBe(0.9);
     expect(env?.weight).toBe(0.6);

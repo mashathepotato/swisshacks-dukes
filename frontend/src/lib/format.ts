@@ -5,6 +5,17 @@ export function scoreColor(score: number): string {
   return "#1f7a4d";
 }
 
+// Continuous green → amber → red gradient (0..100); red = highest.
+export function gradeColor(score: number): string {
+  const t = Math.max(0, Math.min(1, score / 100));
+  const stops: [number, number, number][] = [[0x1f, 0x7a, 0x4d], [0xc4, 0x7d, 0x1a], [0xc0, 0x27, 0x1a]];
+  const seg = t < 0.5 ? 0 : 1;
+  const lt = t < 0.5 ? t * 2 : (t - 0.5) * 2;
+  const a = stops[seg], b = stops[seg + 1];
+  const ch = (i: number) => Math.round(a[i] + (b[i] - a[i]) * lt).toString(16).padStart(2, "0");
+  return `#${ch(0)}${ch(1)}${ch(2)}`;
+}
+
 /** Compact CHF figure: 3_200_000 → "CHF 3.2M", 640_000 → "CHF 640k". */
 export function formatMoney(chf: number): string {
   if (chf >= 1_000_000) return `CHF ${(chf / 1_000_000).toFixed(chf >= 10_000_000 ? 0 : 1)}M`;

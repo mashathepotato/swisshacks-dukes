@@ -26,11 +26,11 @@ describe("dnaContextOf", () => {
     const client = {
       values: ["Reputation = financial risk"],
       dislikes: ["Labour exploitation"],
-      affinities: [{ theme: "reputation", weight: 0.9 }],
+      affinities: [{ theme: "reputation-sensitivity", weight: 0.9 }],
     } as Partial<Client> as Client;
     const s = dnaContextOf(client);
     expect(s).toContain("Reputation = financial risk");
     expect(s).toContain("Labour exploitation");
-    expect(s).toContain("reputation 0.90");
+    expect(s).toContain("reputation-sensitivity 0.90");
   });
 });

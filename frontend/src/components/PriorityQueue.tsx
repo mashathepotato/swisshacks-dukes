@@ -1,7 +1,8 @@
 import { useMemo, useState } from "react";
 import { CLIENTS } from "../data/clients";
 import type { Client } from "../types";
-import { SIGNAL_META, formatMoney, relativeTime } from "../lib/format";
+import { SIGNAL_META, formatMoney, relativeTime, gradeColor } from "../lib/format";
+import { rankBook } from "../lib/priority";
 import { useDone } from "../lib/doneStore";
 
 interface Props {
@@ -13,14 +14,17 @@ export function PriorityQueue({ selectedId, onSelect }: Props) {
   const { done, markDone, reopen } = useDone();
   const [showDone, setShowDone] = useState(true);
 
-  const ranked = useMemo(() => [...CLIENTS].sort((a, b) => b.priorityScore - a.priorityScore), []);
-  const active = ranked.filter((c) => !done.has(c.id));
-  const dealt = ranked.filter((c) => done.has(c.id));
+  // transparent priority: combined of severity, exposure, conflict, recency (see lib/priority.ts)
+  const ranked = useMemo(() => rankBook(CLIENTS), []);
+  const scoreById = useMemo(() => new Map(ranked.map((r) => [r.client.id, Math.round(r.pr.combined * 100)])), [ranked]);
+  const active = ranked.map((r) => r.client).filter((c) => !done.has(c.id));
+  const dealt = ranked.map((r) => r.client).filter((c) => done.has(c.id));
 
   function row(c: Client, isDone: boolean) {
     const sig = c.signals[0];
     const meta = sig ? SIGNAL_META[sig.type] : null;
     const rec = c.recommendations[0];
+    const score = scoreById.get(c.id) ?? 0;
     const trigger = c.lastMessageAt
       ? { label: "messaged", at: c.lastMessageAt }
       : sig
@@ -32,6 +36,7 @@ export function PriorityQueue({ selectedId, onSelect }: Props) {
         className={"qrow" + (selectedId === c.id ? " selected" : "") + (isDone ? " done" : "")}
         onClick={() => onSelect(c)}
       >
+        <span className="qscore" title="Priority score (out of 100)" style={{ color: gradeColor(score), background: gradeColor(score) + "14", borderColor: gradeColor(score) + "59" }}>{score}</span>
         <div className="who">
           <div className="nm">{c.name}</div>
           <div className="at">{c.archetype} · {c.mandate}</div>
@@ -65,7 +70,9 @@ export function PriorityQueue({ selectedId, onSelect }: Props) {
   return (
     <div className="queue">
       <h1>Your book — by priority</h1>
-      <p className="lead">{active.length} client{active.length === 1 ? "" : "s"} need attention.</p>
+      <p className="lead">
+        {active.length} need{active.length === 1 ? "s" : ""} attention · ranked by a transparent priority score (out of 100): event severity, portfolio exposure, conflict and recency. Mark a client complete once you've actioned it.
+      </p>
 
       {active.length > 0 ? active.map((c) => row(c, false)) : (
         <p className="empty" style={{ padding: "32px 0" }}>All caught up.</p>

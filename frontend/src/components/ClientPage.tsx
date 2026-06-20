@@ -12,6 +12,7 @@ import { useDone } from "../lib/doneStore";
 import { useCommPrefs } from "../lib/commPrefStore";
 import { useRmProfile } from "../lib/rmProfileStore";
 import { ValueRadar } from "./ValueRadar";
+import { PriorityScore } from "./PriorityScore";
 import { ConversationCapture } from "./ConversationCapture";
 import { useConversation } from "../lib/conversationStore";
 
@@ -82,8 +83,10 @@ export function ClientPage({ client, onSimulate }: Props) {
         </button>
 
         <div className="cp-grid">
-          {/* Left: the priority story — what happened → (why) → suggested action → next step */}
+          {/* Left: the priority story — score → what happened → (why) → suggested action → next step */}
           <div className="cp-col">
+            <PriorityScore client={mergedClient} />
+
             {mergedClient.signals.length > 0 && (
               <>
                 <div className="section-title">What happened</div>

@@ -5,11 +5,12 @@ import { Rehearse } from "./components/Rehearse";
 import { ClientDetail } from "./components/ClientDetail";
 import { ClientPage } from "./components/ClientPage";
 import { NewsFeed } from "./components/NewsFeed";
-import { NewsDetail } from "./components/NewsDetail";
+import { ClientNewsFeed } from "./components/ClientNewsFeed";
+import { NewsViewToggle } from "./components/NewsViewToggle";
+import type { NewsView } from "./components/NewsViewToggle";
 import { RmProfilePanel } from "./components/RmProfilePanel";
-import type { Client, NewsItem } from "./types";
+import type { Client } from "./types";
 import { CLIENTS } from "./data/clients";
-import { RANKED_NEWS } from "./data/news";
 import { useRmProfile } from "./lib/rmProfileStore";
 
 type Tab = "priority" | "clients" | "news";
@@ -36,7 +37,7 @@ function parseHash(hash: string): Route {
 export default function App() {
   const [route, setRoute] = useState<Route>(() => parseHash(window.location.hash));
   const [selected, setSelected] = useState<Client | null>(null);
-  const [selectedNews, setSelectedNews] = useState<NewsItem | null>(RANKED_NEWS[0]?.news ?? null);
+  const [newsView, setNewsView] = useState<NewsView>("client");
   const [showProfile, setShowProfile] = useState(false);
   const { profile } = useRmProfile();
 
@@ -86,11 +87,17 @@ export default function App() {
           <div className="content">
             {route.name === "priority" && <PriorityQueue selectedId={selected?.id ?? null} onSelect={setSelected} />}
             {route.name === "clients" && <ClientGrid onOpen={openFullClient} />}
-            {route.name === "news" && <NewsFeed selectedId={selectedNews?.id ?? null} onSelect={setSelectedNews} />}
+            {route.name === "news" && (
+              <div className="newstab">
+                <div className="newstab-bar">
+                  <NewsViewToggle view={newsView} onView={setNewsView} />
+                </div>
+                {newsView === "funnel" ? <NewsFeed /> : <ClientNewsFeed />}
+              </div>
+            )}
             {route.name === "rehearse" && <Rehearse focusClientId={route.id} />}
           </div>
           {route.name === "priority" && <ClientDetail client={selected} onOpenFull={openFullClient} />}
-          {route.name === "news" && <NewsDetail news={selectedNews} onOpenClient={openFullClient} />}
         </div>
       )}
     </div>
