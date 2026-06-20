@@ -23,6 +23,50 @@ import { scoreValues } from "./values.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 4000;
+// Built React app (vite build output). Served as the site root in production;
+// in dev the Vite server proxies /api here instead, so this stays unused.
+const DIST_DIR = join(__dirname, "..", "frontend", "dist");
+const MIME = {
+  ".html": "text/html; charset=utf-8",
+  ".js": "text/javascript; charset=utf-8",
+  ".mjs": "text/javascript; charset=utf-8",
+  ".css": "text/css; charset=utf-8",
+  ".json": "application/json; charset=utf-8",
+  ".svg": "image/svg+xml",
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".ico": "image/x-icon",
+  ".webp": "image/webp",
+  ".woff": "font/woff",
+  ".woff2": "font/woff2",
+  ".map": "application/json; charset=utf-8",
+};
+
+// Serve a file from the built frontend; falls back to index.html so client-side
+// routes resolve (SPA). Returns false if the dist bundle isn't present at all.
+async function serveStatic(pathname, res) {
+  const rel = pathname === "/" ? "/index.html" : pathname;
+  const candidate = join(DIST_DIR, rel);
+  // Keep the resolved path inside DIST_DIR (no ../ traversal).
+  if (!candidate.startsWith(DIST_DIR)) {
+    res.writeHead(403, { "Content-Type": "text/plain" });
+    res.end("Forbidden");
+    return true;
+  }
+  for (const target of [candidate, join(DIST_DIR, "index.html")]) {
+    try {
+      const body = await readFile(target);
+      const ext = target.slice(target.lastIndexOf("."));
+      res.writeHead(200, { "Content-Type": MIME[ext] || "application/octet-stream" });
+      res.end(body);
+      return true;
+    } catch {
+      // try the SPA fallback, then give up
+    }
+  }
+  return false;
+}
 const ER_URL = "https://eventregistry.org/api/v1/article/getArticles";
 const API_KEY = process.env.NEWSAPI_KEY || "";
 // Offline (fixture) is the DEFAULT while developing — no API spend. Opt into
@@ -268,11 +312,14 @@ const server = createServer(async (req, res) => {
     if (url.pathname === "/api/simulate" && req.method === "POST")
       return await handleSimulate(req, res);
     if (url.pathname === "/api/news") return await handleNews(url, res);
-    if (url.pathname === "/" || url.pathname === "/index.html") {
+    // The standalone news-pipeline viewer, kept reachable for debugging.
+    if (url.pathname === "/pipeline" || url.pathname === "/pipeline.html") {
       const html = await readFile(join(__dirname, "public", "index.html"));
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
       return res.end(html);
     }
+    // Everything else: serve the built React dashboard (SPA fallback).
+    if (await serveStatic(url.pathname, res)) return;
     res.writeHead(404, { "Content-Type": "text/plain" });
     res.end("Not found");
   } catch (err) {
