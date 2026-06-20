@@ -32,4 +32,11 @@ export const SEED_FEEDBACK: FeedbackEvent[] = [
   { id: "fb-rae-3", clientId: "raeber", date: "2026-01-30", theme: "geographic-anchoring", decision: "accepted", summary: "Reinvested a maturing coupon", voice: "data-driven" },
   { id: "fb-rae-4", clientId: "raeber", date: "2026-02-08", theme: "geographic-anchoring", decision: "accepted", summary: "Chose a dividend-quality alternative", voice: "values-led" },
   { id: "fb-rae-5", clientId: "raeber", date: "2026-03-22", theme: "us-exposure", decision: "declined", summary: "Declined a second AI-momentum nudge", voice: "values-led" },
+
+  // ---- Lecun: AI-native, anti-US-concentration; wants Europe, prefers the reasoning ----
+  { id: "fb-lec-1", clientId: "lecun", date: "2025-09-15", theme: "us-exposure", decision: "declined", summary: "Declined a US mega-cap AI add — wants less US concentration", voice: "data-driven" },
+  { id: "fb-lec-2", clientId: "lecun", date: "2025-11-20", theme: "geographic-anchoring", decision: "accepted", summary: "Added a European semiconductor name (ASML)", voice: "data-driven" },
+  { id: "fb-lec-3", clientId: "lecun", date: "2026-01-28", theme: "us-exposure", decision: "declined", summary: "Passed on a CIO US-tech momentum tilt", voice: "data-driven" },
+  { id: "fb-lec-4", clientId: "lecun", date: "2026-03-09", theme: "geographic-anchoring", decision: "accepted", summary: "Rotated a US software position into SAP", voice: "data-driven" },
+  { id: "fb-lec-5", clientId: "lecun", date: "2026-04-22", theme: "us-exposure", decision: "tweaked", summary: "Reframed a trim note to lead with the reasoning chain", voice: "data-driven" },
 ];

@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CLIENTS } from "../data/clients";
-import type { Client } from "../types";
+import type { Client, SimulationResult } from "../types";
 import { ADVICE, adviceFit } from "../data/bookSim";
 import { simulateProposal } from "../data/simulate";
 import { PORTFOLIOS, CIO, STRATEGIES } from "../data/portfolio";
@@ -115,7 +115,53 @@ export function Rehearse({ focusClientId }: Props) {
   const sel = usingText ? null : advice.find((a) => a.key === adviceKey) ?? advice[0] ?? null;
   const proposalText = usingText ? text : (sel?.detail ?? "");
 
-  const reaction = useMemo(() => (proposalText ? simulateProposal(client, proposalText) : null), [client, proposalText]);
+  // Instant deterministic baseline (shown immediately), then refined by the LLM
+  // simulate seam server-side. The seam degrades to this same baseline if the
+  // model is unavailable, so the panel always has a valid reaction to show.
+  const local = useMemo(() => (proposalText ? simulateProposal(client, proposalText) : null), [client, proposalText]);
+  const [llm, setLlm] = useState<SimulationResult | null>(null);
+  const [refining, setRefining] = useState(false);
+  const seqRef = useRef(0);
+
+  useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
+    setLlm(null);
+    if (!local) { setRefining(false); return; }
+    const seq = ++seqRef.current;
+    const ctrl = new AbortController();
+    setRefining(true);
+    /* eslint-enable react-hooks/set-state-in-effect */
+    fetch("/api/simulate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ client, proposal: proposalText, baseline: local }),
+      signal: ctrl.signal,
+    })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d: SimulationResult | null) => { if (d && seq === seqRef.current) setLlm(d); })
+      .catch(() => {})
+      .finally(() => { if (seq === seqRef.current) setRefining(false); });
+    return () => ctrl.abort();
+  }, [client, proposalText, local]);
+
+  const reaction = llm ?? local;
+  const aiRefined = reaction === llm && llm?.engine === "anthropic";
+
+  // Cycle "thinking" phrases while the model refines, so the wait reads as the
+  // copilot reasoning about this specific client rather than a generic spinner.
+  const phases = useMemo(() => [
+    `Reading ${client.name}'s values & mandate`,
+    "Weighing the proposal against their DNA",
+    `Predicting how ${client.name} would react`,
+  ], [client.name]);
+  const [phase, setPhase] = useState(0);
+  useEffect(() => {
+    if (!refining) return;
+    /* eslint-disable-next-line react-hooks/set-state-in-effect */
+    setPhase(0);
+    const id = setInterval(() => setPhase((p) => (p + 1) % phases.length), 1100);
+    return () => clearInterval(id);
+  }, [refining, phases.length]);
   const { compliance, impact } = useMemo(() => computeOutcome(client, sel, usingText ? text : null), [client, sel, usingText, text]);
 
   function pickAdvice(key: string) { setAdviceKey(key); setText(""); }
@@ -151,7 +197,12 @@ export function Rehearse({ focusClientId }: Props) {
       {usingText && text && <div className="rehearse-subject">Rehearsing your proposal: “{text}”</div>}
 
       <div className="ro-wrap">
-        {!reaction ? (
+        {refining ? (
+          <div className="sim-thinking" role="status" aria-live="polite">
+            <div className="sim-dots" aria-hidden="true"><span /><span /><span /></div>
+            <p className="sim-thinking-label" key={phase}>{phases[phase]}…</p>
+          </div>
+        ) : !reaction ? (
           <p className="empty" style={{ padding: "28px 0" }}>Pick a proposal above or type your own to rehearse.</p>
         ) : (
           <>
@@ -159,6 +210,9 @@ export function Rehearse({ focusClientId }: Props) {
               <div className="ro-accept" style={{ marginBottom: 6 }}>
                 <span className="pct" style={{ color: accColor }}>{acc}%</span>
                 <span className="lbl" style={{ marginLeft: 8 }}>likely acceptance · {client.name}</span>
+                {aiRefined ? (
+                  <span className="lbl" style={{ marginLeft: 8, opacity: 0.7 }} title={`Refined by ${reaction?.model}`}>✦ AI-refined</span>
+                ) : null}
               </div>
               <div className="bar" style={{ maxWidth: 320, marginBottom: 10 }}>
                 <div style={{ width: `${acc}%`, background: accColor }} />

@@ -16,6 +16,7 @@ import { assessBatch, assessorInfo } from "./assessor.mjs";
 import { distill, distillInfo } from "./distill.mjs";
 import { digest, digestInfo } from "./digest.mjs";
 import { dialogue, dialogueInfo } from "./dialogue.mjs";
+import { simulate, simulateInfo } from "./simulate.mjs";
 import { buildBody, batchKey } from "./query.mjs";
 import { matchArticle, holdingsInfo } from "./holdings.mjs";
 import { scoreValues } from "./values.mjs";
@@ -27,8 +28,16 @@ const API_KEY = process.env.NEWSAPI_KEY || "";
 // Offline (fixture) is the DEFAULT while developing — no API spend. Opt into
 // live calls explicitly with NEWS_LIVE=1.
 const OFFLINE = process.env.NEWS_LIVE !== "1";
+// Live news refreshes on a fixed cadence: a processed batch is served from
+// cache until it's older than NEWS_TTL_MS, then the next request re-fetches and
+// re-assesses. Bounds API spend. Default 12h for now — shorten for the demo
+// (e.g. NEWS_TTL_MS=900000 for 15-minute refreshes).
+const NEWS_TTL_MS = Number(process.env.NEWS_TTL_MS || 12 * 60 * 60 * 1000);
 
 if (!OFFLINE && !API_KEY) console.warn("⚠  No NEWSAPI_KEY. Set it or add it to demo/.env");
+
+// Per-query cache of fully-processed payloads: key → { at: epochMs, payload }.
+const newsCache = new Map();
 
 // Source of articles: a saved fixture (offline, no API spend) or a live call.
 let fixtureCache = null;
@@ -63,23 +72,11 @@ async function getResults({ q, mode, count }) {
   return data?.articles?.results || [];
 }
 
-async function handleNews(url, res) {
-  if (!OFFLINE && !API_KEY) {
-    res.writeHead(500, { "Content-Type": "application/json" });
-    return res.end(JSON.stringify({ error: "No NEWSAPI_KEY configured on server." }));
-  }
-
-  let results;
-  try {
-    results = await getResults({
-      q: url.searchParams.get("q"),
-      mode: url.searchParams.get("mode"),
-      count: url.searchParams.get("count"),
-    });
-  } catch (err) {
-    res.writeHead(502, { "Content-Type": "application/json" });
-    return res.end(JSON.stringify({ error: String(err.message || err) }));
-  }
+// Runs the full fetch → filter → assess → match pipeline for one query and
+// returns the JSON payload (the object the endpoint serves). Throws on a fetch
+// error so the caller can surface a 502.
+async function buildNewsPayload({ q, mode, count }) {
+  const results = await getResults({ q, mode, count });
 
   // 1. dedup by title
   const seen = new Set();
@@ -139,19 +136,56 @@ async function handleNews(url, res) {
     return { ...meta, stage1: a.stage1, stage2: v, selected, affectedHoldings: holdings, values, importance };
   });
 
-  res.writeHead(200, { "Content-Type": "application/json" });
-  res.end(
-    JSON.stringify({
-      engine: assessorInfo(),
-      offline: OFFLINE,
-      themes: THEME_KEYS,
-      count: out.length,
-      stage1Dropped: articles.length - candidates.length,
-      assessed: candidates.length,
-      flagged: out.filter((a) => a.selected).length,
-      articles: out,
-    })
-  );
+  return {
+    engine: assessorInfo(),
+    offline: OFFLINE,
+    refreshedAt: new Date().toISOString(),
+    themes: THEME_KEYS,
+    count: out.length,
+    stage1Dropped: articles.length - candidates.length,
+    assessed: candidates.length,
+    flagged: out.filter((a) => a.selected).length,
+    articles: out,
+  };
+}
+
+async function handleNews(url, res) {
+  if (!OFFLINE && !API_KEY) {
+    res.writeHead(500, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: "No NEWSAPI_KEY configured on server." }));
+  }
+
+  const query = {
+    q: url.searchParams.get("q"),
+    mode: url.searchParams.get("mode"),
+    count: url.searchParams.get("count"),
+  };
+
+  // Serve from cache while the batch is younger than the TTL; otherwise refresh.
+  const key = `${batchKey(query)}|${query.count || ""}`;
+  const hit = newsCache.get(key);
+  const now = Date.now();
+  if (hit && now - hit.at < NEWS_TTL_MS) {
+    res.writeHead(200, { "Content-Type": "application/json", "X-News-Cache": "hit" });
+    return res.end(JSON.stringify({ ...hit.payload, cache: "hit", ageMs: now - hit.at }));
+  }
+
+  let payload;
+  try {
+    payload = await buildNewsPayload(query);
+  } catch (err) {
+    // On a refresh failure, fall back to a stale cached batch rather than erroring.
+    if (hit) {
+      res.writeHead(200, { "Content-Type": "application/json", "X-News-Cache": "stale" });
+      return res.end(JSON.stringify({ ...hit.payload, cache: "stale", ageMs: now - hit.at }));
+    }
+    res.writeHead(502, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: String(err.message || err) }));
+  }
+
+  newsCache.set(key, { at: now, payload });
+  res.writeHead(200, { "Content-Type": "application/json", "X-News-Cache": "miss" });
+  res.end(JSON.stringify({ ...payload, cache: "miss", ageMs: 0 }));
 }
 
 function readJson(req) {
@@ -193,6 +227,18 @@ async function handleDialogue(req, res) {
   res.end(JSON.stringify(result));
 }
 
+async function handleSimulate(req, res) {
+  const body = await readJson(req);
+  const { client, proposal, baseline } = body;
+  if (!client || !proposal || !baseline) {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: "client, proposal and baseline are required" }));
+  }
+  const result = await simulate({ client, proposal, baseline });
+  res.writeHead(200, { "Content-Type": "application/json" });
+  res.end(JSON.stringify(result));
+}
+
 async function handleDigest(req, res) {
   const body = await readJson(req);
   const { clientId, transcript, mode, dnaContext } = body;
@@ -219,6 +265,8 @@ const server = createServer(async (req, res) => {
       return await handleDigest(req, res);
     if (url.pathname === "/api/transcript/dialogue" && req.method === "POST")
       return await handleDialogue(req, res);
+    if (url.pathname === "/api/simulate" && req.method === "POST")
+      return await handleSimulate(req, res);
     if (url.pathname === "/api/news") return await handleNews(url, res);
     if (url.pathname === "/" || url.pathname === "/index.html") {
       const html = await readFile(join(__dirname, "public", "index.html"));
@@ -241,5 +289,6 @@ server.listen(PORT, () => {
   console.log(`   Assessor: ${info.engine} (${info.model})`);
   console.log(`   Digest:   ${digestInfo().ready ? `anthropic (${digestInfo().small} / ${digestInfo().large})` : "heuristic (no ANTHROPIC_API_KEY)"}`);
   console.log(`   Dialogue: ${dialogueInfo().engine} (${dialogueInfo().model})`);
+  console.log(`   Simulate: ${simulateInfo().engine} (${simulateInfo().model})`);
   console.log(`   Holdings: ${holdingsInfo().count} instruments indexed for ISIN matching`);
 });

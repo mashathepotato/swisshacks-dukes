@@ -1,6 +1,10 @@
 // Pluggable financial-relevance assessor.
 //
 // Engine resolution:
+//   - "anthropic" : the Anthropic Messages API — used when ANTHROPIC_API_KEY is
+//                   set (the default in that case). Fast small model by default.
+//   - "claude"    : the local Claude CLI, headless — uses this machine's auth,
+//                   no API key.
 //   - "phoeniqs"  : an OpenAI-compatible LLM (the hackathon backend) — used when
 //                   PHOENIQS_API_KEY is set. Swap the URL/model for any other
 //                   OpenAI-compatible endpoint; this is the pluggable seam.
@@ -24,12 +28,20 @@ const PHOENIQS_READY = Boolean(PHOENIQS_KEY) && !PHOENIQS_KEY.startsWith("your_"
 const CLAUDE_BIN = process.env.CLAUDE_BIN || "claude";
 const CLAUDE_MODEL = process.env.ASSESSOR_CLAUDE_MODEL || "haiku";
 
-// Engine resolution: explicit ASSESSOR_ENGINE wins; otherwise this version
-// defaults to the local Claude CLI (no API key needed).
-const ENGINE = process.env.ASSESSOR_ENGINE || "claude"; // claude | phoeniqs | heuristic
+const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY || "";
+const ANTHROPIC_READY = Boolean(ANTHROPIC_KEY) && !ANTHROPIC_KEY.startsWith("your_");
+// Fast tagging stage → small/fast model by default; env-overridable.
+const ANTHROPIC_MODEL =
+  process.env.ASSESSOR_ANTHROPIC_MODEL || process.env.DIGEST_MODEL_SMALL || "claude-haiku-4-5-20251001";
+
+// Engine resolution: explicit ASSESSOR_ENGINE wins; otherwise default to the
+// Anthropic API when its key is present, then the local Claude CLI.
+const ENGINE =
+  process.env.ASSESSOR_ENGINE || (ANTHROPIC_READY ? "anthropic" : "claude"); // anthropic | claude | phoeniqs | heuristic
 
 export function assessorInfo() {
   const model =
+    ENGINE === "anthropic" ? ANTHROPIC_MODEL :
     ENGINE === "claude" ? `claude/${CLAUDE_MODEL}` :
     ENGINE === "phoeniqs" ? PHOENIQS_MODEL :
     "regex-keyword";
@@ -115,6 +127,31 @@ async function assessWithClaude(candidates) {
   return toThemeMap(parseArray(obj.result || ""), "claude");
 }
 
+// Anthropic Messages API, using ANTHROPIC_API_KEY from the environment.
+async function assessWithAnthropic(candidates) {
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": ANTHROPIC_KEY,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: ANTHROPIC_MODEL,
+      max_tokens: 1500,
+      system: SYSTEM,
+      messages: [{ role: "user", content: buildUser(candidates) }],
+    }),
+  });
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`Anthropic ${res.status}: ${body.slice(0, 160)}`);
+  }
+  const data = await res.json();
+  const content = (data?.content || []).filter((b) => b.type === "text").map((b) => b.text).join("");
+  return toThemeMap(parseArray(content), "anthropic");
+}
+
 // Deterministic fallback: keyword-based theme tagging (Stage 2 without an LLM).
 function assessHeuristic(candidates) {
   const out = new Map();
@@ -138,8 +175,14 @@ export async function assessBatch(candidates) {
     console.warn("[assessor] phoeniqs selected but no key; using heuristic");
     return assessHeuristic(candidates);
   }
+  if (ENGINE === "anthropic" && !ANTHROPIC_READY) {
+    console.warn("[assessor] anthropic selected but no key; using heuristic");
+    return assessHeuristic(candidates);
+  }
   try {
-    return ENGINE === "claude"
+    return ENGINE === "anthropic"
+      ? await assessWithAnthropic(candidates)
+      : ENGINE === "claude"
       ? await assessWithClaude(candidates)
       : await assessWithLlm(candidates);
   } catch (err) {

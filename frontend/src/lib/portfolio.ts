@@ -322,4 +322,10 @@ export const PERSONA_PLAY: Record<string, PersonaPlay> = {
     scenario: "A held name (Unilever) takes a landmark anti-deforestation stance — an opportunity to lean in.",
     resolvesConflict: false,
   },
+  lecun: {
+    mandate: "Growth",
+    sellIsin: "US30303M1027", // Meta Platforms — anti-Meta AI strategy + US-mega-cap exit
+    scenario: "He wants out of Meta over its LLM-first AI strategy and out of US mega-cap tech generally, tilting the book toward Europe.",
+    resolvesConflict: true,
+  },
 };

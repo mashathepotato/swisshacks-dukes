@@ -669,6 +669,20 @@ button { font-family: inherit; cursor: pointer; }
 .rehearse-composer button:disabled { opacity: .4; cursor: default; }
 .rehearse-subject { padding: 8px 26px 0; font-size: 12.5px; color: var(--text-dim); font-style: italic; }
 
+/* ---- rehearse: client-reaction "thinking" animation (shown while the LLM refines) ---- */
+.sim-thinking { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 52px 0 60px; }
+.sim-dots { display: flex; gap: 8px; }
+.sim-dots span { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); animation: sim-bounce 1.1s ease-in-out infinite; }
+.sim-dots span:nth-child(2) { animation-delay: .18s; }
+.sim-dots span:nth-child(3) { animation-delay: .36s; }
+@keyframes sim-bounce { 0%, 80%, 100% { transform: scale(.5); opacity: .3; } 40% { transform: scale(1); opacity: 1; } }
+.sim-thinking-label { margin: 0; font-size: 13.5px; color: var(--text-dim); letter-spacing: .01em; animation: sim-fade .35s ease; }
+@keyframes sim-fade { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .sim-dots span { animation: none; opacity: .7; }
+  .sim-thinking-label { animation: none; }
+}
+
 /* ---- communication preference (channel + length) in the draft ---- */
 .pref-block { background: var(--panel); border: 1px solid var(--border); border-radius: 3px; padding: 12px; margin-bottom: 12px; }
 .pref-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
