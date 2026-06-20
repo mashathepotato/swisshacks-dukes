@@ -105,7 +105,7 @@ export function ClientNewsFeed() {
               >
                 <span className="cnews-rowtitle">{article.title}</span>
                 <span className="cnews-rowtags">
-                  <span className="cnews-cnum" title="Combined priority score">{rel.combined.toFixed(2)}</span>
+                  <span className="cnews-cnum" title="Combined priority score (out of 100)">{Math.round(rel.combined * 100)}</span>
                   {rel.holdings[0] && (
                     <span className="cnews-tag hold">
                       Holds {rel.holdings[0].issuer}
@@ -200,14 +200,14 @@ function OverlapDetail({
 
       <div className="cnews-sec">Combined priority score</div>
       <div className="cnews-combined">
-        <span className="cnews-cbig">{rel.combined.toFixed(2)}</span>
+        <span className="cnews-cbig">{Math.round(rel.combined * 100)}</span>
         <div className="cnews-cbreak">
           <div><span>Value overlap</span><span><b>{rel.valueOverlap.toFixed(2)}</b> × {RELEVANCE_WEIGHTS.value}</span></div>
           <div><span>Severity</span><span><b>{rel.severity.toFixed(2)}</b> × {RELEVANCE_WEIGHTS.severity}</span></div>
           <div><span>Recency</span><span><b>{rel.recency.toFixed(2)}</b> × {RELEVANCE_WEIGHTS.recency}</span></div>
         </div>
       </div>
-      <p className="cnews-overlap-cap" style={{ textAlign: "left", margin: "6px 0 0" }}>Weighted blend (0–1) used to rank this client's feed. Justification: docs/relevance-metric.md.</p>
+      <p className="cnews-overlap-cap" style={{ textAlign: "left", margin: "6px 0 0" }}>Weighted blend (out of 100) used to rank this client's feed. Justification: docs/relevance-metric.md.</p>
 
       <div className="cnews-sec">Why it's relevant to {client.name}</div>
       <div className="cnews-reasons">

@@ -17,7 +17,7 @@ type Tab = "priority" | "clients" | "news" | "rehearse";
 export default function App() {
   const [tab, setTab] = useState<Tab>("priority");
   const [selected, setSelected] = useState<Client | null>(null);
-  const [newsView, setNewsView] = useState<NewsView>("funnel");
+  const [newsView, setNewsView] = useState<NewsView>("client");
   const [simFocus, setSimFocus] = useState<string | null>(null);
   // when set, the full client page is shown full-screen over the tabs
   const [fullClient, setFullClient] = useState<Client | null>(null);

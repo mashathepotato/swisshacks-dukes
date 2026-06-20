@@ -8,8 +8,9 @@ combined = 0.5 · valueOverlap  +  0.3 · severity  +  0.2 · recency
 ```
 
 All three inputs are in `[0, 1]` and the weights sum to `1`, so the result is
-always in `[0, 1]`. Implementation: `src/lib/newsRelevance.ts` (`RELEVANCE_WEIGHTS`,
-`severityOf`, `recencyOf`, `relevance`).
+always in `[0, 1]`; it is **displayed out of 100** (`round(combined × 100)`).
+Implementation: `src/lib/newsRelevance.ts` (`RELEVANCE_WEIGHTS`, `severityOf`,
+`recencyOf`, `relevance`).
 
 ---
 
