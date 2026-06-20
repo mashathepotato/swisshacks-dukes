@@ -7,7 +7,7 @@
 
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY || "";
 const ANTHROPIC_READY = Boolean(ANTHROPIC_KEY) && !ANTHROPIC_KEY.startsWith("your_");
-const MODEL = process.env.ASK_MODEL || "claude-opus-4-8";
+const MODEL = process.env.ASK_MODEL || "claude-sonnet-4-6";
 const EFFORT = process.env.ASK_EFFORT || "medium"; // low | medium | high | max
 
 export function askInfo() {
