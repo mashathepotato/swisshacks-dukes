@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { PriorityQueue } from "./components/PriorityQueue";
 import { ClientGrid } from "./components/ClientGrid";
-import { SimulatorChat } from "./components/SimulatorChat";
-import { RehearseOutcome } from "./components/RehearseOutcome";
+import { Rehearse } from "./components/Rehearse";
 import { ClientDetail } from "./components/ClientDetail";
 import { ClientPage } from "./components/ClientPage";
 import { NewsFeed } from "./components/NewsFeed";
@@ -10,7 +9,7 @@ import { NewsDetail } from "./components/NewsDetail";
 import type { Client, NewsItem } from "./types";
 import { RANKED_NEWS } from "./data/news";
 
-type Tab = "priority" | "clients" | "news" | "simulator" | "book";
+type Tab = "priority" | "clients" | "news" | "rehearse";
 
 export default function App() {
   const [tab, setTab] = useState<Tab>("priority");
@@ -23,7 +22,7 @@ export default function App() {
   function openSimulator(client: Client) {
     setFullClient(null);
     setSimFocus(client.id);
-    setTab("simulator");
+    setTab("rehearse");
   }
 
   // open the dedicated full-screen client page (from the queue drawer or news impact map)
@@ -50,8 +49,7 @@ export default function App() {
           <button className={"tab" + (tab === "priority" ? " active" : "")} onClick={() => setTab("priority")}>📋 Priority queue</button>
           <button className={"tab" + (tab === "clients" ? " active" : "")} onClick={() => setTab("clients")}>👥 Clients</button>
           <button className={"tab" + (tab === "news" ? " active" : "")} onClick={() => setTab("news")}>📰 News feed</button>
-          <button className={"tab" + (tab === "simulator" ? " active" : "")} onClick={() => setTab("simulator")}>💬 Rehearse</button>
-          <button className={"tab" + (tab === "book" ? " active" : "")} onClick={() => setTab("book")}>🔬 Rehearse outcome</button>
+          <button className={"tab" + (tab === "rehearse" ? " active" : "")} onClick={() => setTab("rehearse")}>💬 Rehearse</button>
         </div>
         <div className="rm-badge">Relationship Manager · <b>T. Keller</b></div>
       </div>
@@ -61,8 +59,7 @@ export default function App() {
           {tab === "priority" && <PriorityQueue selectedId={selected?.id ?? null} onSelect={setSelected} />}
           {tab === "clients" && <ClientGrid onOpen={openFullClient} />}
           {tab === "news" && <NewsFeed selectedId={selectedNews?.id ?? null} onSelect={setSelectedNews} />}
-          {tab === "simulator" && <SimulatorChat focusClientId={simFocus} />}
-          {tab === "book" && <RehearseOutcome />}
+          {tab === "rehearse" && <Rehearse focusClientId={simFocus} />}
         </div>
         {tab === "priority" && <ClientDetail client={selected} onOpenFull={openFullClient} />}
         {tab === "news" && <NewsDetail news={selectedNews} onOpenClient={openFullClient} />}
@@ -70,6 +67,7 @@ export default function App() {
     </div>
   );
 }
+
 
 
 
