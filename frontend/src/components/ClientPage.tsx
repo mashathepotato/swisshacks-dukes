@@ -9,6 +9,7 @@ import { PORTFOLIOS } from "../data/portfolio";
 import { behavioralForClient, tradeReceipts } from "../lib/behavioral";
 import { HoldingsDetail } from "./HoldingsDetail";
 import { CapitalCurve } from "./CapitalCurve";
+import { Collapsible } from "./Collapsible";
 import { buildMessage, CHANNEL_META, LENGTH_META } from "../lib/commPrefs";
 import type { CommChannel, CommLength } from "../lib/commPrefs";
 import { useLearning } from "../lib/learningStore";
@@ -137,15 +138,15 @@ export function ClientPage({ client, onSimulate }: Props) {
             )}
           </div>
 
-          {/* Right: general info + tools for the relationship */}
+          {/* Right: relationship tools first (capture), then supporting detail */}
           <div className="cp-col">
+            <ConversationCapture client={mergedClient} />
+
             <LearningPanel client={mergedClient} />
 
             <BehavioralDNA client={mergedClient} />
             <HoldingsDetail client={mergedClient} />
             <CapitalCurve client={mergedClient} />
-
-            <ConversationCapture client={mergedClient} />
           </div>
         </div>
       </div>
@@ -231,10 +232,7 @@ function BehavioralDNA({ client }: { client: Client }) {
   if (!traits.length) return null; // synthetic twins have no real portfolio
 
   return (
-    <>
-      <div className="section-title">
-        Behavioral DNA <span className="learn-tag">FROM TRADES</span>
-      </div>
+    <Collapsible title="Behavioral DNA" tag="FROM TRADES" summary={`${traits.length} trait${traits.length > 1 ? "s" : ""}`}>
       {traits.map((t) => {
         const em = EVIDENCE_META[t.receipt.kind];
         return (
@@ -253,7 +251,7 @@ function BehavioralDNA({ client }: { client: Client }) {
           </div>
         );
       })}
-    </>
+    </Collapsible>
   );
 }
 

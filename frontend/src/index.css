@@ -154,6 +154,26 @@ button { font-family: inherit; cursor: pointer; }
 .rcpt-ref { font-size: 10.5px; color: var(--accent); display: inline-block; margin-top: 5px; word-break: break-all; }
 .rcpt-lead { font-size: 11.5px; color: var(--text-dim); margin-bottom: 2px; }
 
+/* ---- collapsible supporting-detail sections ---- */
+.cp-collapse { border: 1px solid var(--border); border-radius: 8px; margin-top: 12px; background: var(--panel); overflow: hidden; }
+.cp-collapse.open { background: var(--panel-2); }
+.cp-collapse-head {
+  width: 100%; display: flex; align-items: center; gap: 8px;
+  background: transparent; border: none; cursor: pointer; text-align: left;
+  font: inherit; padding: 11px 13px;
+}
+.cp-collapse-head:hover { background: var(--panel-2); }
+.cp-collapse-chev { color: var(--text-faint); font-size: 11px; width: 10px; flex: none; }
+.cp-collapse-title {
+  font-weight: 700; font-size: 11.5px; text-transform: uppercase;
+  letter-spacing: .05em; color: var(--text-dim);
+}
+.cp-collapse-summary {
+  margin-left: auto; font-size: 11px; color: var(--text-faint);
+  font-family: var(--font-mono); white-space: nowrap;
+}
+.cp-collapse-body { padding: 2px 13px 13px; }
+
 /* ---- holdings & allocation detail ---- */
 .holdings-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin-top: 8px; }
 .holdings-table th {

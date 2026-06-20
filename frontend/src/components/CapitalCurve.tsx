@@ -4,6 +4,7 @@ import { PERSONA_PLAY } from "../lib/portfolio";
 import { PORTFOLIOS } from "../data/portfolio";
 import { buildCapitalCurve } from "../lib/capitalCurve";
 import { formatMoney } from "../lib/format";
+import { Collapsible } from "./Collapsible";
 
 const W = 520, H = 210;
 const PAD = { l: 8, r: 78, t: 14, b: 26 };
@@ -47,10 +48,11 @@ export function CapitalCurve({ client }: { client: Client }) {
   const gridYs = [0, 0.5, 1].map((f) => PAD.t + PLOT_H - f * PLOT_H);
 
   return (
-    <>
-      <div className="section-title">
-        Invested capital &amp; income <span className="learn-tag">FROM CASH FLOWS</span>
-      </div>
+    <Collapsible
+      title="Invested capital & income"
+      tag="FROM CASH FLOWS"
+      summary={`${formatMoney(curve.currentValueCHF)} value`}
+    >
       <div className="card">
         <svg viewBox={`0 0 ${W} ${H}`} width="100%" height={H} style={{ display: "block" }}>
           {gridYs.map((gy, i) => (
@@ -84,6 +86,6 @@ export function CapitalCurve({ client }: { client: Client }) {
           so we don't draw a value path we can't substantiate.
         </p>
       </div>
-    </>
+    </Collapsible>
   );
 }

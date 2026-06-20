@@ -5,6 +5,7 @@ import { PORTFOLIOS } from "../data/portfolio";
 import { allocationBy, holdingsWithTarget, ALLOC_DIMS } from "../lib/allocation";
 import type { AllocDim } from "../lib/allocation";
 import { formatMoney } from "../lib/format";
+import { Collapsible } from "./Collapsible";
 
 /**
  * Full per-client holdings + allocation breakdown over the REAL portfolio data.
@@ -23,11 +24,11 @@ export function HoldingsDetail({ client }: { client: Client }) {
   if (!play || !alloc) return null;
 
   return (
-    <>
-      <div className="section-title">
-        Holdings &amp; allocation · {play.mandate} <span className="learn-tag">REAL PORTFOLIO</span>
-      </div>
-
+    <Collapsible
+      title={`Holdings & allocation · ${play.mandate}`}
+      tag="REAL PORTFOLIO"
+      summary={`${rows.length} positions`}
+    >
       <div className="card">
         <div className="pref-opts" style={{ marginBottom: 10 }}>
           {ALLOC_DIMS.map((d) => (
@@ -91,6 +92,6 @@ export function HoldingsDetail({ client }: { client: Client }) {
           </table>
         )}
       </div>
-    </>
+    </Collapsible>
   );
 }
