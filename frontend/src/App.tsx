@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { PriorityQueue } from "./components/PriorityQueue";
 import { SimulatorChat } from "./components/SimulatorChat";
-import { BookSimulator } from "./components/BookSimulator";
+import { RehearseOutcome } from "./components/RehearseOutcome";
 import { ClientDetail } from "./components/ClientDetail";
 import { NewsFeed } from "./components/NewsFeed";
 import { NewsDetail } from "./components/NewsDetail";
@@ -35,7 +35,7 @@ export default function App() {
           <button className={"tab" + (tab === "priority" ? " active" : "")} onClick={() => setTab("priority")}>📋 Priority queue</button>
           <button className={"tab" + (tab === "news" ? " active" : "")} onClick={() => setTab("news")}>📰 News feed</button>
           <button className={"tab" + (tab === "simulator" ? " active" : "")} onClick={() => setTab("simulator")}>💬 Rehearse</button>
-          <button className={"tab" + (tab === "book" ? " active" : "")} onClick={() => setTab("book")}>🌐 Book simulator</button>
+          <button className={"tab" + (tab === "book" ? " active" : "")} onClick={() => setTab("book")}>🔬 Rehearse outcome</button>
         </div>
         <div className="rm-badge">Relationship Manager · <b>T. Keller</b></div>
       </div>
@@ -45,7 +45,7 @@ export default function App() {
           {tab === "priority" && <PriorityQueue selectedId={selected?.id ?? null} onSelect={setSelected} />}
           {tab === "news" && <NewsFeed selectedId={selectedNews?.id ?? null} onSelect={setSelectedNews} />}
           {tab === "simulator" && <SimulatorChat focusClientId={simFocus} />}
-          {tab === "book" && <BookSimulator />}
+          {tab === "book" && <RehearseOutcome />}
         </div>
         {tab === "priority" && <ClientDetail client={selected} onSimulate={openSimulator} />}
         {tab === "news" && <NewsDetail news={selectedNews} onOpenClient={openClient} />}
