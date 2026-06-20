@@ -524,7 +524,7 @@ button { font-family: inherit; cursor: pointer; }
 
 /* ---- full client page ---- */
 .clientpage {
-  display: flex; flex-direction: column; height: 100vh; background: var(--bg);
+  display: flex; flex-direction: column; flex: 1; min-height: 0; background: var(--bg);
   overflow: hidden;
 }
 .clientpage-bar {

@@ -37,14 +37,10 @@ export default function App() {
     setFullClient(client);
   }
 
-  if (fullClient) {
-    return (
-      <ClientPage
-        client={fullClient}
-        onBack={() => setFullClient(null)}
-        onSimulate={openSimulator}
-      />
-    );
+  // nav tabs always leave any open client page
+  function goTab(t: Tab) {
+    setFullClient(null);
+    setTab(t);
   }
 
   return (
@@ -52,9 +48,9 @@ export default function App() {
       <div className="topbar">
         <div className="brand">RM Copilot <span className="sub">SwissHacks · Dukes</span></div>
         <div className="tabs">
-          <button className={"tab" + (tab === "priority" ? " active" : "")} onClick={() => setTab("priority")}>Priority queue</button>
-          <button className={"tab" + (tab === "clients" ? " active" : "")} onClick={() => setTab("clients")}>Clients</button>
-          <button className={"tab" + (tab === "news" ? " active" : "")} onClick={() => setTab("news")}>News feed</button>
+          <button className={"tab" + (tab === "priority" && !fullClient ? " active" : "")} onClick={() => goTab("priority")}>Priority queue</button>
+          <button className={"tab" + (tab === "clients" && !fullClient ? " active" : "")} onClick={() => goTab("clients")}>Clients</button>
+          <button className={"tab" + (tab === "news" && !fullClient ? " active" : "")} onClick={() => goTab("news")}>News feed</button>
         </div>
         <button className="rm-badge" onClick={() => setShowProfile(true)} title="Edit your communication conventions">
           Relationship Manager · <b>{profile.name}</b> <span className="rm-gear">Edit</span>
@@ -62,22 +58,26 @@ export default function App() {
       </div>
       <RmProfilePanel open={showProfile} onClose={() => setShowProfile(false)} />
 
-      <div className="main">
-        <div className="content">
-          {tab === "priority" && <PriorityQueue selectedId={selected?.id ?? null} onSelect={setSelected} />}
-          {tab === "clients" && <ClientGrid onOpen={openFullClient} />}
-          {tab === "news" && (
-            <div className="newstab">
-              <div className="newstab-bar">
-                <NewsViewToggle view={newsView} onView={setNewsView} />
+      {fullClient ? (
+        <ClientPage client={fullClient} onBack={() => setFullClient(null)} onSimulate={openSimulator} />
+      ) : (
+        <div className="main">
+          <div className="content">
+            {tab === "priority" && <PriorityQueue selectedId={selected?.id ?? null} onSelect={setSelected} />}
+            {tab === "clients" && <ClientGrid onOpen={openFullClient} />}
+            {tab === "news" && (
+              <div className="newstab">
+                <div className="newstab-bar">
+                  <NewsViewToggle view={newsView} onView={setNewsView} />
+                </div>
+                {newsView === "funnel" ? <NewsFeed /> : <ClientNewsFeed />}
               </div>
-              {newsView === "funnel" ? <NewsFeed /> : <ClientNewsFeed />}
-            </div>
-          )}
-          {tab === "rehearse" && <Rehearse focusClientId={simFocus} />}
+            )}
+            {tab === "rehearse" && <Rehearse focusClientId={simFocus} />}
+          </div>
+          {tab === "priority" && <ClientDetail client={selected} onOpenFull={openFullClient} />}
         </div>
-        {tab === "priority" && <ClientDetail client={selected} onOpenFull={openFullClient} />}
-      </div>
+      )}
     </div>
   );
 }
