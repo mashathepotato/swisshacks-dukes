@@ -237,3 +237,12 @@ export interface DistillResult {
   dnaDeltas: DnaDeltas;
   receipts: Evidence[];
 }
+
+export interface DigestResult {
+  model: string;            // "claude-haiku-4-5-20251001" | "claude-sonnet-4-6" | "heuristic"
+  mode: "live" | "final";
+  summary: string;
+  bullets: string[];
+  topics: string[];
+  historyLinks?: string[];  // final pass only
+}
