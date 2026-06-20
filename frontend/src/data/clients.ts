@@ -442,7 +442,7 @@ export const CLIENTS: Client[] = [
   },
   {
     id: "lecun",
-    name: "Lecun",
+    name: "LeCun",
     archetype: "The AI-Native Anomaly",
     isPersona: true,
     mandate: "Growth",
@@ -544,9 +544,9 @@ export const CLIENTS: Client[] = [
       subject: "Acting on your Meta position and the US-tech overweight",
       body: {
         "values-led":
-          "Dear Dr Lecun,\n\nYou've been clear that Meta's direction is one you no longer want your own capital behind, and that you see the next decade compounding in Europe. Your portfolio doesn't yet reflect that — it still carries the US mega-cap overweight, Meta included.\n\nI'd like to propose exiting Meta and rotating that exposure into European names on our buy list — ASML and SAP — so the book finally matches your conviction. Nothing executes without your sign-off.\n\nAt your convenience,\nT. Keller",
+          "Dear Dr LeCun,\n\nYou've been clear that Meta's direction is one you no longer want your own capital behind, and that you see the next decade compounding in Europe. Your portfolio doesn't yet reflect that — it still carries the US mega-cap overweight, Meta included.\n\nI'd like to propose exiting Meta and rotating that exposure into European names on our buy list — ASML and SAP — so the book finally matches your conviction. Nothing executes without your sign-off.\n\nAt your convenience,\nT. Keller",
         "data-driven":
-          "Dear Dr Lecun,\n\nActioning your stated view: your Growth mandate holds Meta Platforms (~CHF 205k) inside a broader US mega-cap tech overweight, against your preference to reduce US concentration and tilt to Europe.\n\nRecommended action: exit Meta and rotate proceeds into ASML and SAP — both European CIO BUYs in the technology sleeve, preserving your equity allocation while cutting US exposure. I can stage the trades for your approval.\n\nBest regards,\nT. Keller",
+          "Dear Dr LeCun,\n\nActioning your stated view: your Growth mandate holds Meta Platforms (~CHF 205k) inside a broader US mega-cap tech overweight, against your preference to reduce US concentration and tilt to Europe.\n\nRecommended action: exit Meta and rotate proceeds into ASML and SAP — both European CIO BUYs in the technology sleeve, preserving your equity allocation while cutting US exposure. I can stage the trades for your approval.\n\nBest regards,\nT. Keller",
       },
     },
   },
