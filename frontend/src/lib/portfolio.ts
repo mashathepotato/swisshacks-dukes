@@ -8,9 +8,32 @@ export type PMandate = "Defensive" | "Balanced" | "Growth";
 export interface PHolding {
   isin: string;
   issuer: string;
+  assetClass: string;
   industryGroup: string;
   subAssetClass: string;
+  region: string;
   currentCHF: number;
+  targetCHF: number;
+}
+
+/** A single executed trade from the 3-year blotter (data/portfolio/transactions_*.csv). */
+export interface PTransaction {
+  id: string;
+  date: string;            // YYYY-MM-DD
+  isin: string;
+  issuer: string;
+  side: "BUY" | "SELL";
+  amountCHF: number;
+  rationale: string;       // free-text desk note, e.g. "Trim on rally · realising gains"
+}
+
+/** A cash movement: deposit, withdrawal, coupon or fee (data/portfolio/cash_flows.csv). */
+export interface PCashFlow {
+  id: string;
+  date: string;            // YYYY-MM-DD
+  side: "DEPOSIT" | "WITHDRAWAL" | "COUPON" | "FEE";
+  amountCHF: number;       // signed as stored (withdrawals/fees negative)
+  rationale: string;
 }
 export interface PCio {
   isin: string;
@@ -162,7 +185,7 @@ export function simulateSwap(input: SimInput): SimResult {
   if (s) s.currentCHF = Math.max(0, s.currentCHF - amountCHF);
   const existing = after.find((h) => h.isin === buyIsin);
   if (existing) existing.currentCHF += amountCHF;
-  else if (buyCio) after.push({ isin: buyIsin, issuer: buyCio.issuer, industryGroup: buyCio.industryGroup, subAssetClass: buyCio.subAssetClass, currentCHF: amountCHF });
+  else if (buyCio) after.push({ isin: buyIsin, issuer: buyCio.issuer, assetClass: "", industryGroup: buyCio.industryGroup, subAssetClass: buyCio.subAssetClass, region: "", currentCHF: amountCHF, targetCHF: amountCHF });
 
   const driftBefore = computeDrift(holdings, strategies, mandate);
   const driftAfter = computeDrift(after, strategies, mandate);

@@ -2,17 +2,18 @@ import { useEffect, useMemo, useState } from "react";
 import type { Client, EvidenceKind } from "../types";
 import { PORTFOLIOS, CIO, STRATEGIES } from "../data/portfolio";
 import { computeDrift, proposeSwap, simulateSwap, PERSONA_PLAY } from "../lib/portfolio";
+import { tradeReceipts } from "../lib/behavioral";
 import { EVIDENCE_META } from "../lib/explain";
 import { formatMoney } from "../lib/format";
 
 /** A source receipt, reusing the dev prototype's receipt style. */
-function Receipt({ kind, sourceId, quote }: { kind: EvidenceKind; sourceId: string; quote: string }) {
+function Receipt({ kind, sourceId, quote, date }: { kind: EvidenceKind; sourceId: string; quote: string; date?: string }) {
   const em = EVIDENCE_META[kind];
   return (
     <div className="receipt">
       <div className="rcpt-meta">
         <span className="kindtag" style={{ background: em.color }}>{em.label}</span>
-        <span className="rcpt-src">{sourceId}</span>
+        <span className="rcpt-src">{sourceId}{date ? ` · ${date}` : ""}</span>
       </div>
       <blockquote className="rcpt-quote">“{quote}”</blockquote>
     </div>
@@ -102,6 +103,9 @@ export function ComplianceDesk({ client }: { client: Client }) {
           <p>{rec.chosen.reason}</p>
           <div className="receipts" style={{ marginTop: 9 }}>
             <Receipt kind="cio" sourceId={`CIO list · ${rec.chosen.issuer} rated BUY`} quote={rec.chosen.cioView} />
+            {tradeReceipts(play.mandate, rec.sell.isin).map((e, i) => (
+              <Receipt key={i} kind={e.kind} sourceId={e.sourceId} quote={e.quote} date={e.date} />
+            ))}
           </div>
           {rec.alternatives.length > 0 && (
             <div className="alts">
@@ -138,6 +142,15 @@ export function ComplianceDesk({ client }: { client: Client }) {
             <div className="stamp">{mk(sim.newBreaches.length === 0)} No new ±2.0pp drift breach{sim.newBreaches.length ? ` — ${sim.newBreaches.join(", ")}` : ""}</div>
             <div className="cdesk-moved"><b>{formatMoney(sim.amountCHF)}</b> would move from {sim.sell.issuer} to {sim.buy.issuer}.</div>
             <div className={"dverdict " + sim.dna.verdict}><b>Client values: {sim.dna.verdict}</b> — {sim.dna.reason}</div>
+            {(() => {
+              const past = tradeReceipts(play.mandate, sellIsin, 2);
+              return past.length ? (
+                <div className="receipts" style={{ marginTop: 9 }}>
+                  <div className="rcpt-lead">This client's real past trades on {sim.sell.issuer}:</div>
+                  {past.map((e, i) => <Receipt key={i} kind={e.kind} sourceId={e.sourceId} quote={e.quote} date={e.date} />)}
+                </div>
+              ) : null;
+            })()}
           </>
         )}
       </div>
