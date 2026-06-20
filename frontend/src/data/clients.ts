@@ -454,7 +454,13 @@ export const CLIENTS: Client[] = [
     affinities: [
       { theme: "us-exposure", weight: 0.92, polarity: -1 },
       { theme: "geographic-anchoring", weight: 0.82 },
+      { theme: "personal-cause", weight: 0.75 },
+      { theme: "social-ethics", weight: 0.65 },
       { theme: "confidentiality", weight: 0.55 },
+      { theme: "reputation-sensitivity", weight: 0.50 },
+      { theme: "military-defence", weight: 0.35, polarity: -1 },
+      { theme: "environmental", weight: 0.30 },
+      { theme: "philanthropy", weight: 0.25 },
     ],
     priorityScore: 90,
     amountAtStake: 204_568,
