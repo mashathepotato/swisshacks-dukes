@@ -57,6 +57,22 @@
     .theme { font-size: 11px; padding: 1px 8px; border-radius: 999px; background: #20283a; color: #b9c6d6; border: 1px solid var(--line); }
     .theme.mkt { background: #243a5e; color: #8fb8f7; border-color: #345; }
     .theme.none { color: var(--none); }
+    .clickable { cursor: pointer; }
+    .clickable:hover { border-color: var(--accent); }
+    .rank { font-size: 11px; font-weight: 700; color: var(--accent); background: #16243a; border: 1px solid #2a3d5a; border-radius: 6px; padding: 1px 7px; }
+    .clickhint { margin-top: 8px; font-size: 11px; color: var(--muted); opacity: .7; }
+    .modal { position: fixed; inset: 0; background: rgba(6,9,14,.72); display: flex; align-items: center; justify-content: center; z-index: 50; padding: 24px; }
+    .modal.hidden { display: none; }
+    .modal-card { position: relative; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px 24px; width: 420px; max-width: 100%; max-height: 90vh; overflow: auto; }
+    .modal-close { position: absolute; top: 12px; right: 12px; background: transparent; border: none; color: var(--muted); font-size: 16px; cursor: pointer; }
+    .m-src { color: var(--muted); font-size: 12.5px; }
+    .m-title { display: block; color: var(--ink); font-weight: 600; font-size: 16px; text-decoration: none; margin: 4px 0 12px; }
+    .m-title:hover { color: var(--accent); }
+    .m-themes { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 6px; }
+    .radar-title { font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 14px 0 2px; text-align: center; }
+    .radar { display: flex; justify-content: center; }
+    .m-vals { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; margin: 4px 0 10px; }
+    .vchip { font-size: 11.5px; padding: 2px 9px; border-radius: 999px; background: #16243a; color: #8fb8f7; border: 1px solid #2a3d5a; }
 
     .conf { font-size: 11px; color: var(--muted); }
     .conf .bar { display: inline-block; width: 46px; height: 5px; border-radius: 3px; background: #20283a; vertical-align: middle; overflow: hidden; }
@@ -100,10 +116,17 @@
       <div id="allList"></div>
     </section>
     <section class="col right">
-      <h2>Market-relevant · <span class="n" id="flagCount">0</span></h2>
-      <div class="hint">Agent verdict on the survivors: direct market news / potential mover, with confidence &amp; affected sectors.</div>
+      <h2>Selected · by importance · <span class="n" id="flagCount">0</span></h2>
+      <div class="hint">Themed/market articles, ranked by portfolio exposure &amp; values touched. Click any article for its value spider.</div>
       <div id="flagList"></div>
     </section>
+  </div>
+
+  <div id="modal" class="modal hidden">
+    <div class="modal-card">
+      <button class="modal-close" id="modalClose">✕</button>
+      <div id="modalBody"></div>
+    </div>
   </div>
 
   <script>
@@ -116,23 +139,25 @@
     });
 
     const fmtDate = (d) => { try { return new Date(d).toLocaleString(); } catch { return d || ""; } };
+    let lastArticles = [];
 
     // Left panel: every fetched article. Greyed = dropped at Stage 1 (not
     // investment-relevant). Highlighted = selected (passed all stages).
-    function leftCard(a) {
+    function leftCard(a, idx) {
       const sel = a.selected;
-      return `<div class="card lite ${sel ? "flagged" : ""}"
+      return `<div class="card lite clickable ${sel ? "flagged" : ""}" data-idx="${idx}"
                    style="${sel ? "border-left:3px solid var(--accent)" : ""}">
         <div class="meta">
           <span class="badge ${sel ? "sel" : "drop"}">${sel ? "selected" : (a.stage1.relevant ? "no theme" : "not invest.")}</span>
           <span class="src">${a.source} · ${fmtDate(a.date)}</span>
         </div>
-        <a href="${a.url}" target="_blank" rel="noopener">${a.title}</a>
+        <a href="${a.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${a.title}</a>
       </div>`;
     }
 
-    // Right panel: selected articles — Stage 2 themes + market-movement, Stage 3 ISINs.
-    function rightCard(a) {
+    // Right panel: selected articles in importance order — Stage 2 themes +
+    // market-movement, Stage 3 ISINs. Click for the value spider.
+    function rightCard(a, idx, rank) {
       const v = a.stage2 || {}, pct = Math.round((v.confidence || 0) * 100);
       const themeChips =
         (v.marketMovement ? `<span class="theme mkt">market-movement</span>` : "") +
@@ -149,17 +174,73 @@
             </div>`).join("") +
           `</div>`
         : `<div class="nohold">No specific holding matched — broad / market-level signal.</div>`;
-      return `<div class="card" style="border-left:3px solid var(--accent)">
+      return `<div class="card clickable" data-idx="${idx}" style="border-left:3px solid var(--accent)">
         <div class="meta">
+          <span class="rank">#${rank}</span>
           <span class="conf">conf <span class="bar"><i style="width:${pct}%"></i></span> ${pct}%</span>
           <span class="src">${a.source} · ${fmtDate(a.date)}</span>
         </div>
-        <a href="${a.url}" target="_blank" rel="noopener">${a.title}</a>
+        <a href="${a.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${a.title}</a>
         <div class="why">▸ ${v.reason || ""}</div>
         <div class="affected">${themeChips || '<span class="theme none">untagged</span>'}</div>
         ${holdsHtml}
+        <div class="clickhint">▾ click for value spider</div>
       </div>`;
     }
+
+    // ── value spider (radar) over the 8 value-axes ────────────────────────────
+    function radarSvg(values) {
+      const N = values.length, size = 300, c = size / 2, R = c - 66;
+      const ang = (i) => (-90 + i * 360 / N) * Math.PI / 180;
+      const pt = (i, r) => [c + r * Math.cos(ang(i)), c + r * Math.sin(ang(i))];
+      const ring = (f) => values.map((_, i) => pt(i, R * f).join(",")).join(" ");
+      const poly = values.map((v, i) => pt(i, R * Math.max(0.015, v.score)).join(",")).join(" ");
+      let s = `<svg viewBox="0 0 ${size} ${size}" width="300" height="300">`;
+      [0.5, 1].forEach((f) => (s += `<polygon points="${ring(f)}" fill="none" stroke="#232c3d" stroke-width="1"/>`));
+      values.forEach((_, i) => { const [x, y] = pt(i, R); s += `<line x1="${c}" y1="${c}" x2="${x}" y2="${y}" stroke="#1b2331"/>`; });
+      s += `<polygon points="${poly}" fill="#4f8ff733" stroke="#4f8ff7" stroke-width="2" stroke-linejoin="round"/>`;
+      values.forEach((v, i) => {
+        const [px, py] = pt(i, R * Math.max(0.015, v.score));
+        if (v.score > 0) s += `<circle cx="${px}" cy="${py}" r="3.2" fill="#4f8ff7"/>`;
+        const [lx, ly] = pt(i, R + 26);
+        s += `<text x="${lx}" y="${ly}" fill="${v.score > 0 ? "#cfe0f5" : "#6b7a8f"}" font-size="11" text-anchor="middle" dominant-baseline="middle">${v.short}</text>`;
+      });
+      return s + `</svg>`;
+    }
+
+    function openModal(a) {
+      const v = a.stage2 || {}, values = a.values || [];
+      const touched = values.filter((x) => x.score > 0).sort((x, y) => y.score - x.score);
+      const themeChips =
+        (v.marketMovement ? `<span class="theme mkt">market-movement</span>` : "") +
+        (v.themes || []).filter((t) => t !== "market-movement").map((t) => `<span class="theme">${t}</span>`).join("");
+      const body =
+        `<div class="m-src">${a.source} · ${fmtDate(a.date)}</div>` +
+        `<a class="m-title" href="${a.url}" target="_blank" rel="noopener">${a.title}</a>` +
+        (a.selected
+          ? `<div class="m-themes">${themeChips || '<span class="theme none">untagged</span>'}</div>` +
+            `<div class="radar-title">Client values implicated</div>` +
+            `<div class="radar">${radarSvg(values)}</div>` +
+            (touched.length
+              ? `<div class="m-vals">${touched.map((x) => `<span class="vchip">${x.short} · ${Math.round(x.score * 100)}%</span>`).join("")}</div>`
+              : `<div class="nohold">No client value-axes implicated by this article.</div>`) +
+            (a.affectedHoldings.length
+              ? `<div class="holdings"><div class="lbl">Instruments · ${a.affectedHoldings.length}</div>` +
+                a.affectedHoldings.map((h) => `<div class="hold"><span class="ty ${h.type}">${h.type}</span><span class="isin">${h.isin}</span><span class="iss">${h.issuer}</span></div>`).join("") + `</div>`
+              : "")
+          : `<div class="nohold">${a.stage1.relevant ? "Investment-relevant, but no theme/market signal." : "Dropped at Stage 1 — not investment-relevant."}</div>`);
+      $("modalBody").innerHTML = body;
+      $("modal").classList.remove("hidden");
+    }
+    const closeModal = () => $("modal").classList.add("hidden");
+
+    document.addEventListener("click", (e) => {
+      const card = e.target.closest(".card[data-idx]");
+      if (card) { const a = lastArticles[+card.dataset.idx]; if (a) openModal(a); }
+    });
+    $("modalClose").addEventListener("click", closeModal);
+    $("modal").addEventListener("click", (e) => { if (e.target.id === "modal") closeModal(); });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
 
     async function fetchNews() {
       goEl.disabled = true;
@@ -174,6 +255,7 @@
           funnelEl.classList.add("err");
           return;
         }
+        lastArticles = data.articles;
         const e = data.engine;
         engineEl.textContent = e.llmReady ? `Stage 2 · ${e.model}` : `Stage 2 · heuristic`;
         engineEl.className = "engine " + (e.llmReady ? "phoeniqs" : "heuristic");
@@ -185,15 +267,15 @@
           `<span>→ S3: ISINs labelled</span>`;
 
         $("allCount").textContent = data.count;
-        $("allList").innerHTML = data.articles.map(leftCard).join("");
+        $("allList").innerHTML = data.articles.map((a, i) => leftCard(a, i)).join("");
 
+        // Right panel ordered by importance (portfolio exposure → values → market).
         const flagged = data.articles
           .filter((a) => a.selected)
-          .sort((a, b) => (b.affectedHoldings.length - a.affectedHoldings.length) ||
-                          ((b.stage2?.confidence || 0) - (a.stage2?.confidence || 0)));
+          .sort((a, b) => (b.importance - a.importance) || ((b.stage2?.confidence || 0) - (a.stage2?.confidence || 0)));
         $("flagCount").textContent = flagged.length;
         $("flagList").innerHTML =
-          flagged.map(rightCard).join("") ||
+          flagged.map((a, i) => rightCard(a, lastArticles.indexOf(a), i + 1)).join("") ||
           '<div class="hint">No themed/market articles in this batch.</div>';
       } catch (err) {
         funnelEl.textContent = "Request failed: " + err.message;

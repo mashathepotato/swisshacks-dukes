@@ -16,6 +16,8 @@ files below are the deeper detail it links into.
 - `team.md` — who's who and who owns what.
 - `decisions.md` — running log of decisions and why we made them.
 - `agents.dot` / `agents.png` — the conceptual multi-agent architecture diagram.
+- `voice-digest.dot` / `voice-digest.png` — focused voice-capture + dynamic-digest flow.
+- `values.md` — the Client DNA value-axes (vocabulary + news/portfolio mappings).
 
 ## Conventions
 

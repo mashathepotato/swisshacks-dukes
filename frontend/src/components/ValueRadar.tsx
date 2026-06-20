@@ -30,25 +30,25 @@ export function ValueRadar({ client }: Props) {
     <svg viewBox={`0 0 ${SIZE} ${SIZE}`} width="100%" height={SIZE} style={{ display: "block" }}>
       {/* grid rings */}
       {[0.33, 0.66, 1].map((f) => (
-        <polygon key={f} points={ringPoly(f)} fill="none" stroke="#232c3d" strokeWidth={1} />
+        <polygon key={f} points={ringPoly(f)} fill="none" stroke="#d7d4cc" strokeWidth={1} />
       ))}
       {/* spokes */}
       {THEMES.map((_, i) => {
         const p = pt(i, R);
-        return <line key={i} x1={C} y1={C} x2={p.x} y2={p.y} stroke="#1b2331" strokeWidth={1} />;
+        return <line key={i} x1={C} y1={C} x2={p.x} y2={p.y} stroke="#e7e4dc" strokeWidth={1} />;
       })}
       {/* value polygon */}
-      <polygon points={valuePoly} fill="#4f8ff733" stroke="#4f8ff7" strokeWidth={2} strokeLinejoin="round" />
+      <polygon points={valuePoly} fill="#de39191f" stroke="#de3919" strokeWidth={2} strokeLinejoin="round" />
       {weights.map((w, i) => {
         const p = pt(i, R * w);
         return <circle key={i} cx={p.x} cy={p.y} r={3} fill={THEMES[i].color} />;
       })}
       {/* corner labels */}
       {THEMES.map((t, i) => {
-        const p = pt(i, R + 20);
+        const p = pt(i, R + 22);
         return (
-          <text key={t.id} x={p.x} y={p.y} fill="#9fb0c3" fontSize={13} textAnchor="middle" dominantBaseline="middle">
-            {t.emoji}
+          <text key={t.id} x={p.x} y={p.y} fill="#545861" fontSize={10.5} fontWeight={600} letterSpacing=".02em" textAnchor="middle" dominantBaseline="middle">
+            {t.short}
           </text>
         );
       })}

@@ -102,7 +102,7 @@ export function ClientPage({ client, onBack, onSimulate }: Props) {
                 <div className="section-title">Client DNA</div>
                 <div className="chips">
                   {mergedClient.values.map((v) => <span key={v} className="chip">✓ {v}</span>)}
-                  {mergedClient.dislikes.map((v) => <span key={v} className="chip" style={{ color: "#f0a0a0" }}>✕ {v}</span>)}
+                  {mergedClient.dislikes.map((v) => <span key={v} className="chip" style={{ color: "var(--red)" }}>✕ {v}</span>)}
                 </div>
               </>
             )}
@@ -446,7 +446,7 @@ function DraftMessage({ client }: { client: Client }) {
           </div>
           <p className="pref-note">
             {isCustom(client.id)
-              ? <>★ Tuned by you — {client.name} set to <b>{CHANNEL_META[pref.channel].label.toLowerCase()}</b>, <b>{pref.length}</b>. The draft below follows it.</>
+              ? <>Tuned by you — {client.name} set to <b>{CHANNEL_META[pref.channel].label.toLowerCase()}</b>, <b>{pref.length}</b>. The draft below follows it.</>
               : <>On file: {client.name} prefers <b>{CHANNEL_META[pref.channel].label.toLowerCase()}</b>, <b>{pref.length}</b>. The draft below follows it.</>}
           </p>
           {history.length > 0 && (
@@ -467,7 +467,7 @@ function DraftMessage({ client }: { client: Client }) {
           </button>
         </div>
         {learnedThisVoice && (
-          <p className="draft-learned">★ Pre-selected — {client.name} accepts this tone most often.</p>
+          <p className="draft-learned">Pre-selected — {client.name} accepts this tone most often.</p>
         )}
 
         <div className="draft-format">{msg.format}{msg.subject ? "" : " · spoken / no subject line"}</div>

@@ -44,14 +44,14 @@ export function ClientDetail({ client, onOpenFull }: Props) {
       )}
 
       <p className="why-priority"><b>Why now:</b> {client.topReason}</p>
-      {sig && <p className="sig-headline">📰 {sig.headline} <span style={{ color: "var(--text-faint)" }}>· {sig.source}</span></p>}
+      {sig && <p className="sig-headline">{sig.headline} <span style={{ color: "var(--text-faint)" }}>· {sig.source}</span></p>}
 
       {(client.values.length > 0 || client.dislikes.length > 0) && (
         <>
           <div className="section-title">Value DNA</div>
           <div className="chips">
             {client.values.slice(0, 3).map((v) => <span key={v} className="chip">✓ {v}</span>)}
-            {client.dislikes.slice(0, 2).map((v) => <span key={v} className="chip" style={{ color: "#f0a0a0" }}>✕ {v}</span>)}
+            {client.dislikes.slice(0, 2).map((v) => <span key={v} className="chip" style={{ color: "var(--red)" }}>✕ {v}</span>)}
           </div>
         </>
       )}

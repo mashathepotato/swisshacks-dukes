@@ -80,7 +80,7 @@ export function ComplianceDesk({ client }: { client: Client }) {
   return (
     <>
       <div className="section-title">
-        Mandate &amp; compliance desk <span className="learn-tag" style={{ color: "var(--accent)", background: "#4f8ff722", borderColor: "#4f8ff755" }}>LIVE ENGINE</span>
+        Mandate &amp; compliance desk <span className="learn-tag" style={{ color: "var(--accent)", background: "var(--accent-soft)", borderColor: "var(--accent-line)" }}>LIVE ENGINE</span>
       </div>
       <p className="thread-intro">{play.scenario} Checked against the real CIO recommendation list and the ±2.0pp mandate-drift rule.</p>
 
