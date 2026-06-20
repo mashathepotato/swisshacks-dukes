@@ -16,6 +16,7 @@ import { assessBatch, assessorInfo } from "./assessor.mjs";
 import { distill, distillInfo } from "./distill.mjs";
 import { digest, digestInfo } from "./digest.mjs";
 import { dialogue, dialogueInfo } from "./dialogue.mjs";
+import { simulate, simulateInfo } from "./simulate.mjs";
 import { buildBody, batchKey } from "./query.mjs";
 import { matchArticle, holdingsInfo } from "./holdings.mjs";
 import { scoreValues } from "./values.mjs";
@@ -193,6 +194,18 @@ async function handleDialogue(req, res) {
   res.end(JSON.stringify(result));
 }
 
+async function handleSimulate(req, res) {
+  const body = await readJson(req);
+  const { client, proposal, baseline } = body;
+  if (!client || !proposal || !baseline) {
+    res.writeHead(400, { "Content-Type": "application/json" });
+    return res.end(JSON.stringify({ error: "client, proposal and baseline are required" }));
+  }
+  const result = await simulate({ client, proposal, baseline });
+  res.writeHead(200, { "Content-Type": "application/json" });
+  res.end(JSON.stringify(result));
+}
+
 async function handleDigest(req, res) {
   const body = await readJson(req);
   const { clientId, transcript, mode, dnaContext } = body;
@@ -219,6 +232,8 @@ const server = createServer(async (req, res) => {
       return await handleDigest(req, res);
     if (url.pathname === "/api/transcript/dialogue" && req.method === "POST")
       return await handleDialogue(req, res);
+    if (url.pathname === "/api/simulate" && req.method === "POST")
+      return await handleSimulate(req, res);
     if (url.pathname === "/api/news") return await handleNews(url, res);
     if (url.pathname === "/" || url.pathname === "/index.html") {
       const html = await readFile(join(__dirname, "public", "index.html"));
@@ -241,5 +256,6 @@ server.listen(PORT, () => {
   console.log(`   Assessor: ${info.engine} (${info.model})`);
   console.log(`   Digest:   ${digestInfo().ready ? `anthropic (${digestInfo().small} / ${digestInfo().large})` : "heuristic (no ANTHROPIC_API_KEY)"}`);
   console.log(`   Dialogue: ${dialogueInfo().engine} (${dialogueInfo().model})`);
+  console.log(`   Simulate: ${simulateInfo().engine} (${simulateInfo().model})`);
   console.log(`   Holdings: ${holdingsInfo().count} instruments indexed for ISIN matching`);
 });

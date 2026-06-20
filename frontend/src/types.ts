@@ -215,6 +215,8 @@ export interface SimulationResult {
   bestFraming: string;
   nextStep: string;
   trajectory: TrajectoryPoint[];
+  engine?: string; // "anthropic" | "heuristic" — set by the /api/simulate seam
+  model?: string;
 }
 
 export interface ConsentRecord {
