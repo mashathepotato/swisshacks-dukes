@@ -3,7 +3,7 @@
 // text. Every trait carries a verbatim receipt (the real row + desk rationale)
 // so it reads as evidence, never a black-box label. Pure + deterministic.
 
-import type { Evidence, ThemeId } from "../types";
+import type { Evidence } from "../types";
 import type { PMandate, PTransaction, PCashFlow } from "./portfolio";
 import { PERSONA_PLAY } from "./portfolio";
 import { TRANSACTIONS, CASHFLOWS } from "../data/portfolio";
@@ -20,7 +20,6 @@ export interface BehavioralTrait {
   label: string;
   detail: string;          // one line, includes the computed statistic
   receipt: Evidence;       // a verbatim trade/flow row backing the trait
-  affinityHint?: ThemeId;  // optional nudge toward a value theme
 }
 
 // Full CHF figure with Swiss grouping, for receipt quotes (formatMoney is too coarse).
@@ -98,7 +97,6 @@ export function deriveBehavioralDNA(mandate: PMandate, sellIsin?: string): Behav
       label: "Disciplined accumulator",
       detail: `${deposits.length} recurring top-ups since inception — a steady saver who keeps funding the mandate.`,
       receipt: cfReceipt(pick),
-      affinityHint: "income",
     });
   }
 
@@ -112,7 +110,6 @@ export function deriveBehavioralDNA(mandate: PMandate, sellIsin?: string): Behav
       label: "Income-oriented",
       detail: `${coupons.length} coupons totalling ${chf(total)} collected — values a steady income stream.`,
       receipt: cfReceipt(pick),
-      affinityHint: "income",
     });
   }
 

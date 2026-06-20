@@ -1,5 +1,6 @@
 import type { Client } from "../types";
 import { SIGNAL_META, formatMoney, relativeTime } from "../lib/format";
+import { PriorityScore } from "./PriorityScore";
 import { useDone } from "../lib/doneStore";
 
 interface Props {
@@ -12,7 +13,7 @@ export function ClientDetail({ client, onOpenFull }: Props) {
   if (!client) {
     return (
       <div className="drawer">
-        <p className="empty">Select a client to preview their priority, the top reason it surfaced and the headline next step. Open the full profile for the reasoning chain, value DNA, compliance desk and draft message.</p>
+        <p className="empty">Select a client to preview their priority and next step.</p>
       </div>
     );
   }
@@ -46,6 +47,8 @@ export function ClientDetail({ client, onOpenFull }: Props) {
       <p className="why-priority"><b>Why now:</b> {client.topReason}</p>
       {sig && <p className="sig-headline">{sig.headline} <span style={{ color: "var(--text-faint)" }}>· {sig.source}</span></p>}
 
+      <PriorityScore client={client} />
+
       {(client.values.length > 0 || client.dislikes.length > 0) && (
         <>
           <div className="section-title">Value DNA</div>
@@ -66,7 +69,7 @@ export function ClientDetail({ client, onOpenFull }: Props) {
       )}
 
       <button className="cp-open" onClick={() => onOpenFull?.(client)}>
-        View full profile — reasoning chain, value DNA, compliance &amp; draft →
+        View full profile →
       </button>
 
       <div>

@@ -12,7 +12,7 @@ function Receipt({ kind, sourceId, quote, date }: { kind: EvidenceKind; sourceId
   return (
     <div className="receipt">
       <div className="rcpt-meta">
-        <span className="kindtag" style={{ background: em.color }}>{em.icon} {em.label}</span>
+        <span className="kindtag" style={{ background: em.color }}>{em.label}</span>
         <span className="rcpt-src">{sourceId}{date ? ` · ${date}` : ""}</span>
       </div>
       <blockquote className="rcpt-quote">“{quote}”</blockquote>
@@ -80,10 +80,8 @@ export function ComplianceDesk({ client }: { client: Client }) {
 
   return (
     <>
-      <div className="section-title">
-        Mandate &amp; compliance desk <span className="learn-tag" style={{ color: "var(--accent)", background: "var(--accent-soft)", borderColor: "var(--accent-line)" }}>LIVE ENGINE</span>
-      </div>
-      <p className="thread-intro">{play.scenario} Checked against the real CIO recommendation list and the ±2.0pp mandate-drift rule.</p>
+      <div className="section-title">Mandate &amp; compliance desk</div>
+      <p className="thread-intro">{play.scenario}</p>
 
       <div className="card">
         <h4>Mandate drift · {play.mandate} (computed from holdings)</h4>

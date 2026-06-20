@@ -3,11 +3,17 @@ import type { Client, SimulationResult, ThemeId } from "../types";
 /**
  * Mock client-twin simulator. Heuristically predicts how a client would react
  * to an RM proposal phrased in natural language. Stand-in for the real
- * Forecast Agent (LLM + tools) — same shape of output.
+ * Forecast Agent (LLM + tools) — same shape of output. Reasons over the client
+ * value-axes (us-exposure carries a polarity: +1 = seeks US, -1 = avoids it).
  */
 export function simulateProposal(client: Client, proposal: string): SimulationResult {
   const p = proposal.toLowerCase();
   const affinity = (t: ThemeId) => client.affinities.find((a) => a.theme === t)?.weight ?? 0;
+  // signed conviction: weight × polarity (e.g. +0.9 US-bull, −0.85 US-averse)
+  const signed = (t: ThemeId) => {
+    const a = client.affinities.find((x) => x.theme === t);
+    return a ? a.weight * (a.polarity ?? 1) : 0;
+  };
 
   // crude intent detection
   const mentions = (...kw: string[]) => kw.some((k) => p.includes(k));
@@ -21,23 +27,23 @@ export function simulateProposal(client: Client, proposal: string): SimulationRe
   const objections: string[] = [];
   const reasonBits: string[] = [];
 
-  // US-tech-averse / defensive clients resist AI/tech adds
+  // adding US tech/AI: welcomed by US-seekers, resisted by the US-averse
   if (isUSTech && isIncrease) {
-    const resist = affinity("defensive") * 0.6 + affinity("income") * 0.3 - affinity("us_tech_bullish") * 0.7;
-    acceptance -= resist;
-    if (resist > 0.2) {
+    const usApp = signed("us-exposure");
+    acceptance += usApp * 0.7;
+    if (usApp < -0.2) {
       objections.push("Sees US tech/AI as speculative; explicitly wants to avoid Silicon Valley hype.");
       reasonBits.push("the proposal pushes into US tech the client distrusts");
-    } else {
-      acceptance += affinity("us_tech_bullish") * 0.4;
+    } else if (usApp > 0.3) {
       reasonBits.push("the client is already bullish on US tech");
     }
   }
 
+  // cutting US tech: the US-averse welcome it; a US-bull resists
   if (isUSTech && isReduce) {
-    acceptance += affinity("defensive") * 0.4 - affinity("us_tech_bullish") * 0.5;
-    if (affinity("us_tech_bullish") > 0.6)
-      objections.push("Reluctant to cut a conviction position while momentum is strong.");
+    const usApp = signed("us-exposure");
+    acceptance += -usApp * 0.5;
+    if (usApp > 0.6) objections.push("Reluctant to cut a conviction position while momentum is strong.");
   }
 
   if (isESG) {
@@ -46,22 +52,22 @@ export function simulateProposal(client: Client, proposal: string): SimulationRe
   }
 
   if (isDividend) {
-    acceptance += affinity("income") * 0.5;
-    if (affinity("income") > 0.6) reasonBits.push("it preserves the predictable income the client relies on");
+    // home-anchored, conservative clients value predictable income
+    acceptance += affinity("geographic-anchoring") * 0.4;
+    if (affinity("geographic-anchoring") > 0.6) reasonBits.push("it preserves the predictable, home-anchored income the client relies on");
   }
 
-  // reputation-sensitive clients welcome exiting tainted names
-  if (client.affinities.some((a) => a.theme === "reputation" && a.weight > 0.6) && isReduce) {
+  // reputation-/ethics-sensitive clients welcome exiting tainted names
+  if (isReduce && (affinity("reputation-sensitivity") > 0.6 || affinity("social-ethics") > 0.6)) {
     acceptance += 0.25;
     reasonBits.push("the client treats reputational risk as financial risk and welcomes distancing");
   }
 
   acceptance = Math.max(0.05, Math.min(0.95, acceptance));
 
-  // best framing by comm style
-  const valuesLed = client.affinities.some(
-    (a) => (a.theme === "environmental" || a.theme === "healthcare" || a.theme === "reputation") && a.weight > 0.6
-  );
+  // best framing by what the client values
+  const VALUE_LED: ThemeId[] = ["environmental", "personal-cause", "philanthropy", "social-ethics", "reputation-sensitivity"];
+  const valuesLed = client.affinities.some((a) => VALUE_LED.includes(a.theme) && a.weight > 0.6);
   const bestFraming = valuesLed
     ? "Lead with values and personal narrative; tie the move to what the client cares about, then show the numbers."
     : "Lead with hard numbers — risk, yield, downside protection — and keep the tone calm and non-promotional.";
@@ -84,7 +90,7 @@ export function simulateProposal(client: Client, proposal: string): SimulationRe
     objections.push("Wants to understand why now, and what it changes about their long-term plan.");
 
   // trajectory: trust & alignment over the next 3 quarters under this proposal
-  const base = 60 + Math.round(affinity("defensive") * 10);
+  const base = 60 + Math.round(affinity("geographic-anchoring") * 10);
   const dir = acceptance > 0.5 ? 1 : -1;
   const mag = Math.round((Math.abs(acceptance - 0.5) * 2) * 18);
   const trajectory = [

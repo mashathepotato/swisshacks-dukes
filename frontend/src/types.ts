@@ -1,12 +1,18 @@
 export type Mandate = "Defensive" | "Balanced" | "Growth";
 
+// The client value-axes (news-test VALUE_KEYS in values.mjs). One vocabulary for
+// client DNA, hand-authored news themes, simulate and learning. Pipeline articles
+// are tagged with news-themes and bridged onto these via scoreValues.
 export type ThemeId =
+  | "personal-cause"
+  | "geographic-anchoring"
+  | "us-exposure"
   | "environmental"
-  | "us_tech_bullish"
-  | "defensive"
-  | "income"
-  | "reputation"
-  | "healthcare";
+  | "social-ethics"
+  | "reputation-sensitivity"
+  | "philanthropy"
+  | "military-defence"
+  | "confidentiality";
 
 export interface Theme {
   id: ThemeId;
@@ -17,10 +23,14 @@ export interface Theme {
   color: string;
 }
 
-/** How strongly a client aligns with a value theme (0..1). */
+/**
+ * How strongly a client holds a value-axis (0..1). `polarity` encodes the
+ * direction for bipolar/slot axes: +1 = seek it, -1 = avoid it (default +1).
+ */
 export interface ValueAffinity {
   theme: ThemeId;
   weight: number;
+  polarity?: 1 | -1;
 }
 
 export type SignalType =
