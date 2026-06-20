@@ -247,9 +247,7 @@ function OverlapDetail({
               {a.polarity === -1 ? " (avoid)" : ""}
             </span>
             {match ? (
-              <span className="cnews-axis-math">
-                {match.articleScore.toFixed(2)} × {a.weight.toFixed(2)} = <b>{match.contribution.toFixed(2)}</b>
-              </span>
+              <span className="cnews-axis-math">touched</span>
             ) : (
               <span className="cnews-axis-math none">not touched</span>
             )}
