@@ -21,6 +21,17 @@
     .engine { font-size: 11.5px; font-weight: 700; padding: 3px 9px; border-radius: 6px; border: 1px solid; }
     .engine.phoeniqs { color: var(--direct); border-color: var(--direct); }
     .engine.heuristic, .engine.heuristic-fallback { color: var(--indirect); border-color: var(--indirect); }
+    /* Live health check: a green badge whose dot fades in/out as a heartbeat. */
+    .live { display: none; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 700;
+            padding: 3px 9px; border-radius: 6px; border: 1px solid var(--pos); color: var(--pos);
+            text-transform: uppercase; letter-spacing: .04em; opacity: 0; transition: opacity .5s ease; }
+    .live.show { display: inline-flex; opacity: 1; }
+    .live .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pos);
+                 box-shadow: 0 0 6px var(--pos); animation: livePulse 1.6s ease-in-out infinite; }
+    .live.offline { color: var(--none); border-color: var(--none); }
+    .live.offline .dot { background: var(--none); box-shadow: none; animation: none; }
+    @keyframes livePulse { 0%, 100% { opacity: 1; transform: scale(1); }
+                           50% { opacity: .2; transform: scale(.8); } }
     .controls { display: flex; gap: 8px; margin-left: auto; flex-wrap: wrap; }
     input, select, button { background: var(--panel); color: var(--ink);
       border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; font-size: 14px; }
@@ -96,6 +107,7 @@
 <body>
   <header>
     <h1>News feed <span class="sub">Event Registry · hybrid pipeline</span></h1>
+    <span id="live" class="live"><span class="dot"></span><span id="liveLabel">live</span></span>
     <span id="engine" class="engine">…</span>
     <div class="controls">
       <select id="mode" title="Query mode">
@@ -260,6 +272,20 @@
         engineEl.textContent = e.llmReady ? `Stage 2 · ${e.model}` : `Stage 2 · heuristic`;
         engineEl.className = "engine " + (e.llmReady ? "phoeniqs" : "heuristic");
 
+        // Health check: green pulsing badge when the feed is live.
+        const liveEl = $("live"), liveLabel = $("liveLabel");
+        if (data.offline) {
+          liveEl.className = "live offline show";
+          liveLabel.textContent = "offline";
+          liveEl.title = "Serving a saved fixture — not live.";
+        } else {
+          liveEl.className = "live show";
+          liveLabel.textContent = "live";
+          const updated = data.refreshedAt ? new Date(data.refreshedAt).toLocaleString() : "just now";
+          liveEl.title = `Live Event Registry · last refreshed ${updated}` +
+            (data.cache ? ` (${data.cache})` : "") + " · refreshes on a fixed cadence.";
+        }
+
         funnelEl.innerHTML =
           `<span><b>${data.count}</b> fetched</span>` +
           `<span>→ S1: <b>${data.count - data.stage1Dropped}</b> investment-relevant <span style="opacity:.6">(${data.stage1Dropped} dropped)</span></span>` +
@@ -280,6 +306,10 @@
       } catch (err) {
         funnelEl.textContent = "Request failed: " + err.message;
         funnelEl.classList.add("err");
+        const liveEl = $("live");
+        liveEl.className = "live offline show";
+        $("liveLabel").textContent = "down";
+        liveEl.title = "The news server isn't responding.";
       } finally {
         goEl.disabled = false;
       }
