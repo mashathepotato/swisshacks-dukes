@@ -1,7 +1,10 @@
 import type { Client } from "../types";
+import { PORTFOLIOS } from "./portfolio";
+import { SIX_SERIES } from "./sixPrices";
+import { attachAnomalies } from "../lib/attachAnomalies";
 
 // 4 challenge personas (rich) + synthetic twins (to show scale & clustering).
-export const CLIENTS: Client[] = [
+const BASE_CLIENTS: Client[] = [
   {
     id: "ammann",
     name: "Ammann",
@@ -584,6 +587,11 @@ export const CLIENTS: Client[] = [
     { theme: "personal-cause", weight: 0.3 },
   ], 28, "No active signal."),
 ];
+
+// Fan SIX-detected market anomalies into the book: each anomalous holding reaches
+// every client whose mandate holds it, scaled by their CHF exposure. This is what
+// makes a fresh market move re-rank the priority queue (see lib/attachAnomalies).
+export const CLIENTS: Client[] = attachAnomalies(BASE_CLIENTS, SIX_SERIES, (m) => PORTFOLIOS[m]);
 
 function syn(
   id: string,
