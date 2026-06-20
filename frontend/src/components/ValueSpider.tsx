@@ -9,7 +9,7 @@ import type { ValueScore } from "../data/newsFeed";
 export function ValueSpider({
   values,
   overlay,
-  overlayColor = "#d69e2e",
+  overlayColor = "#3a5a8c",
   size = 280,
 }: {
   values: ValueScore[];
@@ -31,17 +31,17 @@ export function ValueSpider({
   return (
     <svg viewBox={`0 0 ${size} ${size}`} width="100%" height={size} style={{ display: "block" }}>
       {[0.5, 1].map((f) => (
-        <polygon key={f} points={ring(f)} fill="none" stroke="#232c3d" strokeWidth={1} />
+        <polygon key={f} points={ring(f)} fill="none" stroke="#d7d4cc" strokeWidth={1} />
       ))}
       {values.map((_, i) => {
         const [x, y] = pt(i, R);
-        return <line key={i} x1={c} y1={c} x2={x} y2={y} stroke="#1b2331" strokeWidth={1} />;
+        return <line key={i} x1={c} y1={c} x2={x} y2={y} stroke="#e7e4dc" strokeWidth={1} />;
       })}
 
       {/* client profile (behind) */}
       {polyOverlay && <polygon points={polyOverlay} fill={overlayColor + "1f"} stroke={overlayColor} strokeWidth={1.6} strokeDasharray="4 3" strokeLinejoin="round" />}
       {/* this story's implicated axes (front) */}
-      <polygon points={poly} fill="#4f8ff733" stroke="#4f8ff7" strokeWidth={2} strokeLinejoin="round" />
+      <polygon points={poly} fill="#de39191f" stroke="#de3919" strokeWidth={2} strokeLinejoin="round" />
 
       {overlay && overlay.map((s, i) => {
         if (s <= 0) return null;
@@ -55,8 +55,8 @@ export function ValueSpider({
         const clientOn = overlay ? overlay[i] > 0 : false;
         return (
           <g key={v.key} style={{ cursor: "default" }} onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}>
-            {on && <circle cx={px} cy={py} r={hover === i ? 4.6 : 3.4} fill="#4f8ff7" />}
-            <text x={lx} y={ly} fill={hover === i ? "#e6edf6" : on || clientOn ? "#cfe0f5" : "#6b7a8f"} fontSize={10.5} textAnchor="middle" dominantBaseline="middle">
+            {on && <circle cx={px} cy={py} r={hover === i ? 4.6 : 3.4} fill="#de3919" />}
+            <text x={lx} y={ly} fill={hover === i ? "#16181d" : on || clientOn ? "#16181d" : "#8c8f97"} fontSize={10.5} textAnchor="middle" dominantBaseline="middle">
               {v.short}
             </text>
             <title>{v.label} · {Math.round(v.score * 100)}%</title>

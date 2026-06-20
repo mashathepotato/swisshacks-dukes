@@ -8,10 +8,10 @@ export type CommLength = "brief" | "standard" | "detailed";
 export interface CommPref { channel: CommChannel; length: CommLength; }
 
 export const CHANNEL_META: Record<CommChannel, { label: string; icon: string }> = {
-  email: { label: "Email", icon: "✉️" },
-  call: { label: "Phone call", icon: "📞" },
-  meeting: { label: "In person", icon: "🤝" },
-  message: { label: "Message", icon: "💬" },
+  email: { label: "Email", icon: "" },
+  call: { label: "Phone call", icon: "" },
+  meeting: { label: "In person", icon: "" },
+  message: { label: "Message", icon: "" },
 };
 export const LENGTH_META: Record<CommLength, { label: string }> = {
   brief: { label: "Brief" },

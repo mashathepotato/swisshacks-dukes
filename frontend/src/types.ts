@@ -17,6 +17,7 @@ export type ThemeId =
 export interface Theme {
   id: ThemeId;
   label: string;
+  /** Short label used for compact chart axes (no emoji — Swiss house style). */
   short: string;
   emoji: string;
   color: string;

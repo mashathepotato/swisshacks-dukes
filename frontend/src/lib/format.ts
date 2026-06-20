@@ -1,8 +1,8 @@
 export function scoreColor(score: number): string {
-  if (score >= 80) return "#e53e3e";
-  if (score >= 65) return "#dd6b20";
-  if (score >= 45) return "#d69e2e";
-  return "#4a7a52";
+  if (score >= 80) return "#c0271a";
+  if (score >= 65) return "#a85a1c";
+  if (score >= 45) return "#94680a";
+  return "#1f7a4d";
 }
 
 /** Compact CHF figure: 3_200_000 → "CHF 3.2M", 640_000 → "CHF 640k". */
@@ -27,9 +27,9 @@ export function relativeTime(dateStr: string): string {
 }
 
 export const SIGNAL_META: Record<string, { label: string; color: string }> = {
-  value_conflict: { label: "Value conflict", color: "#e53e3e" },
-  reputational: { label: "Reputational", color: "#dd6b20" },
-  mandate_drift: { label: "Mandate drift", color: "#d69e2e" },
-  opportunity: { label: "Opportunity", color: "#38a169" },
-  exposure: { label: "Exposure", color: "#4f8ff7" },
+  value_conflict: { label: "Value conflict", color: "#c0271a" },
+  reputational: { label: "Reputational", color: "#a85a1c" },
+  mandate_drift: { label: "Mandate drift", color: "#94680a" },
+  opportunity: { label: "Opportunity", color: "#1f7a4d" },
+  exposure: { label: "Exposure", color: "#3a5a8c" },
 };
