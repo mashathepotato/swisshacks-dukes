@@ -20,6 +20,14 @@ export interface Stage2Verdict {
   reason: string;
   engine: string;
 }
+// One entry per client value-axis (from news-test/values.mjs scoreValues).
+export interface ValueScore {
+  key: string;
+  label: string;
+  short: string;
+  overlap: number;
+  score: number;   // 0..1 — share of the axis's themes the article hits
+}
 export interface FeedArticle {
   id: string;
   title: string;
@@ -32,6 +40,8 @@ export interface FeedArticle {
   stage2: Stage2Verdict | null;
   selected: boolean;
   affectedHoldings: AffectedHolding[];
+  values: ValueScore[];
+  importance: number;
 }
 export interface NewsFeedData {
   generatedAt: string;

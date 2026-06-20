@@ -14,6 +14,7 @@ import { dirname, join } from "node:path";
 import { investmentRelevance, orgsOf, centralOrgsOf, THEME_KEYS } from "./classify.mjs";
 import { assessBatch, assessorInfo } from "./assessor.mjs";
 import { matchArticle } from "./holdings.mjs";
+import { scoreValues } from "./values.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const OUT = join(__dirname, "..", "frontend", "src", "data", "newsFeed.json");
@@ -79,10 +80,18 @@ async function main() {
   // STAGE 3 — instruments, and assemble the lean output
   const out = articles.map((a) => {
     const meta = { id: a.id, title: a.title, source: a.source, date: a.date, url: a.url, sentiment: a.sentiment, summary: a.summary };
-    if (!a.stage1.relevant) return { ...meta, stage1: a.stage1, stage2: null, selected: false, affectedHoldings: [] };
+    if (!a.stage1.relevant) return { ...meta, stage1: a.stage1, stage2: null, selected: false, affectedHoldings: [], values: [], importance: 0 };
     const v = verdicts.get(a.id) || { themes: [], marketMovement: false, confidence: 0, reason: "no verdict", engine: "none" };
     const selected = v.themes.length > 0 || v.marketMovement;
-    return { ...meta, stage1: a.stage1, stage2: v, selected, affectedHoldings: selected ? a.holdings : [] };
+    const values = scoreValues(v.themes);
+    const holdings = selected ? a.holdings : [];
+    // Importance = portfolio exposure first, then how many client values it
+    // touches, market-movement weight, theme breadth, confidence as tiebreak.
+    const valuesTouched = values.filter((x) => x.score > 0).length;
+    const importance = selected
+      ? holdings.length * 3 + valuesTouched * 2 + (v.marketMovement ? 2 : 0) + v.themes.length + (v.confidence || 0)
+      : 0;
+    return { ...meta, stage1: a.stage1, stage2: v, selected, affectedHoldings: holdings, values, importance };
   });
 
   const feed = {

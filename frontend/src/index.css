@@ -681,3 +681,20 @@ button { font-family: inherit; cursor: pointer; }
 .nf-head-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex: none; }
 .news-head-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .news-head-row h1 { margin: 0; }
+
+/* ---- News desk: importance rank + value spider modal ---- */
+.nf-card.clickable { cursor: pointer; }
+.nf-card.clickable:hover { border-color: #2b3c5e; }
+.nf-rank { font-size: 11px; font-weight: 800; color: var(--accent); background: var(--accent-soft); border: 1px solid #2b3c5e; border-radius: 6px; padding: 1px 7px; }
+.nf-clickhint { margin-top: 9px; font-size: 11px; color: var(--text-faint); }
+.nf-card.clickable:hover .nf-clickhint { color: var(--accent); }
+
+.nf-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: flex; align-items: flex-start; justify-content: center; z-index: 60; padding: 40px 16px; overflow-y: auto; }
+.nf-modal { position: relative; background: var(--panel); border: 1px solid var(--border); border-radius: 14px; width: 100%; max-width: 460px; padding: 22px 24px 22px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+.nf-x { position: absolute; top: 12px; right: 12px; background: transparent; border: none; color: var(--text-faint); font-size: 16px; cursor: pointer; padding: 4px 8px; border-radius: 6px; }
+.nf-x:hover { color: var(--text); background: var(--panel-2); }
+.nf-m-title { display: block; color: var(--text); text-decoration: none; font-weight: 700; font-size: 16px; line-height: 1.35; margin: 6px 0; }
+.nf-m-title:hover { color: var(--accent); }
+.nf-m-section { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--text-faint); font-weight: 700; margin: 16px 0 4px; }
+.nf-vchips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; justify-content: center; }
+.nf-vchip { font-size: 11px; padding: 3px 9px; border-radius: 999px; background: var(--accent-soft); color: #cfe0f5; border: 1px solid #2b3c5e; font-weight: 600; }

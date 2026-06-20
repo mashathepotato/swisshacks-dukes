@@ -3,6 +3,7 @@ import { NEWS_FEED } from "../data/newsFeed";
 import type { FeedArticle } from "../data/newsFeed";
 import { NewsViewToggle } from "./NewsViewToggle";
 import type { NewsView } from "./NewsViewToggle";
+import { ValueSpider } from "./ValueSpider";
 
 const TYPE_LABEL: Record<string, string> = {
   equity: "equity", bond: "bond", "real-estate": "real estate", alternative: "alt", other: "other",
@@ -23,11 +24,13 @@ export function NewsFeed({ view, onView }: { view: NewsView; onView: (v: NewsVie
   const feed = NEWS_FEED;
   const [marketOnly, setMarketOnly] = useState(false);
   const [theme, setTheme] = useState<string | null>(null);
+  const [open, setOpen] = useState<FeedArticle | null>(null);
 
   const selected = useMemo(
     () => feed.articles
       .filter((a) => a.selected && matchesTheme(a, theme))
       .sort((a, b) =>
+        (b.importance - a.importance) ||
         (b.affectedHoldings.length - a.affectedHoldings.length) ||
         ((b.stage2?.confidence || 0) - (a.stage2?.confidence || 0))),
     [feed, theme],
@@ -45,7 +48,7 @@ export function NewsFeed({ view, onView }: { view: NewsView; onView: (v: NewsVie
       <div className="nf-head">
         <div>
           <h1>News desk</h1>
-          <p className="lead">Every headline, filtered for investment relevance — drops the noise, themes the survivors, and labels the instruments each story touches.</p>
+          <p className="lead">Every headline, filtered for investment relevance — drops the noise, themes the survivors, ranks by portfolio exposure &amp; client values, and labels the instruments each story touches.</p>
         </div>
         <div className="nf-head-right">
           <NewsViewToggle view={view} onView={onView} />
@@ -84,12 +87,14 @@ export function NewsFeed({ view, onView }: { view: NewsView; onView: (v: NewsVie
 
         <section className="nf-col">
           <div className="nf-colhead"><h2>Market-relevant · <span className="n">{selected.length}</span></h2></div>
-          <p className="nf-hint">Survivors with their themes, confidence and the specific holdings affected (by ISIN).</p>
+          <p className="nf-hint">Ranked by importance (portfolio exposure + client values touched). Click a story for its value spider.</p>
           {selected.length
-            ? selected.map((a) => <SelectedCard key={a.id} a={a} />)
+            ? selected.map((a, i) => <SelectedCard key={a.id} a={a} rank={i + 1} onOpen={() => setOpen(a)} />)
             : <p className="nf-empty">No themed / market-moving articles{theme ? ` for “${theme}”` : ""}.</p>}
         </section>
       </div>
+
+      {open && <NewsArticleModal a={open} onClose={() => setOpen(null)} />}
     </div>
   );
 }
@@ -109,16 +114,18 @@ function IncomingCard({ a }: { a: FeedArticle }) {
   );
 }
 
-function SelectedCard({ a }: { a: FeedArticle }) {
+function SelectedCard({ a, rank, onOpen }: { a: FeedArticle; rank: number; onOpen: () => void }) {
   const v = a.stage2!;
   const pct = Math.round((v.confidence || 0) * 100);
+  const touched = a.values.filter((x) => x.score > 0).length;
   return (
-    <div className="nf-card sel-card">
+    <div className="nf-card sel-card clickable" onClick={onOpen}>
       <div className="nf-meta">
+        <span className="nf-rank">#{rank}</span>
         <span className="nf-conf">conf <span className="nf-bar"><i style={{ width: pct + "%" }} /></span> {pct}%</span>
         <span className="nf-src">{a.source} · {fmtDate(a.date)}</span>
       </div>
-      <a className="nf-title" href={a.url} target="_blank" rel="noopener">{a.title}</a>
+      <a className="nf-title" href={a.url} target="_blank" rel="noopener" onClick={(ev) => ev.stopPropagation()}>{a.title}</a>
       {v.reason && <div className="nf-why">▸ {v.reason}</div>}
       <div className="nf-chips">
         {v.marketMovement && <span className="nf-theme mkt">market-movement</span>}
@@ -139,6 +146,50 @@ function SelectedCard({ a }: { a: FeedArticle }) {
       ) : (
         <div className="nf-nohold">No specific holding matched — broad / market-level signal.</div>
       )}
+      <div className="nf-clickhint">▾ {touched ? `${touched} client value${touched === 1 ? "" : "s"} implicated` : "value spider"} · click</div>
+    </div>
+  );
+}
+
+function NewsArticleModal({ a, onClose }: { a: FeedArticle; onClose: () => void }) {
+  const v = a.stage2;
+  const touched = a.values.filter((x) => x.score > 0).sort((x, y) => y.score - x.score);
+  return (
+    <div className="nf-overlay" onClick={onClose}>
+      <div className="nf-modal" onClick={(e) => e.stopPropagation()}>
+        <button className="nf-x" onClick={onClose}>✕</button>
+        <div className="nf-src">{a.source} · {fmtDate(a.date)}</div>
+        <a className="nf-m-title" href={a.url} target="_blank" rel="noopener">{a.title}</a>
+        {v?.reason && <div className="nf-why">▸ {v.reason}</div>}
+        <div className="nf-chips" style={{ marginTop: 8 }}>
+          {v?.marketMovement && <span className="nf-theme mkt">market-movement</span>}
+          {(v?.themes ?? []).filter((t) => t !== "market-movement").map((t) => <span key={t} className="nf-theme">{t}</span>)}
+        </div>
+
+        <div className="nf-m-section">Client values implicated</div>
+        <ValueSpider values={a.values} />
+        {touched.length ? (
+          <div className="nf-vchips">
+            {touched.map((x) => <span key={x.key} className="nf-vchip">{x.short} · {Math.round(x.score * 100)}%</span>)}
+          </div>
+        ) : (
+          <div className="nf-nohold">No client value-axes implicated by this article.</div>
+        )}
+
+        {a.affectedHoldings.length > 0 && (
+          <div className="nf-holds" style={{ marginTop: 14 }}>
+            <div className="nf-holds-lbl">Instruments affected · {a.affectedHoldings.length}</div>
+            {a.affectedHoldings.map((h) => (
+              <div className="nf-hold" key={h.isin}>
+                <span className={"nf-ty " + h.type}>{TYPE_LABEL[h.type] || h.type}</span>
+                <span className="nf-isin">{h.isin}</span>
+                <span className="nf-iss">{h.ticker ? h.ticker + " · " : ""}{h.issuer}</span>
+                <span className="nf-mand">[{h.mandates.join(", ")}]</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
