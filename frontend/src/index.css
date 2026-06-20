@@ -574,7 +574,7 @@ button { font-family: inherit; cursor: pointer; }
 /* sits under the global topbar and fills the rest of the viewport */
 .clientpage {
   flex: 1; display: flex; flex-direction: column; min-height: 0; background: var(--bg);
-  overflow: hidden;
+  overflow-y: auto;
 }
 .cp-rehearse {
   flex: 0 0 auto; white-space: nowrap; background: var(--accent); color: #fff; border: none;
@@ -583,7 +583,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .cp-rehearse:hover { background: #c4310f; }
 .clientpage-inner {
-  flex: 1; overflow-y: auto; padding: 30px 36px 64px; max-width: 1280px;
+  padding: 30px 36px 64px; max-width: 1280px;
   width: 100%; margin: 0 auto;
 }
 .cp-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 36px; }
