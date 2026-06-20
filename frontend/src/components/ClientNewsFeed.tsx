@@ -1,54 +1,88 @@
-import { RANKED_NEWS, newsImpacts } from "../data/news";
-import { scoreColor, SIGNAL_META } from "../lib/format";
-import type { NewsItem } from "../types";
+import { useMemo, useState } from "react";
+import { CLIENTS } from "../data/clients";
+import { NEWS_FEED } from "../data/newsFeed";
+import { THEME_BY_ID } from "../data/themes";
+import { scoreColor } from "../lib/format";
+import { articlesForClient } from "../lib/newsRelevance";
 
-interface Props {
-  selectedId: string | null;
-  onSelect: (news: NewsItem) => void;
+function fmtDate(d: string | null): string {
+  if (!d) return "";
+  try { return new Date(d).toLocaleDateString(undefined, { month: "short", day: "numeric" }); }
+  catch { return d; }
 }
 
-export function ClientNewsFeed({ selectedId, onSelect }: Props) {
-  return (
-    <div className="queue">
-      <h1>Live news — by client impact</h1>
-      <p className="lead">
-        {RANKED_NEWS.length} curated stories · ranked by severity, hardest client hit and reach across your
-        book. Click a story for why it matters and a map of who it touches.
-      </p>
+const PERSONAS = CLIENTS.filter((c) => c.isPersona);
 
-      {RANKED_NEWS.map(({ news, priority }) => {
-        const meta = SIGNAL_META[news.type];
-        const reach = newsImpacts(news).length;
-        return (
-          <div
-            key={news.id}
-            className={"qrow" + (selectedId === news.id ? " selected" : "")}
-            onClick={() => onSelect(news)}
-          >
-            <span
-              className="score-pill"
-              style={{ background: scoreColor(priority) + "22", color: scoreColor(priority) }}
-            >
-              <span className="n">{priority}</span>
+export function ClientNewsFeed() {
+  const [clientId, setClientId] = useState(PERSONAS[0]?.id ?? "");
+  const client = useMemo(() => CLIENTS.find((c) => c.id === clientId) ?? PERSONAS[0], [clientId]);
+
+  const items = useMemo(() => articlesForClient(NEWS_FEED.articles, client), [client]);
+  const peopleTops = useMemo(
+    () => PERSONAS.map((c) => ({ c, top: articlesForClient(NEWS_FEED.articles, c, 1)[0] })),
+    [],
+  );
+
+  return (
+    <div className="cnews">
+      <h1>News by client</h1>
+      <p className="lead">Real headlines from the relevance funnel, scored against each client's own value-axes — the relevance is the overlap, shown component by component, so it's fully traceable.</p>
+
+      <div className="cnews-people">
+        {peopleTops.map(({ c, top }) => (
+          <button key={c.id} className={"cnews-person" + (c.id === clientId ? " on" : "")} onClick={() => setClientId(c.id)}>
+            <span className="nm">{c.name}</span>
+            <span className="md">{c.mandate}{top ? ` · top ${top.rel.score}` : ""}</span>
+          </button>
+        ))}
+      </div>
+
+      <div className="cnews-values">
+        <span className="lbl">{client.name}'s values</span>
+        {client.affinities.map((a) => {
+          const t = THEME_BY_ID[a.theme];
+          return (
+            <span key={a.theme} className="chip theme" style={{ background: t.color }}>
+              {t.emoji} {t.label} · {Math.round(a.weight * 100)}{a.polarity === -1 ? " ⊘" : ""}
             </span>
-            <div className="who" style={{ minWidth: 96 }}>
-              <div className="at" style={{ fontWeight: 700, color: "var(--text)" }}>{news.source}</div>
-              <div className="at">{news.publishedAt}</div>
-            </div>
-            <div className="reason">
-              {meta && (
-                <span className="badge" style={{ background: meta.color + "22", color: meta.color }}>
-                  {meta.label} · sev {news.severity}
-                </span>
-              )}
-              <div style={{ fontWeight: 600, color: "var(--text)" }}>{news.headline}</div>
-              <div className="recs-inline">
-                <span className="r">Affects {reach} client{reach === 1 ? "" : "s"}</span>
+          );
+        })}
+      </div>
+
+      <div className="cnews-list">
+        {items.length ? items.map(({ article, rel }) => (
+          <div className="cnews-card" key={article.id}>
+            <div className="cnews-top">
+              <span className="cnews-score" style={{ background: scoreColor(rel.score) + "22", color: scoreColor(rel.score) }}>{rel.score}</span>
+              <div className="cnews-headwrap">
+                <a className="cnews-title" href={article.url} target="_blank" rel="noopener">{article.title}</a>
+                <div className="cnews-src">{article.source}{article.date ? ` · ${fmtDate(article.date)}` : ""}</div>
               </div>
             </div>
+
+            <div className="cnews-why">
+              {rel.holdingMatches.length > 0 && (
+                <div className="cnews-bit hold">📌 Holds {rel.holdingMatches.map((h) => `${h.issuer} (${h.isin})`).join(", ")}</div>
+              )}
+              {rel.mandateMatch && (
+                <div className="cnews-bit">🗂 {client.mandate} mandate holds an affected instrument</div>
+              )}
+              {rel.valueMatches.map((m) => (
+                <div className="cnews-bit val" key={m.axis}>
+                  <span className="dot" style={{ background: m.color }} />
+                  {m.emoji} {m.label}: story {Math.round(m.articleScore * 100)}% × {client.name} {Math.round(m.clientWeight * 100)}%
+                  {m.polarity === -1 ? " (guards against)" : ""} → <b>{m.contribution.toFixed(2)}</b>
+                </div>
+              ))}
+              {!rel.holdingMatches.length && !rel.mandateMatch && !rel.valueMatches.length && (
+                <div className="cnews-bit">Broad / market-level signal.</div>
+              )}
+            </div>
           </div>
-        );
-      })}
+        )) : (
+          <p className="nf-empty">No funnel stories are relevant to {client.name} right now.</p>
+        )}
+      </div>
     </div>
   );
 }

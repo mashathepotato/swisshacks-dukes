@@ -6,12 +6,10 @@ import { ClientDetail } from "./components/ClientDetail";
 import { ClientPage } from "./components/ClientPage";
 import { NewsFeed } from "./components/NewsFeed";
 import { ClientNewsFeed } from "./components/ClientNewsFeed";
-import { NewsDetail } from "./components/NewsDetail";
 import { NewsViewToggle } from "./components/NewsViewToggle";
 import type { NewsView } from "./components/NewsViewToggle";
 import { RmProfilePanel } from "./components/RmProfilePanel";
-import type { Client, NewsItem } from "./types";
-import { RANKED_NEWS } from "./data/news";
+import type { Client } from "./types";
 import { useRmProfile } from "./lib/rmProfileStore";
 
 type Tab = "priority" | "clients" | "news" | "rehearse";
@@ -20,7 +18,6 @@ export default function App() {
   const [tab, setTab] = useState<Tab>("priority");
   const [selected, setSelected] = useState<Client | null>(null);
   const [newsView, setNewsView] = useState<NewsView>("funnel");
-  const [selectedNews, setSelectedNews] = useState<NewsItem | null>(RANKED_NEWS[0]?.news ?? null);
   const [simFocus, setSimFocus] = useState<string | null>(null);
   // when set, the full client page is shown full-screen over the tabs
   const [fullClient, setFullClient] = useState<Client | null>(null);
@@ -74,15 +71,12 @@ export default function App() {
               <div className="newstab-bar">
                 <NewsViewToggle view={newsView} onView={setNewsView} />
               </div>
-              {newsView === "funnel"
-                ? <NewsFeed />
-                : <ClientNewsFeed selectedId={selectedNews?.id ?? null} onSelect={setSelectedNews} />}
+              {newsView === "funnel" ? <NewsFeed /> : <ClientNewsFeed />}
             </div>
           )}
           {tab === "rehearse" && <Rehearse focusClientId={simFocus} />}
         </div>
         {tab === "priority" && <ClientDetail client={selected} onOpenFull={openFullClient} />}
-        {tab === "news" && newsView === "client" && <NewsDetail news={selectedNews} onOpenClient={openFullClient} />}
       </div>
     </div>
   );
