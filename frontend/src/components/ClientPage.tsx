@@ -4,7 +4,7 @@ import { THEME_BY_ID } from "../data/themes";
 import { SIGNAL_META, formatMoney, relativeTime } from "../lib/format";
 import { REASON_META, EVIDENCE_META, buildReasoningChain } from "../lib/explain";
 import { adjustConfidence, primaryTheme } from "../lib/learning";
-import { PERSONA_PLAY } from "../lib/portfolio";
+import { PORTFOLIOS } from "../data/portfolio";
 import { buildMessage, CHANNEL_META, LENGTH_META } from "../lib/commPrefs";
 import type { CommChannel, CommLength } from "../lib/commPrefs";
 import { useLearning } from "../lib/learningStore";
@@ -12,7 +12,6 @@ import { useDone } from "../lib/doneStore";
 import { useCommPrefs } from "../lib/commPrefStore";
 import { useRmProfile } from "../lib/rmProfileStore";
 import { ValueRadar } from "./ValueRadar";
-import { ComplianceDesk } from "./ComplianceDesk";
 import { ConversationCapture } from "./ConversationCapture";
 import { useConversation } from "../lib/conversationStore";
 
@@ -33,69 +32,29 @@ export function ClientPage({ client, onBack, onSimulate }: Props) {
   const { withDeltas } = useConversation();
   const mergedClient = withDeltas(client);
   const dealt = isDone(mergedClient.id);
+  const [chainOpen, setChainOpen] = useState(false);
+
+  const portfolioValue = PORTFOLIOS[mergedClient.mandate].reduce((s, h) => s + h.currentCHF, 0);
 
   return (
     <div className="clientpage">
       <div className="clientpage-bar">
         <button className="cp-back" onClick={onBack}>← Back</button>
         <div className="cp-bar-title">{mergedClient.name}</div>
+        <button className={"markdone" + (dealt ? " on" : "")} onClick={() => (dealt ? reopen(mergedClient.id) : markDone(mergedClient.id))}>
+          {dealt ? "✓ Completed — reopen" : "✓ Mark as complete"}
+        </button>
       </div>
 
       <div className="clientpage-inner">
         <div className="cp-head">
-          <div>
+          <div className="cp-head-main">
             <h1>{mergedClient.name}</h1>
             <div className="archetype">{mergedClient.archetype}</div>
-          </div>
-          {mergedClient.signals[0] && (() => {
-            const m = SIGNAL_META[mergedClient.signals[0].type];
-            return <span className="cause-pill" style={{ background: m.color + "22", color: m.color }}>{m.label} · severity {mergedClient.signals[0].severity}</span>;
-          })()}
-        </div>
 
-        <p className="why-priority"><b>Why prioritised:</b> {mergedClient.topReason}</p>
-
-        {mergedClient.amountAtStake != null && (
-          <div className="stake-line">
-            <b>{formatMoney(mergedClient.amountAtStake)}</b> at stake
-            {mergedClient.lastMessageAt
-              ? <> · <span className="ago">messaged {relativeTime(mergedClient.lastMessageAt)}</span></>
-              : mergedClient.signals[0]
-              ? <> · <span className="ago">news {relativeTime(mergedClient.signals[0].publishedAt)}</span></>
-              : null}
-          </div>
-        )}
-
-        <div>
-          <button className={"markdone" + (dealt ? " on" : "")} onClick={() => (dealt ? reopen(mergedClient.id) : markDone(mergedClient.id))}>
-            {dealt ? "✓ Completed — reopen" : "✓ Mark as complete"}
-          </button>
-        </div>
-
-        <div className="cp-grid">
-          <div className="cp-col">
-            <ReasoningChain key={"reason-" + mergedClient.id} client={mergedClient} />
-
-            <div className="section-title">Value vector</div>
-            <ValueRadar client={mergedClient} />
-            <div className="chips" style={{ marginTop: 4 }}>
-              {mergedClient.affinities
-                .filter((a) => a.weight > 0)
-                .sort((a, b) => b.weight - a.weight)
-                .map((a) => {
-                  const t = THEME_BY_ID[a.theme];
-                  return (
-                    <span key={a.theme} className="chip theme" style={{ background: t.color }}>
-                      {t.emoji} {t.label} · {Math.round(a.weight * 100)}
-                    </span>
-                  );
-                })}
+            <div className="cp-pval">
+              <b>{formatMoney(portfolioValue)}</b> portfolio value · {mergedClient.mandate} mandate
             </div>
-
-            <div className="kv"><span className="k">Mandate</span><span>{mergedClient.mandate}</span></div>
-            <div className="kv"><span className="k">Risk</span><span>{mergedClient.riskProfile}</span></div>
-            <div className="kv"><span className="k">Tenure</span><span>{mergedClient.tenureYears} yrs</span></div>
-            <div className="kv"><span className="k">Style</span><span>{mergedClient.commStyle}</span></div>
 
             {mergedClient.values.length > 0 && (
               <>
@@ -107,9 +66,28 @@ export function ClientPage({ client, onBack, onSimulate }: Props) {
               </>
             )}
 
+            <div className="section-title">Specific requests</div>
+            <div className="cp-requests">
+              <div className="kv"><span className="k">Comm style</span><span>{mergedClient.commStyle}</span></div>
+              <div className="kv"><span className="k">Risk</span><span>{mergedClient.riskProfile}</span></div>
+              <div className="kv"><span className="k">Tenure</span><span>{mergedClient.tenureYears} yrs</span></div>
+              {mergedClient.lastMessageAt && (
+                <div className="kv"><span className="k">Last contact</span><span>{relativeTime(mergedClient.lastMessageAt)}</span></div>
+              )}
+            </div>
+          </div>
+
+          <div className="cp-head-radar">
+            <ValueRadar client={mergedClient} />
+          </div>
+        </div>
+
+        <div className="cp-grid">
+          {/* Left: the priority story — what happened → (why) → suggested action → next step */}
+          <div className="cp-col">
             {mergedClient.signals.length > 0 && (
               <>
-                <div className="section-title">Why now — signals</div>
+                <div className="section-title">What happened</div>
                 {mergedClient.signals.map((s) => {
                   const meta = SIGNAL_META[s.type];
                   return (
@@ -128,16 +106,21 @@ export function ClientPage({ client, onBack, onSimulate }: Props) {
                 })}
               </>
             )}
-          </div>
 
-          <div className="cp-col">
-            <LearningPanel client={mergedClient} />
+            <button
+              className={"flow-arrow" + (chainOpen ? " open" : "")}
+              onClick={() => setChainOpen((o) => !o)}
+              aria-expanded={chainOpen}
+            >
+              <span className="flow-arrow-glyph">↓</span>
+              <span className="flow-arrow-label">
+                {chainOpen ? "Hide the reasoning" : "Why this leads to the action — see the full thought process"}
+              </span>
+            </button>
+
+            {chainOpen && <ReasoningChain key={"reason-" + mergedClient.id} client={mergedClient} />}
 
             <Recommendations key={"rec-" + mergedClient.id} client={mergedClient} />
-
-            {PERSONA_PLAY[mergedClient.id] && <ComplianceDesk key={"cdesk-" + mergedClient.id} client={mergedClient} />}
-
-            <ConversationCapture client={mergedClient} />
 
             <DraftMessage key={"draft-" + mergedClient.id} client={mergedClient} />
 
@@ -153,6 +136,13 @@ export function ClientPage({ client, onBack, onSimulate }: Props) {
               </button>
             )}
           </div>
+
+          {/* Right: general info + tools for the relationship */}
+          <div className="cp-col">
+            <LearningPanel client={mergedClient} />
+
+            <ConversationCapture client={mergedClient} />
+          </div>
         </div>
       </div>
     </div>
@@ -167,14 +157,7 @@ function ReasoningChain({ client }: { client: Client }) {
 
   return (
     <>
-      <div className="section-title" style={{ marginTop: 16 }}>
-        Why this priority — reasoning chain
-      </div>
-      <p className="thread-intro">
-        How a combination of factors and a sequence of events led to this ranking. Expand any step to see the
-        direct evidence behind it.
-      </p>
-      <div className="thread">
+      <div className="thread" style={{ marginTop: 16 }}>
         {chain.map((step, i) => {
           const meta = REASON_META[step.kind];
           const ev = step.evidence ?? [];
@@ -321,7 +304,7 @@ function Recommendations({ client }: { client: Client }) {
 
   return (
     <>
-      <div className="section-title">Recommendations</div>
+      <div className="section-title">Actions</div>
       {client.recommendations.map((r) => {
         const adj = adjustConfidence(r.confidence, model, theme);
         const base = Math.round(r.confidence * 100);
@@ -420,7 +403,7 @@ function DraftMessage({ client }: { client: Client }) {
 
   return (
     <>
-      <div className="section-title">Proposed message · next step</div>
+      <div className="section-title">Next step</div>
       <div className="draft">
         {/* communication preference: how this client wants to hear from us */}
         <div className="pref-block">
