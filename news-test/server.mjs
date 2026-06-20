@@ -152,7 +152,7 @@ async function handleNews(url, res) {
 function readJson(req) {
   return new Promise((resolve, reject) => {
     let buf = "";
-    req.on("data", (c) => { buf += c; if (buf.length > 1e6) reject(new Error("body too large")); });
+    req.on("data", (c) => { buf += c; if (buf.length > 1e6) { reject(new Error("body too large")); req.destroy(); } });
     req.on("end", () => { try { resolve(buf ? JSON.parse(buf) : {}); } catch (e) { reject(e); } });
     req.on("error", reject);
   });

@@ -2,12 +2,14 @@ import { useState } from "react";
 import type { Client, ConsentRecord, DistillResult, AffinityDelta } from "../types";
 import { useRecorder } from "../lib/useRecorder";
 import { useConversation } from "../lib/conversationStore";
+import { useRmProfile } from "../lib/rmProfileStore";
 
 type Phase = "consent" | "record" | "review";
 
 export function ConversationCapture({ client }: { client: Client }) {
   const rec = useRecorder();
   const { commit } = useConversation();
+  const { profile } = useRmProfile();
   const [phase, setPhase] = useState<Phase>("consent");
   const [consent, setConsent] = useState<ConsentRecord | null>(null);
   const [result, setResult] = useState<DistillResult | null>(null);
@@ -19,7 +21,7 @@ export function ConversationCapture({ client }: { client: Client }) {
   function giveConsent(method: "verbal" | "written") {
     setConsent({
       clientId: client.id,
-      rmName: "T. Keller",
+      rmName: profile.name,
       method,
       timestamp: new Date().toISOString(),
     });
@@ -64,7 +66,7 @@ export function ConversationCapture({ client }: { client: Client }) {
       affinities: result.dnaDeltas.affinities.filter((a: AffinityDelta) => accepted[`a:${a.theme}`]),
     };
     commit(client.id, deltas, { ...result.note, text: noteText }, result.receipts);
-    setPhase("consent"); setConsent(null); setResult(null); rec.reset();
+    setPhase("consent"); setConsent(null); setResult(null); rec.stop(); rec.reset();
   }
 
   return (
@@ -93,6 +95,7 @@ export function ConversationCapture({ client }: { client: Client }) {
           <textarea
             value={rec.transcript + (rec.interim ? " " + rec.interim : "")}
             onChange={(e) => rec.setTranscript(e.target.value)}
+            readOnly={rec.recording}
             rows={6}
             style={{ width: "100%", marginTop: 8 }}
             placeholder="Live transcript appears here… (or paste one)"
@@ -119,15 +122,18 @@ export function ConversationCapture({ client }: { client: Client }) {
             {result.dnaDeltas.dislikes.map((d) => (
               <li key={`d:${d}`}><label><input type="checkbox" checked={!!accepted[`d:${d}`]} onChange={(e) => setAccepted((p) => ({ ...p, [`d:${d}`]: e.target.checked }))} /> Dislike: {d}</label></li>
             ))}
-            {result.dnaDeltas.affinities.map((a) => (
-              <li key={`a:${a.theme}`}><label><input type="checkbox" checked={!!accepted[`a:${a.theme}`]} onChange={(e) => setAccepted((p) => ({ ...p, [`a:${a.theme}`]: e.target.checked }))} /> Affinity: {a.theme} → {a.toWeight.toFixed(2)}</label></li>
-            ))}
+            {result.dnaDeltas.affinities.map((a) => {
+              const cur = client.affinities.find((x) => x.theme === a.theme)?.weight ?? 0;
+              return (
+                <li key={`a:${a.theme}`}><label><input type="checkbox" checked={!!accepted[`a:${a.theme}`]} onChange={(e) => setAccepted((p) => ({ ...p, [`a:${a.theme}`]: e.target.checked }))} /> Affinity: {a.theme}: {cur.toFixed(2)} → {a.toWeight.toFixed(2)}</label></li>
+              );
+            })}
           </ul>
 
           <h4>Quote receipts</h4>
           <ul>
             {result.receipts.map((r, i) => (
-              <li key={i} style={{ fontSize: 13, opacity: 0.85 }}>"{r.quote}" <span style={{ opacity: 0.6 }}>— {r.sourceId}</span></li>
+              <li key={r.sourceId + ":" + i} style={{ fontSize: 13, opacity: 0.85 }}>"{r.quote}" <span style={{ opacity: 0.6 }}>— {r.sourceId}</span></li>
             ))}
           </ul>
 
