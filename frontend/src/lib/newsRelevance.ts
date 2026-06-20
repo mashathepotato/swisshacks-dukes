@@ -18,10 +18,9 @@ export interface ValueMatch {
   label: string;
   emoji: string;
   color: string;
-  articleScore: number;   // 0..1 — how strongly the story implicates this axis
-  clientWeight: number;   // 0..1 — the client's conviction on it
+  clientWeight: number;   // 0..1 — the client's conviction on this axis
   polarity: 1 | -1;       // -1 = the client guards against this axis
-  contribution: number;   // articleScore × clientWeight
+  contribution: number;   // = the client's conviction (the story touches the axis; it contributes their conviction)
 }
 export interface HoldingMatch { issuer: string; isins: string[]; }
 export type ReasonKind = "holding" | "value" | "mandate";
@@ -49,10 +48,9 @@ export function relevance(article: FeedArticle, client: Client): Relevance {
       label: t?.label ?? v.label,
       emoji: t?.emoji ?? "",
       color: t?.color ?? "#888",
-      articleScore: v.score,
       clientWeight: aff.weight,
       polarity: aff.polarity ?? 1,
-      contribution: v.score * aff.weight,
+      contribution: aff.weight,
     });
   }
   valueMatches.sort((a, b) => b.contribution - a.contribution);
@@ -82,7 +80,7 @@ export function relevance(article: FeedArticle, client: Client): Relevance {
     reasons.push({
       kind: "value",
       icon: m.emoji,
-      text: `${m.polarity === -1 ? "Guards against" : "Values"} ${m.label} — story ${Math.round(m.articleScore * 100)}% × their ${Math.round(m.clientWeight * 100)}% conviction`,
+      text: `${m.polarity === -1 ? "Guards against" : "Values"} ${m.label} (their ${Math.round(m.clientWeight * 100)}% conviction)`,
     });
   }
   if (mandateMatch) reasons.push({ kind: "mandate", icon: "🗂", text: `Their ${client.mandate} mandate holds an affected instrument` });
@@ -94,19 +92,17 @@ export function hasRelevance(r: Relevance): boolean {
   return r.holdings.length > 0 || r.valueMatches.length > 0 || r.mandateMatch;
 }
 
-// Ordering key (internal — never shown). Value overlap leads; a held instrument
-// is a meaningful boost; mandate a small one. So a story that touches a core
-// value outranks an incidental dividend on a name the client merely holds.
-function order(r: Relevance): number {
-  return r.valueScore + (r.holdings.length ? 0.8 : 0) + (r.mandateMatch ? 0.2 : 0);
-}
-
-/** Funnel articles relevant to one client, ordered value-first. */
+/** Funnel articles relevant to one client, sorted by total value overlap (desc).
+ *  Ties break to held instruments, then mandate, so holdings-only stories still
+ *  surface — below anything that touches the client's values. */
 export function articlesForClient(articles: FeedArticle[], client: Client, limit = 14) {
   return articles
     .filter((a) => a.selected)
     .map((a) => ({ article: a, rel: relevance(a, client) }))
     .filter((x) => hasRelevance(x.rel))
-    .sort((a, b) => order(b.rel) - order(a.rel))
+    .sort((a, b) =>
+      (b.rel.valueScore - a.rel.valueScore) ||
+      (b.rel.holdings.length - a.rel.holdings.length) ||
+      ((b.rel.mandateMatch ? 1 : 0) - (a.rel.mandateMatch ? 1 : 0)))
     .slice(0, limit);
 }

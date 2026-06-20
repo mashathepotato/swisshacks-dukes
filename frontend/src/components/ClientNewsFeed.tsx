@@ -127,7 +127,7 @@ function OverlapDetail({ article, rel, client }: { article: FeedArticle; rel: Re
           <div className={"cnews-axis" + (match ? " hit" : "")} key={a.theme}>
             <span className="cnews-axis-name"><span className="dot" style={{ background: t.color }} />{t.emoji} {t.label}{a.polarity === -1 ? " ⊘" : ""}</span>
             {match ? (
-              <span className="cnews-axis-math">story {Math.round(match.articleScore * 100)}% × {Math.round(a.weight * 100)}% → <b>{match.contribution.toFixed(2)}</b></span>
+              <span className="cnews-axis-math">touched · conviction <b>{a.weight.toFixed(2)}</b></span>
             ) : (
               <span className="cnews-axis-math none">not touched</span>
             )}
@@ -140,6 +140,7 @@ function OverlapDetail({ article, rel, client }: { article: FeedArticle; rel: Re
           </div>
         )}
       </div>
+      <p className="cnews-overlap-cap" style={{ textAlign: "left", marginTop: 8 }}>Each value the story touches contributes the client's conviction on it (0–1); the total is their overlap.</p>
     </div>
   );
 }
