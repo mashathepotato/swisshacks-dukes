@@ -24,7 +24,7 @@ export interface ValueMatch {
 }
 export interface HoldingMatch { issuer: string; isins: string[]; }
 export type ReasonKind = "holding" | "value" | "mandate";
-export interface Reason { kind: ReasonKind; icon: string; text: string; }
+export interface Reason { kind: ReasonKind; text: string; }
 
 export interface Relevance {
   holdings: HoldingMatch[];      // unique issuers the story affects that the client holds
@@ -78,16 +78,15 @@ export function relevance(article: FeedArticle, client: Client): Relevance {
   // 4. the reasons — concrete, ordered holdings → values → mandate
   const reasons: Reason[] = [];
   for (const h of holdings) {
-    reasons.push({ kind: "holding", icon: "📌", text: `Holds ${h.issuer}${h.isins.length > 1 ? ` (${h.isins.length} instruments)` : ""}` });
+    reasons.push({ kind: "holding", text: `Holds ${h.issuer}${h.isins.length > 1 ? ` (${h.isins.length} instruments)` : ""}` });
   }
   for (const m of valueMatches) {
     reasons.push({
       kind: "value",
-      icon: m.emoji,
       text: `${m.polarity === -1 ? "Guards against" : "Values"} ${m.label} (their ${Math.round(m.clientWeight * 100)}% conviction)`,
     });
   }
-  if (mandateMatch) reasons.push({ kind: "mandate", icon: "🗂", text: `Their ${client.mandate} mandate holds an affected instrument` });
+  if (mandateMatch) reasons.push({ kind: "mandate", text: `Their ${client.mandate} mandate holds an affected instrument` });
 
   return { holdings, valueMatches, mandateMatch, valueScore, valueOverlap, reasons };
 }

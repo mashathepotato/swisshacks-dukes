@@ -49,7 +49,7 @@ export function ClientNewsFeed() {
           const t = THEME_BY_ID[a.theme];
           return (
             <span key={a.theme} className="chip theme" style={{ background: t.color }}>
-              {t.emoji} {t.label} · {Math.round(a.weight * 100)}{a.polarity === -1 ? " ⊘" : ""}
+              {t.label} · {Math.round(a.weight * 100)}{a.polarity === -1 ? " (avoid)" : ""}
             </span>
           );
         })}
@@ -65,13 +65,13 @@ export function ClientNewsFeed() {
             >
               <span className="cnews-rowtitle">{article.title}</span>
               <span className="cnews-rowtags">
-                {rel.holdings[0] && <span className="cnews-tag hold">📌 {rel.holdings[0].issuer}</span>}
+                {rel.holdings[0] && <span className="cnews-tag hold">Holds {rel.holdings[0].issuer}</span>}
                 {rel.valueMatches[0] && (
                   <span className="cnews-tag val" style={{ borderColor: rel.valueMatches[0].color }}>
-                    {rel.valueMatches[0].emoji} {rel.valueMatches[0].label}
+                    {rel.valueMatches[0].label}
                   </span>
                 )}
-                {!rel.holdings.length && !rel.valueMatches.length && rel.mandateMatch && <span className="cnews-tag">🗂 Mandate</span>}
+                {!rel.holdings.length && !rel.valueMatches.length && rel.mandateMatch && <span className="cnews-tag">Mandate</span>}
               </span>
               <span className="cnews-src">{article.source}{article.date ? ` · ${fmtDate(article.date)}` : ""}</span>
             </button>
@@ -109,7 +109,7 @@ function OverlapDetail({ article, rel, client }: { article: FeedArticle; rel: Re
       <div className="cnews-sec">Why it's relevant to {client.name}</div>
       <div className="cnews-reasons">
         {rel.reasons.map((r, i) => (
-          <div className={"cnews-reason " + r.kind} key={i}><span className="ic">{r.icon}</span> {r.text}</div>
+          <div className={"cnews-reason " + r.kind} key={i}>{r.text}</div>
         ))}
         {!rel.reasons.length && <div className="cnews-reason">Broad / market-level signal — no direct holding or value link.</div>}
       </div>
@@ -125,7 +125,7 @@ function OverlapDetail({ article, rel, client }: { article: FeedArticle; rel: Re
       <div className="cnews-axes">
         {axes.map(({ a, t, match }) => (
           <div className={"cnews-axis" + (match ? " hit" : "")} key={a.theme}>
-            <span className="cnews-axis-name"><span className="dot" style={{ background: t.color }} />{t.emoji} {t.label}{a.polarity === -1 ? " ⊘" : ""}</span>
+            <span className="cnews-axis-name"><span className="dot" style={{ background: t.color }} />{t.label}{a.polarity === -1 ? " (avoid)" : ""}</span>
             {match ? (
               <span className="cnews-axis-math">touched · conviction <b>{a.weight.toFixed(2)}</b></span>
             ) : (
