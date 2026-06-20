@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>News feed — hybrid relevance pipeline</title>
+  <style>
+    :root {
+      --bg: #0f141c; --panel: #161d28; --line: #232c3d;
+      --ink: #e6edf5; --muted: #8b9bb0; --accent: #4f8ff7;
+      --direct: #2f9e8f; --indirect: #d9a13b; --none: #4a5568;
+      --pos: #2fa36b; --neg: #d65b5b;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink);
+      font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    header { padding: 16px 24px; border-bottom: 1px solid var(--line);
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    h1 { font-size: 17px; margin: 0; font-weight: 600; }
+    h1 .sub { color: var(--muted); font-weight: 400; font-size: 13px; margin-left: 8px; }
+    .engine { font-size: 11.5px; font-weight: 700; padding: 3px 9px; border-radius: 6px; border: 1px solid; }
+    .engine.phoeniqs { color: var(--direct); border-color: var(--direct); }
+    .engine.heuristic, .engine.heuristic-fallback { color: var(--indirect); border-color: var(--indirect); }
+    .controls { display: flex; gap: 8px; margin-left: auto; flex-wrap: wrap; }
+    input, select, button { background: var(--panel); color: var(--ink);
+      border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; font-size: 14px; }
+    input { width: 230px; }
+    button { background: var(--accent); border-color: var(--accent); color: #fff; cursor: pointer; font-weight: 600; }
+    button:disabled { opacity: .55; cursor: default; }
+
+    .funnel { padding: 10px 24px 0; color: var(--muted); font-size: 13px; display: flex; gap: 14px; flex-wrap: wrap; }
+    .funnel b { color: var(--ink); }
+    .funnel.err { color: var(--neg); }
+
+    .split { display: grid; grid-template-columns: 1fr 1fr; }
+    .col { padding: 14px 22px; min-height: calc(100vh - 150px); }
+    .col.left { border-right: 1px solid var(--line); }
+    .col h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 4px; }
+    .col h2 .n { color: var(--ink); }
+    .hint { color: var(--muted); font-size: 12.5px; margin: 0 0 12px; }
+
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
+    .card.lite { opacity: .5; padding: 9px 12px; }
+    .card.lite.flagged { opacity: 1; }
+    .meta { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
+    .src { color: var(--muted); font-size: 12.5px; }
+    .card a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: 14.5px; }
+    .card a:hover { color: var(--accent); }
+    .body { color: var(--muted); font-size: 13px; margin-top: 5px; }
+
+    .badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 6px; text-transform: uppercase; letter-spacing: .03em; border: 1px solid; }
+    .badge.direct { color: var(--direct); border-color: var(--direct); }
+    .badge.indirect { color: var(--indirect); border-color: var(--indirect); }
+    .badge.none { color: var(--none); border-color: var(--none); }
+    .badge.sel { color: var(--accent); border-color: var(--accent); }
+    .badge.drop { color: var(--none); border-color: var(--none); }
+    .theme { font-size: 11px; padding: 1px 8px; border-radius: 999px; background: #20283a; color: #b9c6d6; border: 1px solid var(--line); }
+    .theme.mkt { background: #243a5e; color: #8fb8f7; border-color: #345; }
+    .theme.none { color: var(--none); }
+
+    .conf { font-size: 11px; color: var(--muted); }
+    .conf .bar { display: inline-block; width: 46px; height: 5px; border-radius: 3px; background: #20283a; vertical-align: middle; overflow: hidden; }
+    .conf .bar > i { display: block; height: 100%; background: var(--accent); }
+    .why { font-size: 12px; color: #b9c6d6; margin-top: 7px; }
+    .affected { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 7px; }
+    .tag { font-size: 11px; padding: 1px 8px; border-radius: 999px; background: #1d2a33; color: #8fd6cb; }
+    .holdings { margin-top: 9px; border-top: 1px solid var(--line); padding-top: 8px; }
+    .holdings .lbl { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 5px; }
+    .hold { display: flex; align-items: center; gap: 8px; font-size: 12px; padding: 3px 0; }
+    .hold .ty { font-size: 9.5px; font-weight: 700; text-transform: uppercase; padding: 1px 6px; border-radius: 4px; }
+    .hold .ty.equity { background: #243a5e; color: #8fb8f7; }
+    .hold .ty.bond { background: #3a3320; color: #d9c07a; }
+    .hold .ty.other, .hold .ty.real-estate, .hold .ty.alternative { background: #2a2a35; color: #b9b0d6; }
+    .hold .isin { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--ink); }
+    .hold .iss { color: var(--muted); }
+    .hold .mand { color: #6b7a8f; font-size: 10.5px; }
+    .nohold { font-size: 11.5px; color: var(--none); margin-top: 8px; font-style: italic; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>News feed <span class="sub">Event Registry · hybrid pipeline</span></h1>
+    <span id="engine" class="engine">…</span>
+    <div class="controls">
+      <select id="mode" title="Query mode">
+        <option value="keyword">Keyword search</option>
+        <option value="business">Business feed</option>
+      </select>
+      <input id="q" placeholder="e.g. oil" value="oil" />
+      <button id="go">Fetch</button>
+    </div>
+  </header>
+
+  <div class="funnel" id="funnel">Ready.</div>
+
+  <div class="split">
+    <section class="col left">
+      <h2>Incoming feed · <span class="n" id="allCount">0</span></h2>
+      <div class="hint">Everything fetched. Greyed = dropped by the cheap noise pre-filter (no LLM spent).</div>
+      <div id="allList"></div>
+    </section>
+    <section class="col right">
+      <h2>Market-relevant · <span class="n" id="flagCount">0</span></h2>
+      <div class="hint">Agent verdict on the survivors: direct market news / potential mover, with confidence &amp; affected sectors.</div>
+      <div id="flagList"></div>
+    </section>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const funnelEl = $("funnel"), modeEl = $("mode"), qEl = $("q"), goEl = $("go"), engineEl = $("engine");
+
+    modeEl.addEventListener("change", () => {
+      qEl.disabled = modeEl.value === "business";
+      qEl.style.opacity = qEl.disabled ? 0.5 : 1;
+    });
+
+    const fmtDate = (d) => { try { return new Date(d).toLocaleString(); } catch { return d || ""; } };
+
+    // Left panel: every fetched article. Greyed = dropped at Stage 1 (not
+    // investment-relevant). Highlighted = selected (passed all stages).
+    function leftCard(a) {
+      const sel = a.selected;
+      return `<div class="card lite ${sel ? "flagged" : ""}"
+                   style="${sel ? "border-left:3px solid var(--accent)" : ""}">
+        <div class="meta">
+          <span class="badge ${sel ? "sel" : "drop"}">${sel ? "selected" : (a.stage1.relevant ? "no theme" : "not invest.")}</span>
+          <span class="src">${a.source} · ${fmtDate(a.date)}</span>
+        </div>
+        <a href="${a.url}" target="_blank" rel="noopener">${a.title}</a>
+      </div>`;
+    }
+
+    // Right panel: selected articles — Stage 2 themes + market-movement, Stage 3 ISINs.
+    function rightCard(a) {
+      const v = a.stage2 || {}, pct = Math.round((v.confidence || 0) * 100);
+      const themeChips =
+        (v.marketMovement ? `<span class="theme mkt">market-movement</span>` : "") +
+        (v.themes || []).filter((t) => t !== "market-movement").map((t) => `<span class="theme">${t}</span>`).join("");
+      const holds = a.affectedHoldings || [];
+      const holdsHtml = holds.length
+        ? `<div class="holdings"><div class="lbl">Stage 3 · instruments affected · ${holds.length}</div>` +
+          holds.map((h) => `
+            <div class="hold">
+              <span class="ty ${h.type}">${h.type}</span>
+              <span class="isin">${h.isin}</span>
+              <span class="iss">${h.ticker ? h.ticker + " · " : ""}${h.issuer}</span>
+              <span class="mand">[${h.mandates.join(", ")}]</span>
+            </div>`).join("") +
+          `</div>`
+        : `<div class="nohold">No specific holding matched — broad / market-level signal.</div>`;
+      return `<div class="card" style="border-left:3px solid var(--accent)">
+        <div class="meta">
+          <span class="conf">conf <span class="bar"><i style="width:${pct}%"></i></span> ${pct}%</span>
+          <span class="src">${a.source} · ${fmtDate(a.date)}</span>
+        </div>
+        <a href="${a.url}" target="_blank" rel="noopener">${a.title}</a>
+        <div class="why">▸ ${v.reason || ""}</div>
+        <div class="affected">${themeChips || '<span class="theme none">untagged</span>'}</div>
+        ${holdsHtml}
+      </div>`;
+    }
+
+    async function fetchNews() {
+      goEl.disabled = true;
+      $("allList").innerHTML = ""; $("flagList").innerHTML = "";
+      funnelEl.textContent = "Stage 1 → 2 → 3…"; funnelEl.classList.remove("err");
+      const params = new URLSearchParams({ mode: modeEl.value, q: qEl.value, count: "30" });
+      try {
+        const res = await fetch("/api/news?" + params);
+        const data = await res.json();
+        if (data.error) {
+          funnelEl.textContent = "Error: " + data.error;
+          funnelEl.classList.add("err");
+          return;
+        }
+        const e = data.engine;
+        engineEl.textContent = e.llmReady ? `Stage 2 · ${e.model}` : `Stage 2 · heuristic`;
+        engineEl.className = "engine " + (e.llmReady ? "phoeniqs" : "heuristic");
+
+        funnelEl.innerHTML =
+          `<span><b>${data.count}</b> fetched</span>` +
+          `<span>→ S1: <b>${data.count - data.stage1Dropped}</b> investment-relevant <span style="opacity:.6">(${data.stage1Dropped} dropped)</span></span>` +
+          `<span>→ S2: <b>${data.flagged}</b> themed/market</span>` +
+          `<span>→ S3: ISINs labelled</span>`;
+
+        $("allCount").textContent = data.count;
+        $("allList").innerHTML = data.articles.map(leftCard).join("");
+
+        const flagged = data.articles
+          .filter((a) => a.selected)
+          .sort((a, b) => (b.affectedHoldings.length - a.affectedHoldings.length) ||
+                          ((b.stage2?.confidence || 0) - (a.stage2?.confidence || 0)));
+        $("flagCount").textContent = flagged.length;
+        $("flagList").innerHTML =
+          flagged.map(rightCard).join("") ||
+          '<div class="hint">No themed/market articles in this batch.</div>';
+      } catch (err) {
+        funnelEl.textContent = "Request failed: " + err.message;
+        funnelEl.classList.add("err");
+      } finally {
+        goEl.disabled = false;
+      }
+    }
+
+    goEl.addEventListener("click", fetchNews);
+    qEl.addEventListener("keydown", (e) => { if (e.key === "Enter") fetchNews(); });
+    fetchNews();
+  </script>
+</body>
+</html>
