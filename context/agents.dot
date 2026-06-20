@@ -25,6 +25,7 @@ digraph Agents {
     crmlog[label="CRM conversation\nlogs (3-yr RM notes)", fillcolor="#1b2436", color="#3d5a99"];
     cio   [label="CIO recommendation\nlist (BUY/HOLD/SELL\n+ swap universe)", fillcolor="#1b2436", color="#3d5a99"];
     llm   [label="Phoeniqs LLM\n(reasoning engine)", fillcolor="#241b2e", color="#7d5aa0"];
+    anthropic [label="Anthropic\nHaiku · Sonnet\n(digest models)", fillcolor="#241b2e", color="#7d5aa0"];
   }
 
   // ───────────── Agent layer ─────────────
@@ -58,6 +59,12 @@ digraph Agents {
   // ───────────── Humans ─────────────
   rm     [label="👤  Relationship\nManager", shape=oval, fillcolor="#3a2415", color="#d08a2f", penwidth=2.0, fontsize=13];
   client [label="🧑  Client\n(decides &amp; places orders)", shape=oval, fillcolor="#1d2a1a", color="#6fa84a", penwidth=2.0, fontsize=13];
+
+  // ── Voice conversation capture + digest ──
+  consent [label="🔒  Consent gate\n(client consents to record)", fillcolor="#2a2416", color="#c79a3a"];
+  stt     [label="🎙️  Live STT\n(Web Speech API)", fillcolor="#16302a", color="#3aa17e"];
+  digestN [label="🧠  Transcript Digest\nlive: Haiku · finalize: Sonnet\ncomplexity-routed · heuristic fallback", fillcolor="#2e1630", color="#b257b8", penwidth=2.0];
+  distillN[label="🧬  Distill\n→ CRM note + DNA deltas\n(quote receipts)", fillcolor="#16302a", color="#3aa17e"];
 
   // ───────────── Provider → agent wiring ─────────────
   crmlog -> crmA;
@@ -95,4 +102,14 @@ digraph Agents {
   rm -> msgA  [label="approve / edit", color="#d08a2f", fontcolor="#e0a85f"];
   rm -> client [label="recommends →", color="#6fa84a", fontcolor="#9ccb78", penwidth=2.0];
   client -> rm [label="decides", style=dashed, color="#6fa84a", fontcolor="#9ccb78"];
+
+  // ── Voice capture + digest wiring ──
+  rm      -> consent [label="record (consented)", color="#d08a2f", fontcolor="#e0a85f"];
+  consent -> stt;
+  stt     -> digestN  [label="transcript stream"];
+  stt     -> distillN [label="on review"];
+  anthropic -> digestN [style=dashed, color="#6b4f8a", arrowhead=none];
+  crmlog  -> digestN  [label="history (finalize)", style=dashed, color="#6b4f8a"];
+  distillN -> crmA    [label="DNA deltas"];
+  digestN -> cd       [label="live understanding"];
 }

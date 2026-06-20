@@ -75,7 +75,7 @@ export function PriorityQueue({ selectedId, onSelect }: Props) {
       </p>
 
       {active.length > 0 ? active.map((c) => row(c, false)) : (
-        <p className="empty" style={{ padding: "32px 0" }}>✓ All caught up — every flagged client has been actioned.</p>
+        <p className="empty" style={{ padding: "32px 0" }}>All caught up.</p>
       )}
 
       {dealt.length > 0 && (

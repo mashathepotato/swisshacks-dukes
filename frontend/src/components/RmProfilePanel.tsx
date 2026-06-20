@@ -52,7 +52,7 @@ export function RmProfilePanel({ open, onClose }: { open: boolean; onClose: () =
         <div className="rmp-section">Sign-off &amp; close — per method <span className="rmp-hint">tokens: {"{name}"} · {"{initials}"}</span></div>
         {channels.map((ch) => (
           <label key={ch} className="rmp-signoff">
-            <span className="rmp-ch">{CHANNEL_META[ch].icon} {CHANNEL_META[ch].label}</span>
+            <span className="rmp-ch">{CHANNEL_META[ch].label}</span>
             <input value={profile.signoff[ch]} onChange={(e) => setSignoff(ch, e.target.value)} />
             <span className="rmp-preview">{applyTokens(profile.signoff[ch], profile).replace(/\n/g, " ⏎ ")}</span>
           </label>

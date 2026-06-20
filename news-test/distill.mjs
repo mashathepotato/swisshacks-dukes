@@ -1,12 +1,19 @@
 // DNA-extraction seam for conversation transcripts. Mirrors assessor.mjs:
-//   phoeniqs (OpenAI-compatible LLM) | heuristic (deterministic fallback).
+//   anthropic (Claude) | phoeniqs (OpenAI-compatible LLM) | heuristic (fallback).
 // Always degrades to the heuristic so the demo never hard-fails.
 
 const PHOENIQS_KEY = process.env.PHOENIQS_API_KEY || "";
 const PHOENIQS_URL = process.env.PHOENIQS_API_URL || "https://maas.phoeniqs.com/v1";
 const PHOENIQS_MODEL = process.env.PHOENIQS_MODEL || "inference-gpt-oss-120b";
 const PHOENIQS_READY = Boolean(PHOENIQS_KEY) && !PHOENIQS_KEY.startsWith("your_");
-const ENGINE = process.env.DISTILL_ENGINE || (PHOENIQS_READY ? "phoeniqs" : "heuristic");
+
+const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY || "";
+const ANTHROPIC_READY = Boolean(ANTHROPIC_KEY) && !ANTHROPIC_KEY.startsWith("your_");
+// DNA extraction uses the small/fast model (Haiku) by default; env-overridable.
+const ANTHROPIC_MODEL = process.env.DISTILL_MODEL || process.env.DIGEST_MODEL_SMALL || "claude-haiku-4-5-20251001";
+
+// Engine resolution: Anthropic (if key) → Phoeniqs (if key) → heuristic.
+const ENGINE = process.env.DISTILL_ENGINE || (ANTHROPIC_READY ? "anthropic" : PHOENIQS_READY ? "phoeniqs" : "heuristic");
 
 // The fixed frontend ThemeId universe (must match frontend/src/types.ts ThemeId).
 export const THEME_IDS = [
@@ -30,7 +37,11 @@ const KEYWORDS = [
 ];
 
 export function distillInfo() {
-  return { engine: ENGINE, model: ENGINE === "phoeniqs" ? PHOENIQS_MODEL : "keyword", llmReady: ENGINE !== "heuristic" };
+  const model =
+    ENGINE === "anthropic" ? ANTHROPIC_MODEL :
+    ENGINE === "phoeniqs" ? PHOENIQS_MODEL :
+    "keyword";
+  return { engine: ENGINE, model, llmReady: ENGINE !== "heuristic" };
 }
 
 function sentences(text) {
@@ -127,14 +138,39 @@ async function distillWithLlm(args) {
   return parseLlmDistill(data?.choices?.[0]?.message?.content || "", args);
 }
 
+async function distillWithAnthropic(args) {
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": ANTHROPIC_KEY,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: ANTHROPIC_MODEL,
+      max_tokens: 800,
+      system: SYSTEM,
+      messages: [{ role: "user", content: `Transcript:\n${args.transcript}` }],
+    }),
+  });
+  if (!res.ok) throw new Error(`Anthropic ${res.status}: ${(await res.text().catch(() => "")).slice(0, 160)}`);
+  const data = await res.json();
+  const text = (data?.content || []).filter((b) => b.type === "text").map((b) => b.text).join("");
+  return parseLlmDistill(text, args);
+}
+
 export async function distill(args) {
   if (ENGINE === "heuristic") return distillHeuristic(args);
+  if (ENGINE === "anthropic" && !ANTHROPIC_READY) {
+    console.warn("[distill] anthropic selected but no key; using heuristic");
+    return distillHeuristic(args);
+  }
   if (ENGINE === "phoeniqs" && !PHOENIQS_READY) {
     console.warn("[distill] phoeniqs selected but no key; using heuristic");
     return distillHeuristic(args);
   }
   try {
-    return await distillWithLlm(args);
+    return ENGINE === "anthropic" ? await distillWithAnthropic(args) : await distillWithLlm(args);
   } catch (err) {
     console.warn(`[distill] ${ENGINE} failed, falling back to heuristic: ${err.message}`);
     return distillHeuristic(args);
