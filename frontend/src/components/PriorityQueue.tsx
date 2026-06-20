@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { CLIENTS } from "../data/clients";
 import type { Client } from "../types";
-import { scoreColor, SIGNAL_META, formatMoney, relativeTime } from "../lib/format";
+import { SIGNAL_META, formatMoney, relativeTime } from "../lib/format";
 import { useDone } from "../lib/doneStore";
 
 interface Props {
@@ -32,19 +32,20 @@ export function PriorityQueue({ selectedId, onSelect }: Props) {
         className={"qrow" + (selectedId === c.id ? " selected" : "") + (isDone ? " done" : "")}
         onClick={() => onSelect(c)}
       >
-        <span className="score-pill" style={{ background: scoreColor(c.priorityScore) + "22", color: scoreColor(c.priorityScore) }}>
-          <span className="n">{c.priorityScore}</span>
-        </span>
         <div className="who">
           <div className="nm">{c.name}</div>
           <div className="at">{c.archetype} · {c.mandate}</div>
           <div className="qmeta">
-            {meta && <span className="cause" style={{ color: meta.color }}>{meta.label}</span>}
             {c.amountAtStake != null && <span className="stake">{formatMoney(c.amountAtStake)} at stake</span>}
             {trigger && <span className="ago">{trigger.label} {relativeTime(trigger.at)}</span>}
           </div>
         </div>
         <div className="reason">
+          {meta && (
+            <span className="badge" style={{ background: meta.color + "22", color: meta.color }}>
+              {meta.label}{sig ? ` · severity ${sig.severity}` : ""}
+            </span>
+          )}
           <div>{c.topReason}</div>
           {rec && (
             <div className="recs-inline">

@@ -3,7 +3,7 @@ import { CLIENTS } from "../data/clients";
 import { simulateProposal } from "../data/simulate";
 import type { ChatMessage, Client, SimulationResult } from "../types";
 import { PORTFOLIOS, CIO, STRATEGIES } from "../data/portfolio";
-import { PERSONA_PLAY, simulateSwap, estimateImpact } from "../lib/portfolio";
+import { PERSONA_PLAY, proposeSwap, simulateSwap, estimateImpact } from "../lib/portfolio";
 import type { MonetaryImpact } from "../lib/portfolio";
 import { formatMoney } from "../lib/format";
 
@@ -24,62 +24,40 @@ function deriveImpact(client: Client, proposal: string): MonetaryImpact {
   const isReduce = mentions("reduce", "cut", "trim", "exit", "sell", "divest", "drop", "dump");
   const isUSTechAdd = mentions("nvidia", "ai", "tech", "us equit", "semiconductor", "microsoft", "apple")
     && mentions("increase", "add", "buy", "overweight", "more");
+  const followCio = mentions("follow cio", "rotation", "rotate into", "mega-cap", "tactical");
 
   const play = PERSONA_PLAY[client.id];
   const severity = client.signals[0]?.severity ?? 55;
 
-  // If the proposal mentions a known flagged holding keyword, try a real swap simulation.
-  // Match broadly: the RM might say "exit the labour scandal holding" not the exact name.
-  const flaggedKeywords: Record<string, string[]> = {
-    ammann:   ["adidas", "labour", "scandal", "brand"],
-    schneider: ["roche", "pharma", "parkinson"],
-    raeber:   ["nestlé", "nestle", "staple", "defensive", "value"],
-    huber:    ["unilever", "deforest", "sustainab"],
-  };
+  if (play) {
+    const holdings = PORTFOLIOS[play.mandate];
+    const flaggedPos = holdings.find((h) => h.isin === play.sellIsin);
+    const exposure = flaggedPos?.currentCHF ?? client.amountAtStake ?? 0;
+    const averse = (play.aversionTerms?.length ?? 0) > 0;
 
-  const flagged = play && (flaggedKeywords[client.id] ?? []).some((kw) => p.includes(kw));
-  const compliance = (flagged && play && isReduce)
-    ? simulateSwap({
-        holdings: PORTFOLIOS[play.mandate],
-        strategies: STRATEGIES,
-        cio: CIO,
-        mandate: play.mandate,
-        sellIsin: play.sellIsin,
-        // Pick the first CIO-BUY in same sector as the buyIsin placeholder — matches proposeSwap logic.
-        buyIsin: (() => {
-          const hold = PORTFOLIOS[play.mandate].find((h) => h.isin === play.sellIsin);
-          const sector = hold?.industryGroup ?? "";
-          return CIO.find((c) => c.rating === "BUY" && c.industryGroup === sector && c.isin !== play.sellIsin)?.isin
-            ?? play.sellIsin; // fallback: same isin means hasTrade stays false in estimateImpact
-        })(),
-        aversionTerms: play.aversionTerms,
-        sellResolvesConflict: play.resolvesConflict,
-      })
-    : null;
+    // Pushing an averse client into the sector they distrust → risk-on, with a real compliance check.
+    if (averse && (isUSTechAdd || followCio)) {
+      const held = new Set(holdings.map((h) => h.isin));
+      const pushed = CIO.find(
+        (c) => c.rating === "BUY" && play.aversionTerms!.some((t) => c.industryGroup.toLowerCase().includes(t)) && !held.has(c.isin)
+      );
+      const compliance = pushed
+        ? simulateSwap({
+            holdings, strategies: STRATEGIES, cio: CIO, mandate: play.mandate,
+            sellIsin: play.sellIsin, buyIsin: pushed.isin, aversionTerms: play.aversionTerms, sellResolvesConflict: false,
+          })
+        : null;
+      return estimateImpact({ exposureCHF: compliance?.amountCHF ?? exposure, mode: "risk-on", severity, hasTrade: !!compliance });
+    }
 
-  let exposure: number;
-  let mode: "protect" | "risk-on" | "neutral";
-  let hasTrade = false;
-
-  if (compliance) {
-    exposure = compliance.amountCHF;
-    hasTrade = true;
-    // If the buy conflicts with client values (e.g. US-tech averse + forced into IT), it's risk-on.
-    mode = compliance.dna.verdict === "conflicts" ? "risk-on" : "protect";
-  } else if (isUSTechAdd) {
-    // Pushing a sector the client is averse to — check persona aversionTerms.
-    const isAverse = play?.aversionTerms?.some((t) => t.includes("information technology") || t.includes("tech")) ?? false;
-    exposure = client.amountAtStake ?? 0;
-    mode = isAverse ? "risk-on" : "neutral";
-  } else if (isReduce) {
-    exposure = client.amountAtStake ?? 0;
-    mode = "protect";
-  } else {
-    exposure = client.amountAtStake ?? 0;
-    mode = "neutral";
+    // Otherwise, frame the monetary stakes of acting on the client's flagged position.
+    const chosen = proposeSwap(play.sellIsin, holdings, CIO).chosen;
+    return estimateImpact({ exposureCHF: exposure, mode: "protect", severity, hasTrade: !!chosen });
   }
 
-  return estimateImpact({ exposureCHF: exposure, mode, severity, hasTrade });
+  // Non-persona fallback.
+  const exposure = client.amountAtStake ?? 0;
+  return estimateImpact({ exposureCHF: exposure, mode: isReduce ? "protect" : "neutral", severity, hasTrade: false });
 }
 
 export function SimulatorChat({ focusClientId }: Props) {
@@ -240,7 +218,7 @@ export function SimulatorChat({ focusClientId }: Props) {
                     </>
                   ) : (
                     <p style={{ fontSize: 12.5, color: "var(--text-faint)" }}>
-                      No quantified monetary exposure to model for this proposal on {client.name}.
+                      Limited direct monetary effect — this proposal doesn't change {client.name}'s at-risk exposure.
                     </p>
                   )}
                 </div>

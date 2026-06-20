@@ -1,5 +1,5 @@
 import type { Client } from "../types";
-import { scoreColor, formatMoney, relativeTime } from "../lib/format";
+import { SIGNAL_META, formatMoney, relativeTime } from "../lib/format";
 import { useDone } from "../lib/doneStore";
 
 interface Props {
@@ -23,19 +23,17 @@ export function ClientDetail({ client, onOpenFull }: Props) {
     ? { label: "news", at: client.signals[0].publishedAt }
     : null;
   const rec = client.recommendations[0];
+  const sig = client.signals[0];
 
   return (
     <div className="drawer">
       <h2>{client.name}</h2>
       <div className="archetype">{client.archetype}</div>
 
-      <span
-        className="score-pill"
-        style={{ background: scoreColor(client.priorityScore) + "22", color: scoreColor(client.priorityScore) }}
-      >
-        <span className="n">{client.priorityScore}</span>
-        <span className="d">/100 priority</span>
-      </span>
+      {sig && (() => {
+        const m = SIGNAL_META[sig.type];
+        return <span className="cause-pill" style={{ background: m.color + "22", color: m.color }}>{m.label} · severity {sig.severity}</span>;
+      })()}
 
       {(client.amountAtStake != null || trigger) && (
         <div className="stake-line">
@@ -45,8 +43,18 @@ export function ClientDetail({ client, onOpenFull }: Props) {
         </div>
       )}
 
-      <div className="section-title">Top reason</div>
-      <p className="news-text">{client.topReason}</p>
+      <p className="why-priority"><b>Why now:</b> {client.topReason}</p>
+      {sig && <p className="sig-headline">📰 {sig.headline} <span style={{ color: "var(--text-faint)" }}>· {sig.source}</span></p>}
+
+      {(client.values.length > 0 || client.dislikes.length > 0) && (
+        <>
+          <div className="section-title">Value DNA</div>
+          <div className="chips">
+            {client.values.slice(0, 3).map((v) => <span key={v} className="chip">✓ {v}</span>)}
+            {client.dislikes.slice(0, 2).map((v) => <span key={v} className="chip" style={{ color: "#f0a0a0" }}>✕ {v}</span>)}
+          </div>
+        </>
+      )}
 
       {rec && (
         <>
@@ -58,7 +66,7 @@ export function ClientDetail({ client, onOpenFull }: Props) {
       )}
 
       <button className="cp-open" onClick={() => onOpenFull?.(client)}>
-        View full profile →
+        View full profile — reasoning chain, value DNA, compliance &amp; draft →
       </button>
 
       <div>

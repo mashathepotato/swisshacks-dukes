@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import type { Client, FeedbackDecision, PreferenceModel, Voice } from "../types";
 import { THEME_BY_ID } from "../data/themes";
-import { scoreColor, SIGNAL_META, formatMoney, relativeTime } from "../lib/format";
+import { SIGNAL_META, formatMoney, relativeTime } from "../lib/format";
 import { REASON_META, EVIDENCE_META, buildReasoningChain, buildDraftEmail } from "../lib/explain";
 import { adjustConfidence, primaryTheme } from "../lib/learning";
 import { PERSONA_PLAY } from "../lib/portfolio";
@@ -39,14 +39,13 @@ export function ClientPage({ client, onBack, onSimulate }: Props) {
             <h1>{client.name}</h1>
             <div className="archetype">{client.archetype}</div>
           </div>
-          <span
-            className="score-pill"
-            style={{ background: scoreColor(client.priorityScore) + "22", color: scoreColor(client.priorityScore) }}
-          >
-            <span className="n">{client.priorityScore}</span>
-            <span className="d">/100 priority</span>
-          </span>
+          {client.signals[0] && (() => {
+            const m = SIGNAL_META[client.signals[0].type];
+            return <span className="cause-pill" style={{ background: m.color + "22", color: m.color }}>{m.label} · severity {client.signals[0].severity}</span>;
+          })()}
         </div>
+
+        <p className="why-priority"><b>Why prioritised:</b> {client.topReason}</p>
 
         {client.amountAtStake != null && (
           <div className="stake-line">
