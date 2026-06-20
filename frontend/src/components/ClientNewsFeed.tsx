@@ -255,19 +255,7 @@ function OverlapDetail({
             )}
           </div>
         ))}
-        <div className="cnews-axis total">
-          <span className="cnews-axis-name">Total value overlap{rel.valueMatches.length ? ` (avg of ${rel.valueMatches.length})` : ""}</span>
-          <span className="cnews-axis-math">
-            <b>{rel.valueOverlap.toFixed(2)}</b>
-          </span>
-        </div>
       </div>
-      <p
-        className="cnews-overlap-cap"
-        style={{ textAlign: "left", marginTop: 8 }}
-      >
-        Weighted average of (story value × client value) over the values the story touches.
-      </p>
     </div>
   );
 }
