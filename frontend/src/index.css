@@ -845,15 +845,5 @@ button { font-family: inherit; cursor: pointer; }
 .pscore-break b { color: var(--text); font-family: var(--font-mono); }
 .pscore-cap { font-size: 11px; color: var(--text-faint); margin: 6px 0 4px; line-height: 1.4; }
 
-/* ---- formula-on-hover tooltips (KaTeX) ---- */
-.ftip-wrap { position: relative; cursor: help; }
-.pscore-break .ftip-wrap > span, .cnews-cbreak .ftip-wrap > span { border-bottom: 1px dotted var(--text-faint); }
-.ftip {
-  position: absolute; bottom: calc(100% + 8px); left: 0; z-index: 90;
-  background: var(--panel); color: var(--text); border: 1px solid var(--border);
-  border-radius: 4px; padding: 7px 11px; white-space: nowrap;
-  box-shadow: 0 8px 28px rgba(0,0,0,.16); opacity: 0; pointer-events: none; transition: opacity .12s;
-}
-.ftip-wrap:hover .ftip { opacity: 1; }
-.ftip .katex { font-size: 1.04em; color: var(--text); }
+/* ---- priority score on the client page ---- */
 .cp-priority { max-width: 540px; margin: 6px 0 4px; }

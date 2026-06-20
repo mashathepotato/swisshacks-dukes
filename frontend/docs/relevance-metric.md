@@ -109,3 +109,18 @@ The weights live in one place — `RELEVANCE_WEIGHTS` in
 (`HALF_LIFE_DAYS`) and the severity sub-weights are adjacent constants in the
 same file. If the live LLM Stage-2 engine replaces the heuristic, reconsider
 folding `confidence` into `severity`.
+
+---
+
+## Formulas (LaTeX)
+
+Combined score:
+
+$$\text{score}=0.5\,\text{overlap}+0.3\,\text{sev}+0.2\,\text{rec}$$
+
+Sub-scores:
+
+$$\text{overlap}=\frac{1}{n}\sum_{i}\text{story}_i\cdot\text{client}_i\qquad
+\text{rec}=0.5^{\,\Delta t_{\text{days}}/7}$$
+
+$$\text{sev}=0.45\,\mathbb{1}_{\text{marketMovement}}+0.35\,\frac{|\text{sentiment}|}{0.5}+0.20\,\frac{\#\text{themes}}{2}$$

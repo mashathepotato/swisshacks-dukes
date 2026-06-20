@@ -7,14 +7,6 @@ import type { Relevance } from "../lib/newsRelevance";
 import type { Client } from "../types";
 import type { FeedArticle } from "../data/newsFeed";
 import { ValueSpider } from "./ValueSpider";
-import { FormulaTip } from "./Formula";
-
-const NF = {
-  combined: String.raw`\text{score}=0.5\,\text{overlap}+0.3\,\text{sev}+0.2\,\text{rec}`,
-  value: String.raw`\text{overlap}=\dfrac{1}{n}\sum_i \text{story}_i\cdot\text{client}_i`,
-  severity: String.raw`\text{sev}=0.45\,\mathbb{1}_{\text{mkt}}+0.35\,\tfrac{|s|}{0.5}+0.20\,\tfrac{\#\text{themes}}{2}`,
-  recency: String.raw`\text{rec}=0.5^{\,\Delta t_{\text{days}}/7}`,
-};
 
 function fmtDate(d: string | null): string {
   if (!d) return "";
@@ -208,14 +200,14 @@ function OverlapDetail({
 
       <div className="cnews-sec">Combined priority score</div>
       <div className="cnews-combined">
-        <FormulaTip formula={NF.combined}><span className="cnews-cbig">{Math.round(rel.combined * 100)}</span></FormulaTip>
+        <span className="cnews-cbig">{Math.round(rel.combined * 100)}</span>
         <div className="cnews-cbreak">
-          <div><FormulaTip formula={NF.value}><span>Value overlap</span></FormulaTip><span><b>{Math.round(rel.valueOverlap * 100)}</b> × {RELEVANCE_WEIGHTS.value}</span></div>
-          <div><FormulaTip formula={NF.severity}><span>Severity</span></FormulaTip><span><b>{Math.round(rel.severity * 100)}</b> × {RELEVANCE_WEIGHTS.severity}</span></div>
-          <div><FormulaTip formula={NF.recency}><span>Recency</span></FormulaTip><span><b>{Math.round(rel.recency * 100)}</b> × {RELEVANCE_WEIGHTS.recency}</span></div>
+          <div><span>Value overlap</span><span><b>{Math.round(rel.valueOverlap * 100)}</b> × {RELEVANCE_WEIGHTS.value}</span></div>
+          <div><span>Severity</span><span><b>{Math.round(rel.severity * 100)}</b> × {RELEVANCE_WEIGHTS.severity}</span></div>
+          <div><span>Recency</span><span><b>{Math.round(rel.recency * 100)}</b> × {RELEVANCE_WEIGHTS.recency}</span></div>
         </div>
       </div>
-      <p className="cnews-overlap-cap" style={{ textAlign: "left", margin: "6px 0 0" }}>Weighted blend (out of 100) used to rank this client's feed · hover a row for its formula. Justification: docs/relevance-metric.md.</p>
+      <p className="cnews-overlap-cap" style={{ textAlign: "left", margin: "6px 0 0" }}>Weighted blend (out of 100) used to rank this client's feed. Justification: docs/relevance-metric.md.</p>
 
       <div className="cnews-sec">Why it's relevant to {client.name}</div>
       <div className="cnews-reasons">
