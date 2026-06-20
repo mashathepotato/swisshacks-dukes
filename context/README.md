@@ -10,6 +10,7 @@ anyone (human or AI agent) can get oriented fast.
 - `architecture.md` — stack, components, data flow, key decisions.
 - `team.md` — who's who and who owns what.
 - `decisions.md` — running log of decisions and why we made them.
+- `values.md` — the Client DNA value-axes (vocabulary + news/portfolio mappings).
 
 ## Conventions
 
