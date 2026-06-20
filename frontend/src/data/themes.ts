@@ -1,12 +1,12 @@
 import type { Theme, ThemeId } from "../types";
 
 export const THEMES: Theme[] = [
-  { id: "environmental", label: "Environmental", emoji: "🌱", color: "#38a169" },
-  { id: "us_tech_bullish", label: "US-Tech Bullish", emoji: "🇺🇸", color: "#3182ce" },
-  { id: "defensive", label: "Capital Preservation", emoji: "🛡️", color: "#805ad5" },
-  { id: "income", label: "Income / Dividends", emoji: "💰", color: "#d69e2e" },
-  { id: "reputation", label: "Reputation-Sensitive", emoji: "🏛️", color: "#dd6b20" },
-  { id: "healthcare", label: "Healthcare / Philanthropy", emoji: "⚕️", color: "#e53e3e" },
+  { id: "environmental", label: "Environmental", short: "Environ.", emoji: "", color: "#1f7a4d" },
+  { id: "us_tech_bullish", label: "US-Tech Bullish", short: "US Tech", emoji: "", color: "#3a5a8c" },
+  { id: "defensive", label: "Capital Preservation", short: "Capital", emoji: "", color: "#5a4b86" },
+  { id: "income", label: "Income / Dividends", short: "Income", emoji: "", color: "#94680a" },
+  { id: "reputation", label: "Reputation-Sensitive", short: "Reputation", emoji: "", color: "#a85a1c" },
+  { id: "healthcare", label: "Healthcare / Philanthropy", short: "Health", emoji: "", color: "#c0271a" },
 ];
 
 export const THEME_BY_ID: Record<ThemeId, Theme> = THEMES.reduce(
