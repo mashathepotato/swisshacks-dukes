@@ -6,7 +6,6 @@ import { simulateProposal } from "../data/simulate";
 import { PORTFOLIOS, CIO, STRATEGIES } from "../data/portfolio";
 import { PERSONA_PLAY, proposeSwap, simulateSwap, estimateImpact } from "../lib/portfolio";
 import { formatMoney } from "../lib/format";
-import { BookSimulator } from "./BookSimulator";
 
 type AdviceKind = "swap" | "rec" | "preset";
 interface RAdvice {
@@ -55,7 +54,6 @@ function adviceFor(client: Client): RAdvice[] {
 }
 
 export function RehearseOutcome() {
-  const [mode, setMode] = useState<"client" | "book">("client");
   const personas = CLIENTS.filter((c) => c.isPersona);
   const [clientId, setClientId] = useState(personas[0].id);
   const client = CLIENTS.find((c) => c.id === clientId)!;
@@ -80,8 +78,8 @@ export function RehearseOutcome() {
 
   const impact = useMemo(() => {
     const severity = client.signals[0]?.severity ?? 55;
-    let exposure = 0;
-    let mode: "protect" | "risk-on" | "neutral" = "neutral";
+    let exposure: number;
+    let mode: "protect" | "risk-on" | "neutral";
     let hasTrade = false;
     if (compliance) {
       exposure = compliance.amountCHF;
@@ -102,39 +100,17 @@ export function RehearseOutcome() {
     setAdviceKey(adviceFor(CLIENTS.find((c) => c.id === id)!)[0].key);
   }
 
-  if (mode === "book") {
-    return (
-      <div className="booksim">
-        <div className="bs-head">
-          <div className="head-row">
-            <div>
-              <h1>Whole-book view — if the entire book follows one broadcast advice</h1>
-              <p className="lead">The case for personalisation: one message fits some clients and not others.</p>
-            </div>
-            <button className="bs-toggle" onClick={() => setMode("client")}>← Rehearse one client</button>
-          </div>
-        </div>
-        <BookSimulator />
-      </div>
-    );
-  }
-
   const acc = Math.round(reaction.acceptanceProbability * 100);
   const accColor = reaction.acceptanceProbability > 0.6 ? "var(--green)" : reaction.acceptanceProbability > 0.4 ? "var(--amber)" : "var(--red)";
 
   return (
     <div className="booksim">
-      <div className="bs-head">
-        <div className="head-row">
-          <div>
-            <h1>Rehearse the outcome — simulate a client following a piece of advice</h1>
-            <p className="lead">Pick a client and an action, then see how they'd likely react, the estimated CHF benefit or cost to them, and whether the trade keeps their mandate.</p>
-          </div>
-          <button className="bs-toggle" onClick={() => setMode("book")}>Whole-book view →</button>
-        </div>
+      <div className="bs-head" style={{ paddingBottom: 16 }}>
+        <h1 style={{ margin: "0 0 4px", fontSize: 18, fontWeight: 600 }}>Rehearse outcome</h1>
+        <p className="lead" style={{ margin: 0 }}>Pick a client and an action to see predicted reaction, estimated CHF impact, and mandate compliance.</p>
       </div>
 
-      <div className="ro-clients">
+      <div className="ro-clients" style={{ marginBottom: 12 }}>
         {CLIENTS.map((c) => (
           <button key={c.id} className={"pick" + (c.id === clientId ? " on" : "")} onClick={() => pickClient(c.id)}>
             {c.name}
@@ -152,17 +128,17 @@ export function RehearseOutcome() {
 
       <div className="bs-body">
         <div className="bs-main">
-          <div className="ro-accept">
+          <div className="ro-accept" style={{ marginBottom: 6 }}>
             <span className="pct" style={{ color: accColor }}>{acc}%</span>
-            <span className="lbl">likely acceptance · {client.name}</span>
+            <span className="lbl" style={{ marginLeft: 8 }}>likely acceptance · {client.name}</span>
           </div>
-          <div className="bar" style={{ maxWidth: 320 }}>
+          <div className="bar" style={{ maxWidth: 280, marginBottom: 10 }}>
             <div style={{ width: `${acc}%`, background: accColor }} />
           </div>
-          <p className="ro-react">{reaction.predictedReaction}</p>
+          <p className="ro-react" style={{ marginBottom: 16 }}>{reaction.predictedReaction}</p>
 
           <div className="ro-block">
-            <div className="lbl">Estimated monetary impact · next {impact.horizonMonths} months</div>
+            <div className="lbl" style={{ marginBottom: 6 }}>Estimated monetary impact · next {impact.horizonMonths} months</div>
             {impact.components.length ? (
               <>
                 <div className="impact-net" style={{ color: impact.netCHF >= 0 ? "var(--green)" : "var(--red)" }}>
@@ -194,22 +170,22 @@ export function RehearseOutcome() {
             )}
           </div>
 
-          <div className="ro-block">
-            <div className="lbl">Likely objections</div>
-            {reaction.objections.map((o, i) => <p key={i}>• {o}</p>)}
+          <div className="ro-block" style={{ marginTop: 12 }}>
+            <div className="lbl" style={{ marginBottom: 4 }}>Likely objections</div>
+            {reaction.objections.map((o, i) => <p key={i} style={{ margin: "2px 0" }}>• {o}</p>)}
           </div>
-          <div className="ro-block">
-            <div className="lbl">Best framing</div>
-            <p>{reaction.bestFraming}</p>
+          <div className="ro-block" style={{ marginTop: 12 }}>
+            <div className="lbl" style={{ marginBottom: 4 }}>Best framing</div>
+            <p style={{ margin: 0 }}>{reaction.bestFraming}</p>
           </div>
-          <div className="ro-block">
-            <div className="lbl">Suggested next step</div>
-            <p className="strong">{reaction.nextStep}</p>
+          <div className="ro-block" style={{ marginTop: 12 }}>
+            <div className="lbl" style={{ marginBottom: 4 }}>Suggested next step</div>
+            <p className="strong" style={{ margin: 0 }}>{reaction.nextStep}</p>
           </div>
         </div>
 
         <div className="bs-side">
-          <div className="lbl" style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: ".07em", color: "var(--text-faint)", marginBottom: 10 }}>
+          <div className="lbl" style={{ fontSize: 10.5, textTransform: "uppercase", letterSpacing: ".08em", color: "var(--text-faint)", marginBottom: 12, fontWeight: 600 }}>
             Portfolio &amp; compliance
           </div>
           {compliance ? (

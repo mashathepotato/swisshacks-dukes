@@ -1,8 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CLIENTS } from "../data/clients";
 import { simulateProposal } from "../data/simulate";
 import type { ChatMessage, Client, SimulationResult } from "../types";
-import { TrajectoryChart } from "./TrajectoryChart";
+import { PORTFOLIOS, CIO, STRATEGIES } from "../data/portfolio";
+import { PERSONA_PLAY, simulateSwap, estimateImpact } from "../lib/portfolio";
+import type { MonetaryImpact } from "../lib/portfolio";
+import { formatMoney } from "../lib/format";
 
 const SUGGESTIONS = [
   "Reduce Nvidia exposure by 5% and rotate into Swiss staples",
@@ -13,27 +16,103 @@ const SUGGESTIONS = [
 
 interface Props { focusClientId: string | null; }
 
+/** Derive impact inputs from the free-text proposal + client persona context. */
+function deriveImpact(client: Client, proposal: string): MonetaryImpact {
+  const p = proposal.toLowerCase();
+  const mentions = (...kw: string[]) => kw.some((k) => p.includes(k));
+
+  const isReduce = mentions("reduce", "cut", "trim", "exit", "sell", "divest", "drop", "dump");
+  const isUSTechAdd = mentions("nvidia", "ai", "tech", "us equit", "semiconductor", "microsoft", "apple")
+    && mentions("increase", "add", "buy", "overweight", "more");
+
+  const play = PERSONA_PLAY[client.id];
+  const severity = client.signals[0]?.severity ?? 55;
+
+  // If the proposal mentions a known flagged holding keyword, try a real swap simulation.
+  // Match broadly: the RM might say "exit the labour scandal holding" not the exact name.
+  const flaggedKeywords: Record<string, string[]> = {
+    ammann:   ["adidas", "labour", "scandal", "brand"],
+    schneider: ["roche", "pharma", "parkinson"],
+    raeber:   ["nestlé", "nestle", "staple", "defensive", "value"],
+    huber:    ["unilever", "deforest", "sustainab"],
+  };
+
+  const flagged = play && (flaggedKeywords[client.id] ?? []).some((kw) => p.includes(kw));
+  const compliance = (flagged && play && isReduce)
+    ? simulateSwap({
+        holdings: PORTFOLIOS[play.mandate],
+        strategies: STRATEGIES,
+        cio: CIO,
+        mandate: play.mandate,
+        sellIsin: play.sellIsin,
+        // Pick the first CIO-BUY in same sector as the buyIsin placeholder — matches proposeSwap logic.
+        buyIsin: (() => {
+          const hold = PORTFOLIOS[play.mandate].find((h) => h.isin === play.sellIsin);
+          const sector = hold?.industryGroup ?? "";
+          return CIO.find((c) => c.rating === "BUY" && c.industryGroup === sector && c.isin !== play.sellIsin)?.isin
+            ?? play.sellIsin; // fallback: same isin means hasTrade stays false in estimateImpact
+        })(),
+        aversionTerms: play.aversionTerms,
+        sellResolvesConflict: play.resolvesConflict,
+      })
+    : null;
+
+  let exposure: number;
+  let mode: "protect" | "risk-on" | "neutral";
+  let hasTrade = false;
+
+  if (compliance) {
+    exposure = compliance.amountCHF;
+    hasTrade = true;
+    // If the buy conflicts with client values (e.g. US-tech averse + forced into IT), it's risk-on.
+    mode = compliance.dna.verdict === "conflicts" ? "risk-on" : "protect";
+  } else if (isUSTechAdd) {
+    // Pushing a sector the client is averse to — check persona aversionTerms.
+    const isAverse = play?.aversionTerms?.some((t) => t.includes("information technology") || t.includes("tech")) ?? false;
+    exposure = client.amountAtStake ?? 0;
+    mode = isAverse ? "risk-on" : "neutral";
+  } else if (isReduce) {
+    exposure = client.amountAtStake ?? 0;
+    mode = "protect";
+  } else {
+    exposure = client.amountAtStake ?? 0;
+    mode = "neutral";
+  }
+
+  return estimateImpact({ exposureCHF: exposure, mode, severity, hasTrade });
+}
+
 export function SimulatorChat({ focusClientId }: Props) {
   const personas = CLIENTS.filter((c) => c.isPersona);
   const [clientId, setClientId] = useState<string>(focusClientId ?? personas[0].id);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [result, setResult] = useState<SimulationResult | null>(null);
+  const [lastProposal, setLastProposal] = useState<string>("");
   const msgsRef = useRef<HTMLDivElement>(null);
 
   const client: Client = CLIENTS.find((c) => c.id === clientId)!;
 
   useEffect(() => {
     if (focusClientId) {
+      // Intentional: reset the chat when the parent focuses a different client.
+      /* eslint-disable react-hooks/set-state-in-effect */
       setClientId(focusClientId);
       setMessages([]);
       setResult(null);
+      setLastProposal("");
+      /* eslint-enable react-hooks/set-state-in-effect */
     }
   }, [focusClientId]);
 
   useEffect(() => {
     msgsRef.current?.scrollTo({ top: msgsRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
+
+  const impact = useMemo(
+    () => (lastProposal ? deriveImpact(client, lastProposal) : null),
+    [client, lastProposal]
+  );
 
   function send(text: string) {
     const proposal = text.trim();
@@ -47,6 +126,7 @@ export function SimulatorChat({ focusClientId }: Props) {
       `Best framing: ${sim.bestFraming}\n\nSuggested next step: ${sim.nextStep}`;
     setMessages((m) => [...m, { role: "rm", text: proposal }, { role: "copilot", text: reply }]);
     setResult(sim);
+    setLastProposal(proposal);
     setInput("");
   }
 
@@ -118,14 +198,53 @@ export function SimulatorChat({ focusClientId }: Props) {
                 </div>
               </div>
 
-              <div className="metric">
-                <div className="lbl">Predicted trajectory</div>
-                <TrajectoryChart points={result.trajectory} />
-                <div style={{ fontSize: 11, color: "var(--text-faint)", display: "flex", gap: 12, marginTop: 2 }}>
-                  <span style={{ color: "#4f8ff7" }}>— Trust</span>
-                  <span style={{ color: "#805ad5" }}>-- Values alignment</span>
+              {impact && (
+                <div className="metric">
+                  <div className="lbl">Estimated monetary impact · next {impact.horizonMonths} months</div>
+                  {impact.components.length > 0 ? (
+                    <>
+                      <div
+                        className="impact-net"
+                        style={{ color: impact.netCHF >= 0 ? "var(--green)" : "var(--red)" }}
+                      >
+                        {impact.netCHF >= 0 ? "+" : "−"}{formatMoney(Math.abs(impact.netCHF))}
+                      </div>
+                      <p style={{ fontSize: 12, color: "var(--text-dim)", margin: "0 0 10px" }}>
+                        net {impact.netCHF >= 0 ? "benefit" : "cost"} to {client.name} from this proposal.
+                      </p>
+                      {impact.components.map((comp, i) => {
+                        const pos = comp.amountCHF >= 0;
+                        const mag = Math.max(...impact.components.map((x) => Math.abs(x.amountCHF)));
+                        return (
+                          <div className="impact-comp" key={i}>
+                            <div className="ic-top">
+                              <span>{comp.label}</span>
+                              <span className={"amt " + (pos ? "pos" : "neg")}>
+                                {pos ? "+" : "−"}{formatMoney(Math.abs(comp.amountCHF))}
+                              </span>
+                            </div>
+                            <div
+                              className="ic-bar"
+                              style={{
+                                width: `${mag ? Math.max(6, (Math.abs(comp.amountCHF) / mag) * 100) : 0}%`,
+                                background: pos ? "var(--green)" : "var(--red)",
+                              }}
+                            />
+                            <div className="ic-note">{comp.note}</div>
+                          </div>
+                        );
+                      })}
+                      <p className="impact-assump">
+                        An estimate, not a guarantee — each figure is the real position value × a stated assumption (severity→drawdown, 0.20% transaction cost, 1.5% CIO-BUY premium), so it's fully traceable rather than a black-box forecast.
+                      </p>
+                    </>
+                  ) : (
+                    <p style={{ fontSize: 12.5, color: "var(--text-faint)" }}>
+                      No quantified monetary exposure to model for this proposal on {client.name}.
+                    </p>
+                  )}
                 </div>
-              </div>
+              )}
 
               <div className="metric">
                 <div className="lbl">Likely objections</div>

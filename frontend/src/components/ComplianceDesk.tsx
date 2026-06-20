@@ -58,6 +58,8 @@ export function ComplianceDesk({ client }: { client: Client }) {
 
   const [buyIsin, setBuyIsin] = useState(candidates[0]?.isin ?? "");
   useEffect(() => {
+    // Intentional: when the sell changes, reset the buy to the new top candidate.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!candidates.find((c) => c.isin === buyIsin)) setBuyIsin(candidates[0]?.isin ?? "");
   }, [candidates, buyIsin]);
 

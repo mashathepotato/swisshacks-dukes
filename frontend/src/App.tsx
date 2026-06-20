@@ -3,6 +3,7 @@ import { PriorityQueue } from "./components/PriorityQueue";
 import { SimulatorChat } from "./components/SimulatorChat";
 import { RehearseOutcome } from "./components/RehearseOutcome";
 import { ClientDetail } from "./components/ClientDetail";
+import { ClientPage } from "./components/ClientPage";
 import { NewsFeed } from "./components/NewsFeed";
 import { NewsDetail } from "./components/NewsDetail";
 import type { Client, NewsItem } from "./types";
@@ -15,16 +16,29 @@ export default function App() {
   const [selected, setSelected] = useState<Client | null>(null);
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(RANKED_NEWS[0]?.news ?? null);
   const [simFocus, setSimFocus] = useState<string | null>(null);
+  // when set, the full client page is shown full-screen over the tabs
+  const [fullClient, setFullClient] = useState<Client | null>(null);
 
   function openSimulator(client: Client) {
+    setFullClient(null);
     setSimFocus(client.id);
     setTab("simulator");
   }
 
-  // jump from a news impact map straight to the client's full profile
-  function openClient(client: Client) {
+  // open the dedicated full-screen client page (from the queue drawer or news impact map)
+  function openFullClient(client: Client) {
     setSelected(client);
-    setTab("priority");
+    setFullClient(client);
+  }
+
+  if (fullClient) {
+    return (
+      <ClientPage
+        client={fullClient}
+        onBack={() => setFullClient(null)}
+        onSimulate={openSimulator}
+      />
+    );
   }
 
   return (
@@ -47,9 +61,10 @@ export default function App() {
           {tab === "simulator" && <SimulatorChat focusClientId={simFocus} />}
           {tab === "book" && <RehearseOutcome />}
         </div>
-        {tab === "priority" && <ClientDetail client={selected} onSimulate={openSimulator} />}
-        {tab === "news" && <NewsDetail news={selectedNews} onOpenClient={openClient} />}
+        {tab === "priority" && <ClientDetail client={selected} onOpenFull={openFullClient} />}
+        {tab === "news" && <NewsDetail news={selectedNews} onOpenClient={openFullClient} />}
       </div>
     </div>
   );
 }
+
