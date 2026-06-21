@@ -66,7 +66,7 @@ function NewsDetailBody({ news, onOpenClient }: { news: NewsItem; onOpenClient?:
         })}
       </div>
 
-      <div className="section-title">Who it affects — impact map</div>
+      <div className="section-title">Who it affects</div>
       <NewsImpactMap news={news} impacts={impacts} onPick={(im) => onOpenClient?.(im.client)} />
 
       <div className="section-title">Affected clients · {impacts.length}</div>

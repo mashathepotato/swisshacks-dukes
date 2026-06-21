@@ -164,7 +164,7 @@ export function ConversationCapture({ client }: { client: Client }) {
 
   return (
     <section className="conv-capture" style={{ border: "1px solid var(--border)", borderRadius: 2, padding: 16, marginTop: 16 }}>
-      <h3>🎙️ Conversation Capture — {client.name}</h3>
+      <h3>🎙️ Conversation Capture · {client.name}</h3>
 
       <div className="conv-tabs">
         <button className={`conv-tab${tab === "voice" ? " on" : ""}`} onClick={() => switchTab("voice")} disabled={tab === "voice"}>🎙️ Voice (consented)</button>
@@ -173,7 +173,7 @@ export function ConversationCapture({ client }: { client: Client }) {
 
       {tab === "manual" && (
         <div>
-          <p style={{ fontSize: 12, opacity: 0.7 }}>No recording — type your notes. (Use Voice if the client consented to recording.)</p>
+          <p style={{ fontSize: 12, opacity: 0.7 }}>No recording. Type your notes. (Use Voice if the client consented to recording.)</p>
           <textarea
             value={manualText}
             onChange={(e) => setManualText(e.target.value)}

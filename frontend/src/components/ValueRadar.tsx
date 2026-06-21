@@ -4,6 +4,7 @@ import type { Client } from "../types";
 interface Props { client: Client; }
 
 const SIZE = 260;
+const PAD = 30;           // breathing room so axis labels don't clip at the viewBox edge
 const C = SIZE / 2;
 const R = SIZE / 2 - 38;
 
@@ -27,7 +28,7 @@ export function ValueRadar({ client }: Props) {
     THEMES.map((_, i) => { const p = pt(i, R * frac); return `${p.x},${p.y}`; }).join(" ");
 
   return (
-    <svg viewBox={`0 0 ${SIZE} ${SIZE}`} width="100%" height={SIZE} style={{ display: "block" }}>
+    <svg viewBox={`${-PAD} ${-PAD} ${SIZE + PAD * 2} ${SIZE + PAD * 2}`} width="100%" height={SIZE + PAD * 2} style={{ display: "block" }}>
       {/* grid rings */}
       {[0.33, 0.66, 1].map((f) => (
         <polygon key={f} points={ringPoly(f)} fill="none" stroke="#d7d4cc" strokeWidth={1} />

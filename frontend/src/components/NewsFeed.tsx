@@ -46,7 +46,7 @@ export function NewsFeed() {
       <div className="nf-head">
         <div>
           <h1>News desk</h1>
-          <p className="lead">Every headline, filtered for investment relevance — drops the noise, themes the survivors, ranks by portfolio exposure &amp; client values, and labels the instruments each story touches.</p>
+          <p className="lead">Every headline, filtered for investment relevance. Drops the noise, themes the survivors, ranks by portfolio exposure &amp; client values, and labels the instruments each story touches.</p>
         </div>
         <span className={"nf-eng " + (e.llmReady ? "llm" : "heur")} title={`Stage 2 engine: ${e.engine} (${e.model})`}>
           Stage 2 · {e.llmReady ? e.model : "heuristic"}
@@ -139,7 +139,7 @@ function SelectedCard({ a, rank, onOpen }: { a: FeedArticle; rank: number; onOpe
           ))}
         </div>
       ) : (
-        <div className="nf-nohold">No specific holding matched — broad / market-level signal.</div>
+        <div className="nf-nohold">No specific holding matched. Broad / market-level signal.</div>
       )}
       <div className="nf-clickhint">▾ {touched ? `${touched} client value${touched === 1 ? "" : "s"} implicated` : "value spider"} · click</div>
     </div>

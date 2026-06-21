@@ -19,6 +19,7 @@ import { useRmProfile } from "../lib/rmProfileStore";
 import { ValueRadar } from "./ValueRadar";
 import { PriorityScore } from "./PriorityScore";
 import { ConversationCapture } from "./ConversationCapture";
+import { AskClient } from "./AskClient";
 import { useConversation } from "../lib/conversationStore";
 
 interface Props {
@@ -32,6 +33,20 @@ const DECISION_META: Record<FeedbackDecision, { label: string; color: string }> 
   declined: { label: "Declined", color: "var(--red)" },
 };
 
+/** A one-line, glanceable synthesis of who this client is — risk, what they
+ *  value, and what they avoid. Deterministic; complements the DNA chips below. */
+function dnaSummary(c: Client): string | null {
+  if (c.values.length === 0 && c.dislikes.length === 0) return null;
+  const join = (xs: string[]) =>
+    xs.length <= 1 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`;
+  const likes = c.values.slice(0, 2);
+  const avoids = c.dislikes.slice(0, 1);
+  let s = `A ${c.riskProfile.toLowerCase()}-risk client`;
+  if (likes.length) s += ` who values ${join(likes)}`;
+  if (avoids.length) s += `${likes.length ? "," : " who"} steers clear of ${join(avoids)}`;
+  return s + ".";
+}
+
 export function ClientPage({ client, onSimulate }: Props) {
   const { isDone, markDone, reopen } = useDone();
   const { withDeltas } = useConversation();
@@ -40,6 +55,7 @@ export function ClientPage({ client, onSimulate }: Props) {
   const [chainOpen, setChainOpen] = useState(false);
 
   const portfolioValue = PORTFOLIOS[mergedClient.mandate].reduce((s, h) => s + h.currentCHF, 0);
+  const dna = dnaSummary(mergedClient);
 
   return (
     <div className="clientpage">
@@ -48,6 +64,8 @@ export function ClientPage({ client, onSimulate }: Props) {
           <div className="cp-head-main">
             <h1>{mergedClient.name}</h1>
             <div className="archetype">{mergedClient.archetype}</div>
+
+            {dna && <p className="cp-dna-summary">{dna}</p>}
 
             <div className="cp-pval">
               <b>{formatMoney(portfolioValue)}</b> portfolio value · {mergedClient.mandate} mandate
@@ -84,7 +102,7 @@ export function ClientPage({ client, onSimulate }: Props) {
           style={{ maxWidth: 320 }}
           onClick={() => (dealt ? reopen(mergedClient.id) : markDone(mergedClient.id))}
         >
-          {dealt ? "✓ Completed — reopen" : "✓ Mark as complete"}
+          {dealt ? "✓ Completed · reopen" : "✓ Mark as complete"}
         </button>
 
         <div className="cp-grid">
@@ -121,7 +139,7 @@ export function ClientPage({ client, onSimulate }: Props) {
             >
               <span className="flow-arrow-glyph">↓</span>
               <span className="flow-arrow-label">
-                {chainOpen ? "Hide the reasoning" : "Why this leads to the action — see the full thought process"}
+                {chainOpen ? "Hide reasoning" : "Show reasoning"}
               </span>
             </button>
 
@@ -138,8 +156,10 @@ export function ClientPage({ client, onSimulate }: Props) {
             )}
           </div>
 
-          {/* Right: relationship tools first (capture), then supporting detail */}
+          {/* Right: ask-the-copilot first, then relationship tools and detail */}
           <div className="cp-col">
+            <AskClient key={"ask-" + mergedClient.id} client={mergedClient} />
+
             <ConversationCapture client={mergedClient} />
 
             <LearningPanel client={mergedClient} />
@@ -381,7 +401,7 @@ function Recommendations({ client }: { client: Client }) {
 
             {choice ? (
               <div className="fb-done" style={{ color: DECISION_META[choice].color }}>
-                ✓ Recorded as {DECISION_META[choice].label.toLowerCase()} — model updated.
+                ✓ Recorded as {DECISION_META[choice].label.toLowerCase()}. Model updated.
               </div>
             ) : (
               <div className="fb-row">
@@ -470,7 +490,7 @@ function DraftMessage({ client }: { client: Client }) {
           </div>
           <p className="pref-note">
             {isCustom(client.id)
-              ? <>Tuned by you — {client.name} set to <b>{CHANNEL_META[pref.channel].label.toLowerCase()}</b>, <b>{pref.length}</b>. The draft below follows it.</>
+              ? <>Tuned by you. {client.name} set to <b>{CHANNEL_META[pref.channel].label.toLowerCase()}</b>, <b>{pref.length}</b>. The draft below follows it.</>
               : <>On file: {client.name} prefers <b>{CHANNEL_META[pref.channel].label.toLowerCase()}</b>, <b>{pref.length}</b>. The draft below follows it.</>}
           </p>
           {history.length > 0 && (
@@ -491,7 +511,7 @@ function DraftMessage({ client }: { client: Client }) {
           </button>
         </div>
         {learnedThisVoice && (
-          <p className="draft-learned">Pre-selected — {client.name} accepts this tone most often.</p>
+          <p className="draft-learned">Pre-selected. {client.name} accepts this tone most often.</p>
         )}
 
         <div className="draft-format">{msg.format}{msg.subject ? "" : " · spoken / no subject line"}</div>
@@ -510,9 +530,9 @@ function DraftMessage({ client }: { client: Client }) {
           <button className="draft-copy" onClick={copy}>{copied ? "✓ Copied" : "Copy"}</button>
         </div>
         {sent ? (
-          <p className="draft-note" style={{ color: "var(--green)" }}>✓ Logged via {CHANNEL_META[pref.channel].label.toLowerCase()} ({voice}) — the copilot will favour this tone next time.</p>
+          <p className="draft-note" style={{ color: "var(--green)" }}>✓ Logged via {CHANNEL_META[pref.channel].label.toLowerCase()} ({voice}). Saved as your preferred tone.</p>
         ) : (
-          <p className="draft-note">Drafts only — review before sending.</p>
+          <p className="draft-note">Drafts only. Review before sending.</p>
         )}
       </div>
     </>

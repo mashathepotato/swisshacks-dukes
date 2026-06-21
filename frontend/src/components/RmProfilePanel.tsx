@@ -19,7 +19,7 @@ export function RmProfilePanel({ open, onClose }: { open: boolean; onClose: () =
           <h2>Your RM profile</h2>
           <button className="rmp-x" onClick={onClose}>✕</button>
         </div>
-        <p className="rmp-sub">How <b>you</b> communicate. These conventions shape every proposed message — layered on top of each client's chosen channel &amp; length.</p>
+        <p className="rmp-sub">How <b>you</b> communicate. These conventions shape every proposed message, layered on top of each client's chosen channel &amp; length.</p>
 
         <div className="rmp-grid">
           <label className="rmp-field"><span>Display name</span>
@@ -49,7 +49,7 @@ export function RmProfilePanel({ open, onClose }: { open: boolean; onClose: () =
           ))}
         </div>
 
-        <div className="rmp-section">Sign-off &amp; close — per method <span className="rmp-hint">tokens: {"{name}"} · {"{initials}"}</span></div>
+        <div className="rmp-section">Sign-off &amp; close, per method <span className="rmp-hint">tokens: {"{name}"} · {"{initials}"}</span></div>
         {channels.map((ch) => (
           <label key={ch} className="rmp-signoff">
             <span className="rmp-ch">{CHANNEL_META[ch].label}</span>

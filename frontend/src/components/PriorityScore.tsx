@@ -20,7 +20,7 @@ export function PriorityScore({ client }: { client: Client }) {
           <div><span>Market anomaly</span><span><b>{Math.round(pr.anomaly * 100)}</b> × {w.anomaly}</span></div>
         </div>
       </div>
-      <p className="pscore-cap">Weighted blend (out of 100), weights tuned to the {client.mandate} mandate. Justification: docs/priority-metric.md.</p>
+      <p className="pscore-cap">Weighted blend (out of 100), weights tuned to the {client.mandate} mandate.</p>
     </>
   );
 }
