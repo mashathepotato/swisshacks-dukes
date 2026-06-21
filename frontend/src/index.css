@@ -591,8 +591,8 @@ button { font-family: inherit; cursor: pointer; }
 .cp-head .archetype { color: var(--text-dim); font-size: 13px; }
 .cp-dna-summary { margin: 10px 0 0; max-width: 56ch; font-size: 13.5px; line-height: 1.5; color: var(--text); }
 .cp-head-main { flex: 1; min-width: 0; }
-.cp-head-radar { width: 260px; flex-shrink: 0; }
-@media (max-width: 760px) { .cp-head { flex-direction: column; gap: 12px; } .cp-head-radar { width: 100%; max-width: 300px; } }
+.cp-head-radar { width: 360px; flex-shrink: 0; }
+@media (max-width: 760px) { .cp-head { flex-direction: column; gap: 12px; } .cp-head-radar { width: 100%; max-width: 360px; } }
 
 /* portfolio value + specific-request summary under the name */
 .cp-pval { font-size: 14px; color: var(--text-dim); margin: 12px 0 4px; }
@@ -658,14 +658,15 @@ button { font-family: inherit; cursor: pointer; }
 .clients-search:focus { border-color: var(--accent); }
 .clients-search::placeholder { color: var(--text-faint); }
 
-/* ---- merged rehearse: natural-language composer ---- */
-.rehearse-composer { display: flex; gap: 8px; padding: 0 26px 4px; }
-.rehearse-composer input {
+/* ---- merged rehearse: natural-language composer (chat-style, grows with content) ---- */
+.rehearse-composer { display: flex; align-items: flex-end; gap: 8px; padding: 0 26px 4px; }
+.rehearse-composer textarea {
   flex: 1; max-width: 560px; background: var(--panel); border: 1px solid var(--border); color: var(--text);
-  border-radius: 2px; padding: 10px 13px; font-size: 13.5px; font-family: inherit; outline: none;
+  border-radius: 12px; padding: 11px 14px; font-size: 13.5px; line-height: 1.5; font-family: inherit; outline: none;
+  resize: none; min-height: 44px; max-height: 220px; overflow-y: auto; box-sizing: border-box;
 }
-.rehearse-composer input:focus { border-color: var(--accent); }
-.rehearse-composer button { background: var(--accent); color: #fff; border: none; border-radius: 2px; padding: 0 18px; font-weight: 700; font-size: 13.5px; letter-spacing: .02em; }
+.rehearse-composer textarea:focus { border-color: var(--accent); }
+.rehearse-composer button { align-self: flex-end; min-height: 44px; background: var(--accent); color: #fff; border: none; border-radius: 12px; padding: 0 18px; font-weight: 700; font-size: 13.5px; letter-spacing: .02em; }
 .rehearse-composer button:hover:not(:disabled) { background: #c4310f; }
 .rehearse-composer button:disabled { opacity: .4; cursor: default; }
 .rehearse-subject { padding: 8px 26px 0; font-size: 12.5px; color: var(--text-dim); font-style: italic; }

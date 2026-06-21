@@ -24,7 +24,7 @@ import { useConversation } from "../lib/conversationStore";
 
 interface Props {
   client: Client;
-  onSimulate?: (client: Client) => void;
+  onSimulate?: (client: Client, proposal?: string) => void;
 }
 
 const DECISION_META: Record<FeedbackDecision, { label: string; color: string }> = {
@@ -150,7 +150,7 @@ export function ClientPage({ client, onSimulate }: Props) {
             <DraftMessage key={"draft-" + mergedClient.id} client={mergedClient} />
 
             {onSimulate && (
-              <button className="cp-rehearse" style={{ width: "100%", marginTop: 14, textAlign: "center" }} onClick={() => onSimulate(mergedClient)}>
+              <button className="cp-rehearse" style={{ width: "100%", marginTop: 14, textAlign: "center" }} onClick={() => onSimulate(mergedClient, mergedClient.recommendations[0]?.action)}>
                 Rehearse a proposal →
               </button>
             )}
@@ -309,7 +309,9 @@ function LearningPanel({ client }: { client: Client }) {
             {model.themes
               .filter((t) => t.n > 0 || t.base > 0)
               .map((t) => {
-                const meta = THEME_BY_ID[t.theme];
+                // A distilled/merged affinity can carry a theme id outside the 9-axis
+                // registry; fall back so a missing key never white-screens the demo.
+                const meta = THEME_BY_ID[t.theme] ?? { label: t.theme.replace(/-/g, " "), color: "#94680a" };
                 const up = t.delta > 0.005;
                 const down = t.delta < -0.005;
                 return (

@@ -1,4 +1,4 @@
-import type { Client } from "../types";
+import type { Client, NewsSignal } from "../types";
 import { PORTFOLIOS } from "./portfolio";
 import { PERSONA_PLAY } from "../lib/portfolio";
 import { SIX_SERIES } from "./sixPrices";
@@ -611,7 +611,77 @@ function exposureOf(client: Client, event: AnomalyEvent): number | null {
   return holding?.currentCHF ?? client.amountAtStake ?? 100_000;
 }
 
-export const CLIENTS: Client[] = attachAnomalies(BASE_CLIENTS, SIX_SERIES, exposureOf);
+const ENRICHED_CLIENTS: Client[] = attachAnomalies(BASE_CLIENTS, SIX_SERIES, exposureOf);
+
+// --- DEMO staging --------------------------------------------------------
+// The demo opens with LeCun parked mid-queue and quiet. Before his call, his
+// urgent Meta value-conflict (and the market anomaly his US-tech holdings pull
+// in) are staged OFF, so his transparent priority computes low everywhere —
+// the queue position, his profile score, and the breakdown all agree, because
+// they all read from the same signals. A single calm signal keeps that score
+// honest (a real, mild driver) and lands him ~6th. Flip DEMO_STAGE to "after"
+// once the call + DNA injection arrive to restore the full signal set.
+export type DemoStage = "before" | "after";
+export const DEMO_STAGE: DemoStage = "after";
+
+// Calm standing note — low severity, a couple of weeks old — so a quiet LeCun
+// still ranks on a genuine (if minor) driver rather than an empty zero.
+const LECUN_QUIET_SIGNAL: NewsSignal = {
+  id: "lec-quiet-1",
+  headline: "Routine portfolio review due — no open issues",
+  source: "CRM",
+  publishedAt: "2026-06-02",
+  summary: "Standing six-monthly review window is open. No active news or mandate flags against the book.",
+  type: "opportunity",
+  severity: 10,
+  matchedHoldings: [],
+};
+
+// Everything urgent that surfaces in the queue row (the trigger signal, the
+// headline reason, the action) is staged to a calm standing state. His deeper
+// profile (values, holdings, behavioural DNA) is unchanged. Flipping to "after"
+// restores the authored Meta value-conflict, recommendation and anomaly.
+const LECUN_BEFORE: Partial<Client> = {
+  signals: [LECUN_QUIET_SIGNAL],
+  topReason:
+    "Long-standing Growth client in his routine semi-annual review window. No active news or mandate flags against the book right now.",
+  recommendations: [],
+};
+
+// Beat 2: the urgent call lands. He's relocating to the US and wants the book
+// restructured before the move, with a meeting set for tomorrow — recorded in
+// the captured script. That call (fresh, high-conflict) plus his whole
+// relationship now in play vaults him to the top, on the SAME prior conviction
+// (exit Meta / trim the US mega-cap overweight) that explains the why.
+const LECUN_CALL_SIGNAL: NewsSignal = {
+  id: "lec-call-1",
+  headline: "Client call (recorded): relocating to the US, wants the book restructured before the move",
+  source: "Call · recorded today",
+  publishedAt: "2026-06-21",
+  summary:
+    "LeCun called to say he is relocating to the US and wants his portfolio restructured ahead of the move; a follow-up meeting is set for tomorrow. This sharpens his standing conviction to exit Meta and cut the US mega-cap overweight.",
+  type: "value_conflict",
+  severity: 96,
+  matchedHoldings: ["Meta Platforms Inc."],
+};
+
+const LECUN_AFTER: Partial<Client> = {
+  lastMessageAt: "2026-06-21",
+  amountAtStake: 3_400_000, // whole relationship in play for the relocation restructure
+  topReason:
+    "Called today (recorded): relocating to the US and wants his book restructured before the move, with a meeting set for tomorrow — on top of his standing conviction to exit Meta and the US mega-cap overweight he has long said he wants out of.",
+};
+
+function applyDemoStage(book: Client[]): Client[] {
+  if (DEMO_STAGE === "before")
+    return book.map((c) => (c.id === "lecun" ? { ...c, ...LECUN_BEFORE } : c));
+  // "after": layer the recorded call + tomorrow's meeting on top of his prior story
+  return book.map((c) =>
+    c.id === "lecun" ? { ...c, ...LECUN_AFTER, signals: [LECUN_CALL_SIGNAL, ...c.signals] } : c,
+  );
+}
+
+export const CLIENTS: Client[] = applyDemoStage(ENRICHED_CLIENTS);
 
 function syn(
   id: string,

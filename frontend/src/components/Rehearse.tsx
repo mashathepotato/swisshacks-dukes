@@ -87,9 +87,9 @@ function computeOutcome(client: Client, advice: RAdvice | null, text: string | n
   return { compliance, impact: estimateImpact({ exposureCHF: exposure, mode, severity, hasTrade }) };
 }
 
-interface Props { focusClientId: string | null; }
+interface Props { focusClientId: string | null; initialProposal?: string | null; }
 
-export function Rehearse({ focusClientId }: Props) {
+export function Rehearse({ focusClientId, initialProposal }: Props) {
   const personas = CLIENTS.filter((c) => c.isPersona);
   const [clientId, setClientId] = useState(focusClientId ?? personas[0].id);
   const client = CLIENTS.find((c) => c.id === clientId)!;
@@ -98,18 +98,29 @@ export function Rehearse({ focusClientId }: Props) {
   const [adviceKey, setAdviceKey] = useState<string | null>(advice[0]?.key ?? null);
   const [text, setText] = useState("");   // submitted free-text proposal
   const [input, setInput] = useState(""); // composer field
+  const composerRef = useRef<HTMLTextAreaElement>(null);
+
+  // Grow the composer with its content (chat-style), capped by CSS max-height.
+  useEffect(() => {
+    const el = composerRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+  }, [input]);
 
   useEffect(() => {
-    // the client is chosen from the nav dropdown now — sync and reset the proposal
+    // the client is chosen from the nav dropdown now — sync and reset the proposal.
+    // If a proposal was handed in (e.g. the draft from the client page), pre-fill the
+    // composer with it so the RM can tweak and rehearse without copy-pasting.
     if (!focusClientId) return;
     const next = adviceFor(CLIENTS.find((c) => c.id === focusClientId)!);
     /* eslint-disable react-hooks/set-state-in-effect */
     setClientId(focusClientId);
     setAdviceKey(next[0]?.key ?? null);
     setText("");
-    setInput("");
+    setInput(initialProposal ?? "");
     /* eslint-enable react-hooks/set-state-in-effect */
-  }, [focusClientId]);
+  }, [focusClientId, initialProposal]);
 
   const usingText = adviceKey === null;
   const sel = usingText ? null : advice.find((a) => a.key === adviceKey) ?? advice[0] ?? null;
@@ -186,10 +197,15 @@ export function Rehearse({ focusClientId }: Props) {
       </div>
 
       <div className="rehearse-composer">
-        <input
+        <textarea
+          ref={composerRef}
+          rows={1}
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && submitText()}
+          onKeyDown={(e) => {
+            // Enter sends; Shift+Enter adds a newline, like a chat composer.
+            if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submitText(); }
+          }}
           placeholder={`Or describe a proposal for ${client.name}, e.g. "trim Nvidia and add Swiss staples"`}
         />
         <button onClick={submitText} disabled={!input.trim()}>Rehearse</button>

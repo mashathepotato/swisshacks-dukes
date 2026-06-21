@@ -37,6 +37,8 @@ function parseHash(hash: string): Route {
 export default function App() {
   const [route, setRoute] = useState<Route>(() => parseHash(window.location.hash));
   const [selected, setSelected] = useState<Client | null>(null);
+  // A proposal handed to the rehearse page (e.g. the draft) so the composer is pre-filled.
+  const [pendingProposal, setPendingProposal] = useState<string | null>(null);
   const [newsView, setNewsView] = useState<NewsView>("client");
   const [showProfile, setShowProfile] = useState(false);
   const { profile } = useRmProfile();
@@ -59,7 +61,8 @@ export default function App() {
     setSelected(client);
     navigate({ name: "client", id: client.id });
   }
-  function openSimulator(client: Client) {
+  function openSimulator(client: Client, proposal?: string) {
+    setPendingProposal(proposal ?? null);
     navigate({ name: "rehearse", id: client.id });
   }
 
@@ -95,7 +98,7 @@ export default function App() {
                 {newsView === "funnel" ? <NewsFeed /> : <ClientNewsFeed />}
               </div>
             )}
-            {route.name === "rehearse" && <Rehearse focusClientId={route.id} />}
+            {route.name === "rehearse" && <Rehearse focusClientId={route.id} initialProposal={pendingProposal} />}
           </div>
           {route.name === "priority" && <ClientDetail client={selected} onOpenFull={openFullClient} />}
         </div>
