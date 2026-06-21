@@ -1,4 +1,4 @@
-# AGENTS.md — RM Copilot frontend
+# AGENTS.md — Priori frontend
 
 Pickup guide for sub-agents taking on **small, scoped tasks** in the dashboard.
 Read this once, then open only the files your task names.
@@ -8,7 +8,7 @@ Read this once, then open only the files your task names.
 
 ## What this is
 
-The **RM Copilot** — a relationship-manager dashboard for the SwissHacks "Next
+**Priori** — a relationship-manager dashboard for the SwissHacks "Next
 Generation of Wealth Advisory" challenge. It surfaces which clients need
 attention, explains *why* (with source receipts), lets the RM rehearse the
 outcome of advice, and drafts client messages. **The AI never advises the client

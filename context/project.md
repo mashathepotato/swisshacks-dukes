@@ -1,4 +1,4 @@
-# Project — RM Copilot
+# Project — Priori
 
 A next-generation **wealth-advisory copilot** for SwissHacks 2026 (SIX · Noumena
 · NTT DATA challenge — see `challenge.md`).

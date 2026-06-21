@@ -6,7 +6,7 @@ sibling `context/*.md` (linked inline).
 
 ## TL;DR
 
-**RM Copilot** — a relationship-manager cockpit for the SwissHacks 2026 SIX ·
+**Priori** — a relationship-manager cockpit for the SwissHacks 2026 SIX ·
 Noumena · NTT DATA "Next Generation of Wealth Advisory" challenge. It turns each
 client's CRM history into a **Client DNA**, watches their portfolio against live
 news + the CIO list, and surfaces ranked, fully-traceable alerts so the RM can

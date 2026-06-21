@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What this is
 
 `swisshacks-dukes` is the **SwissHacks 2026** team repo for the SIX · Noumena ·
-NTT DATA challenge: a next-generation **wealth-advisory copilot** ("RM Copilot").
+NTT DATA challenge: a next-generation **wealth-advisory copilot** ("Priori").
 See `context/project.md` for the idea and `context/architecture.md` for the stack.
 
 ## Build / test / run

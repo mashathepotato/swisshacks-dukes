@@ -1,6 +1,6 @@
 # swisshacks-dukes
 
-**RM Copilot** — a relationship-manager cockpit for the SwissHacks 2026
+**Priori** — a relationship-manager cockpit for the SwissHacks 2026
 SIX · Noumena · NTT DATA "Next Generation of Wealth Advisory" challenge.
 
 Turns each client's CRM history into a living **Client DNA**, watches their
