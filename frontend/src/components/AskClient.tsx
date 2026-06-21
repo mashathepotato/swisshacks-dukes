@@ -45,7 +45,7 @@ export function AskClient({ client }: { client: Client }) {
       .then((r) => (r.ok ? r.json() : null))
       .then((d: { answer: string; engine: string } | null) => {
         if (seq !== seqRef.current) return;
-        const answer = d?.answer || "I couldn't reach the copilot just now — try again.";
+        const answer = d?.answer || "Couldn't reach the copilot. Try again.";
         setThread((t) => {
           const idx = t.length;
           setAiEngine((m) => ({ ...m, [idx]: d?.engine === "anthropic" }));
@@ -54,7 +54,7 @@ export function AskClient({ client }: { client: Client }) {
       })
       .catch(() => {
         if (seq !== seqRef.current) return;
-        setThread((t) => [...t, { role: "copilot", text: "I couldn't reach the copilot just now — try again." }]);
+        setThread((t) => [...t, { role: "copilot", text: "Couldn't reach the copilot. Try again." }]);
       })
       .finally(() => { if (seq === seqRef.current) setPending(false); });
   }
@@ -64,7 +64,7 @@ export function AskClient({ client }: { client: Client }) {
       <div className="section-title">Ask about {client.name}</div>
       <div className="ask-thread">
         {thread.length === 0 && !pending && (
-          <p className="ask-empty">Ask the copilot anything about {client.name} — grounded in their DNA, portfolio, signals and history.</p>
+          <p className="ask-empty">Ask anything about {client.name}. Answers draw on their DNA, portfolio, signals and history.</p>
         )}
         {thread.map((m, i) => (
           <div key={i} className={"ask-bubble " + m.role}>
@@ -99,7 +99,7 @@ export function AskClient({ client }: { client: Client }) {
         />
         <button onClick={() => send(input)} disabled={!input.trim() || pending}>Ask</button>
       </div>
-      <p className="ask-note">Answers for the RM — grounded in what's on file. Review before acting.</p>
+      <p className="ask-note">Grounded in what's on file. Review before acting.</p>
     </div>
   );
 }

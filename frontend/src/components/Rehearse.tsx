@@ -174,7 +174,7 @@ export function Rehearse({ focusClientId }: Props) {
     <div className="booksim">
       <div className="bs-head" style={{ paddingBottom: 14 }}>
         <h1 style={{ margin: "0 0 4px", fontSize: 18, fontWeight: 600 }}>Rehearse a proposal · {client.name}</h1>
-        <p className="lead" style={{ margin: 0 }}>Pick a strategy <b>or</b> describe your own — see how {client.name} would likely react, the CHF impact, and whether it keeps their mandate.</p>
+        <p className="lead" style={{ margin: 0 }}>Pick a strategy <b>or</b> describe your own. See how {client.name} would likely react, the CHF impact, and whether it keeps their mandate.</p>
       </div>
 
       <div className="bs-advice">
@@ -190,7 +190,7 @@ export function Rehearse({ focusClientId }: Props) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && submitText()}
-          placeholder={`Or describe a proposal for ${client.name} — e.g. "trim Nvidia and add Swiss staples"`}
+          placeholder={`Or describe a proposal for ${client.name}, e.g. "trim Nvidia and add Swiss staples"`}
         />
         <button onClick={submitText} disabled={!input.trim()}>Rehearse</button>
       </div>
@@ -242,10 +242,10 @@ export function Rehearse({ focusClientId }: Props) {
                         </div>
                       );
                     })}
-                    <p className="impact-assump">Estimates, not guarantees — each figure is a position value × a stated assumption, fully traceable.</p>
+                    <p className="impact-assump">Estimates, not guarantees. Each figure is a position value × a stated assumption, fully traceable.</p>
                   </>
                 ) : (
-                  <p style={{ fontSize: 12.5, color: "var(--text-faint)" }}>Limited direct monetary effect — this proposal doesn't change {client.name}'s at-risk exposure.</p>
+                  <p style={{ fontSize: 12.5, color: "var(--text-faint)" }}>Limited direct monetary effect. This proposal doesn't change {client.name}'s at-risk exposure.</p>
                 )}
               </div>
 

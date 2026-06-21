@@ -82,7 +82,7 @@ export function CapitalCurve({ client }: { client: Client }) {
         </div>
         <p className="cc-caption">
           Invested capital and realised income from the client's <b>actual</b> deposits, withdrawals and coupons.
-          This is <b>not</b> a mark-to-market price history — we don't hold historical prices for these positions,
+          This is <b>not</b> a mark-to-market price history. We don't hold historical prices for these positions,
           so we don't draw a value path we can't substantiate.
         </p>
       </div>

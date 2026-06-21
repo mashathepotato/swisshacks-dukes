@@ -102,7 +102,7 @@ export function ClientPage({ client, onSimulate }: Props) {
           style={{ maxWidth: 320 }}
           onClick={() => (dealt ? reopen(mergedClient.id) : markDone(mergedClient.id))}
         >
-          {dealt ? "✓ Completed — reopen" : "✓ Mark as complete"}
+          {dealt ? "✓ Completed · reopen" : "✓ Mark as complete"}
         </button>
 
         <div className="cp-grid">
@@ -139,7 +139,7 @@ export function ClientPage({ client, onSimulate }: Props) {
             >
               <span className="flow-arrow-glyph">↓</span>
               <span className="flow-arrow-label">
-                {chainOpen ? "Hide the reasoning" : "Show the reasoning behind this priority"}
+                {chainOpen ? "Hide reasoning" : "Show reasoning"}
               </span>
             </button>
 
@@ -401,7 +401,7 @@ function Recommendations({ client }: { client: Client }) {
 
             {choice ? (
               <div className="fb-done" style={{ color: DECISION_META[choice].color }}>
-                ✓ Recorded as {DECISION_META[choice].label.toLowerCase()} — model updated.
+                ✓ Recorded as {DECISION_META[choice].label.toLowerCase()}. Model updated.
               </div>
             ) : (
               <div className="fb-row">
@@ -490,7 +490,7 @@ function DraftMessage({ client }: { client: Client }) {
           </div>
           <p className="pref-note">
             {isCustom(client.id)
-              ? <>Tuned by you — {client.name} set to <b>{CHANNEL_META[pref.channel].label.toLowerCase()}</b>, <b>{pref.length}</b>. The draft below follows it.</>
+              ? <>Tuned by you. {client.name} set to <b>{CHANNEL_META[pref.channel].label.toLowerCase()}</b>, <b>{pref.length}</b>. The draft below follows it.</>
               : <>On file: {client.name} prefers <b>{CHANNEL_META[pref.channel].label.toLowerCase()}</b>, <b>{pref.length}</b>. The draft below follows it.</>}
           </p>
           {history.length > 0 && (
@@ -511,7 +511,7 @@ function DraftMessage({ client }: { client: Client }) {
           </button>
         </div>
         {learnedThisVoice && (
-          <p className="draft-learned">Pre-selected — {client.name} accepts this tone most often.</p>
+          <p className="draft-learned">Pre-selected. {client.name} accepts this tone most often.</p>
         )}
 
         <div className="draft-format">{msg.format}{msg.subject ? "" : " · spoken / no subject line"}</div>
@@ -530,9 +530,9 @@ function DraftMessage({ client }: { client: Client }) {
           <button className="draft-copy" onClick={copy}>{copied ? "✓ Copied" : "Copy"}</button>
         </div>
         {sent ? (
-          <p className="draft-note" style={{ color: "var(--green)" }}>✓ Logged via {CHANNEL_META[pref.channel].label.toLowerCase()} ({voice}) — the copilot will favour this tone next time.</p>
+          <p className="draft-note" style={{ color: "var(--green)" }}>✓ Logged via {CHANNEL_META[pref.channel].label.toLowerCase()} ({voice}). Saved as your preferred tone.</p>
         ) : (
-          <p className="draft-note">Drafts only — review before sending.</p>
+          <p className="draft-note">Drafts only. Review before sending.</p>
         )}
       </div>
     </>

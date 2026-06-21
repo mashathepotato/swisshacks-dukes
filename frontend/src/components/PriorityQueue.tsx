@@ -69,7 +69,7 @@ export function PriorityQueue({ selectedId, onSelect }: Props) {
 
   return (
     <div className="queue">
-      <h1>Your book — by priority</h1>
+      <h1>Your book, by priority</h1>
       <p className="lead">
         {active.length} need{active.length === 1 ? "s" : ""} attention · ranked by a transparent priority score (out of 100): event severity, portfolio exposure, conflict and recency. Mark a client complete once you've actioned it.
       </p>

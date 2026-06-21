@@ -74,7 +74,7 @@ export function ClientDetail({ client, onOpenFull }: Props) {
 
       <div>
         <button className={"markdone" + (dealt ? " on" : "")} onClick={() => (dealt ? reopen(client.id) : markDone(client.id))}>
-          {dealt ? "✓ Completed — reopen" : "✓ Mark as complete"}
+          {dealt ? "✓ Completed · reopen" : "✓ Mark as complete"}
         </button>
       </div>
     </div>

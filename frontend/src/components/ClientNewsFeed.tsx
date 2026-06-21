@@ -52,7 +52,7 @@ export function ClientNewsFeed() {
       <h1>News by client</h1>
       <p className="lead">
         Real headlines from the relevance funnel, matched to each client. Click
-        a story for the concrete reasons it's relevant to them — a held
+        a story for the concrete reasons it's relevant to them: a held
         instrument, or an overlap with their values.
       </p>
 
@@ -219,7 +219,7 @@ function OverlapDetail({
         ))}
         {!rel.reasons.length && (
           <div className="cnews-reason">
-            Broad / market-level signal — no direct holding or value link.
+            Broad / market-level signal. No direct holding or value link.
           </div>
         )}
       </div>
