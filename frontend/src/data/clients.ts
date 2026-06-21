@@ -447,7 +447,7 @@ const BASE_CLIENTS: Client[] = [
   },
   {
     id: "lecun",
-    name: "Lecun",
+    name: "LeCun",
     archetype: "The AI-Native Anomaly",
     isPersona: true,
     mandate: "Growth",
@@ -459,7 +459,13 @@ const BASE_CLIENTS: Client[] = [
     affinities: [
       { theme: "us-exposure", weight: 0.92, polarity: -1 },
       { theme: "geographic-anchoring", weight: 0.82 },
+      { theme: "personal-cause", weight: 0.75 },
+      { theme: "social-ethics", weight: 0.65 },
       { theme: "confidentiality", weight: 0.55 },
+      { theme: "reputation-sensitivity", weight: 0.50 },
+      { theme: "military-defence", weight: 0.35, polarity: -1 },
+      { theme: "environmental", weight: 0.30 },
+      { theme: "philanthropy", weight: 0.25 },
     ],
     priorityScore: 90,
     amountAtStake: 204_568,
@@ -549,9 +555,9 @@ const BASE_CLIENTS: Client[] = [
       subject: "Acting on your Meta position and the US-tech overweight",
       body: {
         "values-led":
-          "Dear Dr Lecun,\n\nYou've been clear that Meta's direction is one you no longer want your own capital behind, and that you see the next decade compounding in Europe. Your portfolio doesn't yet reflect that — it still carries the US mega-cap overweight, Meta included.\n\nI'd like to propose exiting Meta and rotating that exposure into European names on our buy list — ASML and SAP — so the book finally matches your conviction. Nothing executes without your sign-off.\n\nAt your convenience,\nT. Keller",
+          "Dear Dr LeCun,\n\nYou've been clear that Meta's direction is one you no longer want your own capital behind, and that you see the next decade compounding in Europe. Your portfolio doesn't yet reflect that — it still carries the US mega-cap overweight, Meta included.\n\nI'd like to propose exiting Meta and rotating that exposure into European names on our buy list — ASML and SAP — so the book finally matches your conviction. Nothing executes without your sign-off.\n\nAt your convenience,\nT. Keller",
         "data-driven":
-          "Dear Dr Lecun,\n\nActioning your stated view: your Growth mandate holds Meta Platforms (~CHF 205k) inside a broader US mega-cap tech overweight, against your preference to reduce US concentration and tilt to Europe.\n\nRecommended action: exit Meta and rotate proceeds into ASML and SAP — both European CIO BUYs in the technology sleeve, preserving your equity allocation while cutting US exposure. I can stage the trades for your approval.\n\nBest regards,\nT. Keller",
+          "Dear Dr LeCun,\n\nActioning your stated view: your Growth mandate holds Meta Platforms (~CHF 205k) inside a broader US mega-cap tech overweight, against your preference to reduce US concentration and tilt to Europe.\n\nRecommended action: exit Meta and rotate proceeds into ASML and SAP — both European CIO BUYs in the technology sleeve, preserving your equity allocation while cutting US exposure. I can stage the trades for your approval.\n\nBest regards,\nT. Keller",
       },
     },
   },

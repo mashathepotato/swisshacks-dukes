@@ -19,6 +19,7 @@ import { useRmProfile } from "../lib/rmProfileStore";
 import { ValueRadar } from "./ValueRadar";
 import { PriorityScore } from "./PriorityScore";
 import { ConversationCapture } from "./ConversationCapture";
+import { AskClient } from "./AskClient";
 import { useConversation } from "../lib/conversationStore";
 
 interface Props {
@@ -138,8 +139,10 @@ export function ClientPage({ client, onSimulate }: Props) {
             )}
           </div>
 
-          {/* Right: relationship tools first (capture), then supporting detail */}
+          {/* Right: ask-the-copilot first, then relationship tools and detail */}
           <div className="cp-col">
+            <AskClient key={"ask-" + mergedClient.id} client={mergedClient} />
+
             <ConversationCapture client={mergedClient} />
 
             <LearningPanel client={mergedClient} />
