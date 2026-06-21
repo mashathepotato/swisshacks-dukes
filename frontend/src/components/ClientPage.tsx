@@ -10,7 +10,7 @@ import { behavioralForClient, tradeReceipts } from "../lib/behavioral";
 import { HoldingsDetail } from "./HoldingsDetail";
 import { CapitalCurve } from "./CapitalCurve";
 import { Collapsible } from "./Collapsible";
-import { buildMessage, CHANNEL_META, LENGTH_META } from "../lib/commPrefs";
+import { buildMessage, CHANNEL_META, LENGTH_META, SLOT_META, CALL_SLOTS } from "../lib/commPrefs";
 import type { CommChannel, CommLength } from "../lib/commPrefs";
 import { useLearning } from "../lib/learningStore";
 import { useDone } from "../lib/doneStore";
@@ -418,15 +418,21 @@ function Recommendations({ client }: { client: Client }) {
 }
 
 /** The actionable next step: a proposed client message, defaulted to the learned tone. */
-function fmtPref(field: "channel" | "length", val: string): string {
-  return field === "channel"
-    ? CHANNEL_META[val as CommChannel]?.label ?? val
-    : LENGTH_META[val as CommLength]?.label ?? val;
+function fmtPref(field: "channel" | "length" | "slots", val: string): string {
+  if (field === "channel") return CHANNEL_META[val as CommChannel]?.label ?? val;
+  if (field === "length") return LENGTH_META[val as CommLength]?.label ?? val;
+  return val; // slots: already a human-readable label list ("Morning, Evening" / "none")
 }
+
+const SLOT_FIELD_LABEL: Record<"channel" | "length" | "slots", string> = {
+  channel: "Channel",
+  length: "Length",
+  slots: "Call time",
+};
 
 function DraftMessage({ client }: { client: Client }) {
   const { record, modelFor } = useLearning();
-  const { prefFor, isCustom, setChannel, setLength, historyFor } = useCommPrefs();
+  const { prefFor, isCustom, setChannel, setLength, toggleSlot, historyFor } = useCommPrefs();
   const { profile } = useRmProfile();
   const model: PreferenceModel = modelFor(client);
   const theme = primaryTheme(client);
@@ -488,6 +494,21 @@ function DraftMessage({ client }: { client: Client }) {
               ))}
             </div>
           </div>
+          <div className="pref-row">
+            <span className="pref-lbl">Best time to call</span>
+            <div className="pref-opts">
+              {CALL_SLOTS.map((s) => (
+                <button
+                  key={s}
+                  className={"pref-opt" + (pref.slots.includes(s) ? " on" : "")}
+                  title={`${SLOT_META[s].label} (${SLOT_META[s].hours})`}
+                  onClick={() => toggleSlot(client, s)}
+                >
+                  {SLOT_META[s].label}
+                </button>
+              ))}
+            </div>
+          </div>
           <p className="pref-note">
             {isCustom(client.id)
               ? <>Tuned by you. {client.name} set to <b>{CHANNEL_META[pref.channel].label.toLowerCase()}</b>, <b>{pref.length}</b>. The draft below follows it.</>
@@ -496,7 +517,7 @@ function DraftMessage({ client }: { client: Client }) {
           {history.length > 0 && (
             <ul className="pref-history">
               {history.slice(0, 3).map((h, i) => (
-                <li key={i}>{h.field === "channel" ? "Channel" : "Length"}: {fmtPref(h.field, h.from)} → {fmtPref(h.field, h.to)} · {h.date}</li>
+                <li key={i}>{SLOT_FIELD_LABEL[h.field]}: {fmtPref(h.field, h.from)} → {fmtPref(h.field, h.to)} · {h.date}</li>
               ))}
             </ul>
           )}

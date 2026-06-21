@@ -1,12 +1,12 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 import type { Client } from "../types";
-import type { CommChannel, CommLength, CommPref } from "./commPrefs";
-import { defaultPref } from "./commPrefs";
+import type { CallSlot, CommChannel, CommLength, CommPref } from "./commPrefs";
+import { defaultPref, SLOT_META } from "./commPrefs";
 
 export interface PrefChange {
   clientId: string;
-  field: "channel" | "length";
+  field: "channel" | "length" | "slots";
   from: string;
   to: string;
   date: string;
@@ -30,8 +30,14 @@ interface Value {
   isCustom: (clientId: string) => boolean;
   setChannel: (client: Client, channel: CommChannel) => void;
   setLength: (client: Client, length: CommLength) => void;
+  toggleSlot: (client: Client, slot: CallSlot) => void;
   historyFor: (clientId: string) => PrefChange[];
 }
+
+// Slots ordered through the day, for stable display and history strings.
+const SLOT_ORDER = Object.keys(SLOT_META) as CallSlot[];
+const fmtSlots = (slots: CallSlot[]): string =>
+  slots.length ? SLOT_ORDER.filter((s) => slots.includes(s)).map((s) => SLOT_META[s].label).join(", ") : "none";
 const Ctx = createContext<Value | null>(null);
 
 export function CommPrefProvider({ children }: { children: ReactNode }) {
@@ -42,7 +48,12 @@ export function CommPrefProvider({ children }: { children: ReactNode }) {
   }, [state]);
 
   const prefFor = useCallback(
-    (client: Client): CommPref => state.prefs[client.id] ?? defaultPref(client.id),
+    (client: Client): CommPref => {
+      const stored = state.prefs[client.id];
+      if (!stored) return defaultPref(client.id);
+      // Backfill slots for prefs persisted before this field existed.
+      return stored.slots ? stored : { ...stored, slots: defaultPref(client.id).slots };
+    },
     [state],
   );
   const isCustom = useCallback((clientId: string) => clientId in state.prefs, [state]);
@@ -59,14 +70,26 @@ export function CommPrefProvider({ children }: { children: ReactNode }) {
 
   const setChannel = useCallback((c: Client, ch: CommChannel) => change(c, "channel", ch), [change]);
   const setLength = useCallback((c: Client, l: CommLength) => change(c, "length", l), [change]);
+
+  const toggleSlot = useCallback((client: Client, slot: CallSlot) => {
+    setState((prev) => {
+      const fallback = defaultPref(client.id);
+      const current = prev.prefs[client.id] ?? fallback;
+      const slots = current.slots ?? fallback.slots;
+      const nextSlots = slots.includes(slot) ? slots.filter((s) => s !== slot) : [...slots, slot];
+      const next: CommPref = { ...current, slots: nextSlots };
+      const log: PrefChange = { clientId: client.id, field: "slots", from: fmtSlots(slots), to: fmtSlots(nextSlots), date: TODAY };
+      return { prefs: { ...prev.prefs, [client.id]: next }, history: [...prev.history, log] };
+    });
+  }, []);
   const historyFor = useCallback(
     (id: string) => state.history.filter((h) => h.clientId === id).slice().reverse(),
     [state],
   );
 
   const value = useMemo<Value>(
-    () => ({ prefFor, isCustom, setChannel, setLength, historyFor }),
-    [prefFor, isCustom, setChannel, setLength, historyFor],
+    () => ({ prefFor, isCustom, setChannel, setLength, toggleSlot, historyFor }),
+    [prefFor, isCustom, setChannel, setLength, toggleSlot, historyFor],
   );
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

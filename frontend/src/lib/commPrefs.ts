@@ -4,8 +4,9 @@ import { greetingLine, spokenOpen, applyTokens } from "./rmProfile";
 
 export type CommChannel = "email" | "call" | "meeting" | "message";
 export type CommLength = "brief" | "standard" | "detailed";
+export type CallSlot = "morning" | "lunch" | "afternoon" | "evening";
 
-export interface CommPref { channel: CommChannel; length: CommLength; }
+export interface CommPref { channel: CommChannel; length: CommLength; slots: CallSlot[]; }
 
 export const CHANNEL_META: Record<CommChannel, { label: string; icon: string }> = {
   email: { label: "Email", icon: "" },
@@ -18,15 +19,23 @@ export const LENGTH_META: Record<CommLength, { label: string }> = {
   standard: { label: "Standard" },
   detailed: { label: "Detailed" },
 };
+// Best windows to reach the client by phone (local time). Ordered through the day.
+export const SLOT_META: Record<CallSlot, { label: string; hours: string }> = {
+  morning: { label: "Morning", hours: "8–12" },
+  lunch: { label: "Lunch", hours: "12–14" },
+  afternoon: { label: "Afternoon", hours: "14–17" },
+  evening: { label: "Evening", hours: "17–20" },
+};
+export const CALL_SLOTS = Object.keys(SLOT_META) as CallSlot[];
 
 // Authored starting preferences per persona (everyone else gets the fallback).
 export const COMM_DEFAULTS: Record<string, CommPref> = {
-  ammann: { channel: "call", length: "brief" },       // direct, discreet
-  schneider: { channel: "meeting", length: "detailed" }, // personal, emotional
-  huber: { channel: "call", length: "standard" },     // "call me when…"
-  raeber: { channel: "email", length: "detailed" },   // formal, written record
+  ammann: { channel: "call", length: "brief", slots: ["morning"] },              // direct, discreet — catch him early
+  schneider: { channel: "meeting", length: "detailed", slots: ["afternoon"] },   // personal, emotional
+  huber: { channel: "call", length: "standard", slots: ["lunch", "evening"] },   // "call me when…"
+  raeber: { channel: "email", length: "detailed", slots: ["morning", "afternoon"] }, // formal, written record
 };
-export const FALLBACK_PREF: CommPref = { channel: "email", length: "standard" };
+export const FALLBACK_PREF: CommPref = { channel: "email", length: "standard", slots: ["morning"] };
 export function defaultPref(clientId: string): CommPref {
   return COMM_DEFAULTS[clientId] ?? FALLBACK_PREF;
 }
