@@ -93,6 +93,7 @@ export function AskClient({ client }: { client: Client }) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && send(input)}
+          aria-label={`Ask about ${client.name}`}
           placeholder={`Ask about ${client.name}…`}
           disabled={pending}
         />

@@ -33,6 +33,20 @@ const DECISION_META: Record<FeedbackDecision, { label: string; color: string }> 
   declined: { label: "Declined", color: "var(--red)" },
 };
 
+/** A one-line, glanceable synthesis of who this client is — risk, what they
+ *  value, and what they avoid. Deterministic; complements the DNA chips below. */
+function dnaSummary(c: Client): string | null {
+  if (c.values.length === 0 && c.dislikes.length === 0) return null;
+  const join = (xs: string[]) =>
+    xs.length <= 1 ? xs.join("") : `${xs.slice(0, -1).join(", ")} and ${xs[xs.length - 1]}`;
+  const likes = c.values.slice(0, 2);
+  const avoids = c.dislikes.slice(0, 1);
+  let s = `A ${c.riskProfile.toLowerCase()}-risk client`;
+  if (likes.length) s += ` who values ${join(likes)}`;
+  if (avoids.length) s += `${likes.length ? "," : " who"} steers clear of ${join(avoids)}`;
+  return s + ".";
+}
+
 export function ClientPage({ client, onSimulate }: Props) {
   const { isDone, markDone, reopen } = useDone();
   const { withDeltas } = useConversation();
@@ -41,6 +55,7 @@ export function ClientPage({ client, onSimulate }: Props) {
   const [chainOpen, setChainOpen] = useState(false);
 
   const portfolioValue = PORTFOLIOS[mergedClient.mandate].reduce((s, h) => s + h.currentCHF, 0);
+  const dna = dnaSummary(mergedClient);
 
   return (
     <div className="clientpage">
@@ -49,6 +64,8 @@ export function ClientPage({ client, onSimulate }: Props) {
           <div className="cp-head-main">
             <h1>{mergedClient.name}</h1>
             <div className="archetype">{mergedClient.archetype}</div>
+
+            {dna && <p className="cp-dna-summary">{dna}</p>}
 
             <div className="cp-pval">
               <b>{formatMoney(portfolioValue)}</b> portfolio value · {mergedClient.mandate} mandate
@@ -122,7 +139,7 @@ export function ClientPage({ client, onSimulate }: Props) {
             >
               <span className="flow-arrow-glyph">↓</span>
               <span className="flow-arrow-label">
-                {chainOpen ? "Hide the reasoning" : "Why this leads to the action — see the full thought process"}
+                {chainOpen ? "Hide the reasoning" : "Show the reasoning behind this priority"}
               </span>
             </button>
 
