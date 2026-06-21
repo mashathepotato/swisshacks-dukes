@@ -1,0 +1,32 @@
+# Render blueprint — single Node service that serves the built React dashboard
+# AND the /api endpoints (keys stay server-side). One URL, no CORS.
+#
+# Deploy: push to GitHub → render.com → New → Blueprint → pick this repo.
+# Then set the secret env vars (marked sync:false) in the Render dashboard.
+services:
+  - type: web
+    name: priori
+    runtime: node
+    plan: free
+    # Frontend has its own package.json; the backend is zero-dependency (node builtins).
+    buildCommand: cd frontend && npm ci && npm run build
+    startCommand: node news-test/server.mjs
+    healthCheckPath: /
+    envVars:
+      # --- Safe defaults: deploy offline + heuristic first, then flip these ---
+      - key: NODE_VERSION
+        value: "22"
+      # Flip to "1" to call live Event Registry. Leave unset/0 for the fixture.
+      - key: NEWS_LIVE
+        value: "0"
+      # "claude" needs a local CLI that doesn't exist on Render. Use phoeniqs
+      # (with a key) or heuristic. heuristic = no LLM spend, deterministic.
+      - key: ASSESSOR_ENGINE
+        value: heuristic
+      # --- Secrets: set these in the Render dashboard, not in git ---
+      - key: NEWSAPI_KEY        # Event Registry key (needed once NEWS_LIVE=1)
+        sync: false
+      - key: PHOENIQS_API_KEY   # OpenAI-compatible LLM key (if ASSESSOR_ENGINE=phoeniqs)
+        sync: false
+      - key: ANTHROPIC_API_KEY  # optional: powers digest/dialogue/simulate
+        sync: false
